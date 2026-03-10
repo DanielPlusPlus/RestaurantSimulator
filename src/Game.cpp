@@ -1,11 +1,11 @@
-#include "Game.h"
-#include "scenes/MainMenu.h"
+#include "Game.hpp"
+#include "scenes/Level.hpp"
 
 #include <SFML/Graphics.hpp>
 
 Game::Game() {
-    this->window = new sf::RenderWindow(sf::VideoMode(1280, 720), "3Civ Game", sf::Style::Titlebar | sf::Style::Close);
-    this->currentScene = new MainMenu();
+    this->window = new sf::RenderWindow(sf::VideoMode(this->width * this->scaleFactor, this->height * this->scaleFactor), "Restaurant Simulator", sf::Style::Titlebar | sf::Style::Close);
+    this->currentScene = new Level(this->scaleFactor);
 }
 
 Game::~Game() {
@@ -19,7 +19,7 @@ void Game::run() {
         float deltaTime = clock.restart().asSeconds();
         
         currentScene->update(*window, deltaTime);
-
+        
         // window->clear();
         currentScene->render(*window);
         window->display();

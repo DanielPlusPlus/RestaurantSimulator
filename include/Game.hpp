@@ -1,13 +1,14 @@
 #pragma once
 
-#include "scenes/Scene.h"
+#include "scenes/Scene.hpp"
 
 #include <SFML/Graphics.hpp>
 
 class Game {
 private:
-    int width = 1280;
-    int height = 720;
+    int width = 302;
+    int height = 218;
+    int scaleFactor = 4;
     sf::RenderWindow* window;
     Scene* currentScene;
 public:
