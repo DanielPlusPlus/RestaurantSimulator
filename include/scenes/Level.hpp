@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene.hpp"
-#include "../characters/Client.hpp"
+#include "../characters/Chef.hpp"
 
 class Level : public Scene {
 private:
@@ -12,7 +12,10 @@ private:
     sf::Texture flowersTexture;
     sf::Sprite flowersSprite;
     bool texturesLoaded = false;
-    Client* client;
+    Chef* chef;
+    float tileWidth = 16.0f;
+    float tileHeight = 16.0f;
+    float wallWidth = 6.0f;
 public:
     Level(int scaleFactor);
     bool loadTextures(int scaleFactor);

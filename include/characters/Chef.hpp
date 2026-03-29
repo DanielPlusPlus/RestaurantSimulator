@@ -2,7 +2,7 @@
 
 #include "Character.hpp"
 
-class Client : public Character {
+class Chef : public Character {
 private:
     sf::Texture adamIdleTexture;
     sf::Texture adamRunTexture;
@@ -10,13 +10,18 @@ private:
     std::vector<sf::Sprite> adamIdleSprites;
     std::vector<sf::Sprite> adamRunSprites;
     std::vector<sf::Sprite> adamSitSprites;
+    float xPos = 0.0f;
+    float yPos = 0.0f;
+    float width = 16.0f;
+    float height = 32.0f;
     bool texturesLoaded = false;
     int animFrame = 0;
     float animTime = 0.0f;
     int animDirection = 0;
 public:
-    Client(int scaleFactor);
+    Chef(int scaleFactor);
     bool loadTextures(int scaleFactor);
-    void update(sf::RenderWindow& window, float deltaTime) override;
+    void update(sf::RenderWindow& window, float deltaTime, float tileWidth, 
+                float tileHeight, float wallWidth) override;
     void render(sf::RenderWindow& window) override;
 };

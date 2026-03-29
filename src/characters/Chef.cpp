@@ -1,15 +1,17 @@
-#include "characters/Client.hpp"
+#include "characters/Chef.hpp"
 #include <iostream>
 
-Client::Client(int scaleFactor) : Character(scaleFactor) {
+Chef::Chef(int scaleFactor) : Character(scaleFactor) {
     texturesLoaded = loadTextures(scaleFactor);
+    width = width * scaleFactor;
+    height = height * scaleFactor;
 }
 
-bool Client::loadTextures(int scaleFactor) {
+bool Chef::loadTextures(int scaleFactor) {
     int frameWidth = 16;
     int frameHeight = 32;
 
-    if(!adamIdleTexture.loadFromFile("assets/characters/Adam/Adam_idle.png"))
+    if(!adamIdleTexture.loadFromFile("assets/characters/chef/chef_idle.png"))
         return false;
     int idleFrameCount = adamIdleTexture.getSize().x / frameWidth;
     adamIdleSprites.clear();
@@ -21,7 +23,7 @@ bool Client::loadTextures(int scaleFactor) {
         adamIdleSprites.push_back(sprite);
     }
 
-    if(!adamRunTexture.loadFromFile("assets/characters/Adam/Adam_run.png"))
+    if(!adamRunTexture.loadFromFile("assets/characters/chef/chef_run.png"))
         return false;
     int runFrameCount = adamRunTexture.getSize().x / frameWidth;
     adamRunSprites.clear();
@@ -33,7 +35,7 @@ bool Client::loadTextures(int scaleFactor) {
         adamRunSprites.push_back(sprite);
     }
 
-    if(!adamSitTexture.loadFromFile("assets/characters/Adam/Adam_sit.png"))
+    if(!adamSitTexture.loadFromFile("assets/characters/chef/chef_sit.png"))
         return false;
     int sitFrameCount = adamSitTexture.getSize().x / frameWidth;
     adamSitSprites.clear();
@@ -48,20 +50,24 @@ bool Client::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Client::update(sf::RenderWindow& window, float deltaTime) {
+void Chef::update(sf::RenderWindow& window, float deltaTime, float tileWidth, float tileHeight, float wallWidth) {
     animTime += deltaTime;
     if(animTime > 0.2f) {
         animTime = 0.0f;
         animDirection = rand() % 4;
         animFrame = rand() % 6;
     }
+    xPos = wallWidth + tileWidth * 2;
+    yPos = tileHeight * 1.5f;
 }
 
-void Client::render(sf::RenderWindow& window) {
+void Chef::render(sf::RenderWindow& window) {
     sf::Event event;
     int spriteIndex = animDirection * 6 + animFrame;
     if(texturesLoaded && spriteIndex < adamIdleSprites.size()) {
-        window.draw(adamIdleSprites.at(spriteIndex));
+        sf::Sprite sprite = adamIdleSprites.at(spriteIndex);
+        sprite.setPosition(xPos, yPos);
+        window.draw(sprite);
         std::cout << "Drawing sprite index: " << spriteIndex << " of " << adamIdleSprites.size() << std::endl;
     }
 }

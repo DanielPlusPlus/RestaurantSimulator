@@ -4,7 +4,10 @@
 #include <SFML/Graphics.hpp>
 
 Level::Level(int scaleFactor) : Scene(scaleFactor) {
-    client = new Client(scaleFactor);
+    tileWidth = tileWidth * scaleFactor;
+    tileHeight = tileHeight * scaleFactor;
+    wallWidth = wallWidth * scaleFactor;
+    chef = new Chef(scaleFactor);
     this->texturesLoaded = loadTextures(scaleFactor);
 }
 
@@ -41,7 +44,7 @@ void Level::update(sf::RenderWindow& window, float deltaTime) {
     if (this->timeElapsed >= 10.0f) {
         this->timeElapsed = 0.0f;
     }
-    this->client->update(window, deltaTime);
+    this->chef->update(window, deltaTime, tileWidth, tileHeight, wallWidth);
 }
 
 void Level::render(sf::RenderWindow& window) {
@@ -55,6 +58,6 @@ void Level::render(sf::RenderWindow& window) {
         window.draw(backgroundSprite);
         window.draw(wallsSprite);
         window.draw(flowersSprite);
-        this->client->render(window);
+        this->chef->render(window);
     }
 }
