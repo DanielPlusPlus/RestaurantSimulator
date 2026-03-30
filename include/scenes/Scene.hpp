@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
+
 class Scene {
 protected:
     int scaleFactor;

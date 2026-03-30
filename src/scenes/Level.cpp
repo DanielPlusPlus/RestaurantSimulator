@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+
 Level::Level(int scaleFactor) : Scene(scaleFactor) {
     tileWidth = tileWidth * scaleFactor;
     tileHeight = tileHeight * scaleFactor;
@@ -35,15 +36,6 @@ bool Level::loadTextures(int scaleFactor) {
 
 void Level::update(sf::RenderWindow& window, float deltaTime) {
     this->timeElapsed += deltaTime;
-    if (int(timeElapsed) % 10 < 5) {
-        window.clear(sf::Color::White);
-    }
-    else {
-        window.clear(sf::Color::Black);
-    }
-    if (this->timeElapsed >= 10.0f) {
-        this->timeElapsed = 0.0f;
-    }
     this->chef->update(window, deltaTime, tileWidth, tileHeight, wallWidth);
 }
 

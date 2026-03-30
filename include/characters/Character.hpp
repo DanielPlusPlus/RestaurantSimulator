@@ -1,6 +1,10 @@
 #pragma once
 
+#include "enums/DirectionsEnum.hpp"
+#include "enums/StatesEnum.hpp"
+
 #include <SFML/Graphics.hpp>
+
 
 class Character {
 protected:

@@ -2,14 +2,16 @@
 
 #include "Character.hpp"
 
+
 class Chef : public Character {
 private:
-    sf::Texture adamIdleTexture;
-    sf::Texture adamRunTexture;
-    sf::Texture adamSitTexture;
-    std::vector<sf::Sprite> adamIdleSprites;
-    std::vector<sf::Sprite> adamRunSprites;
-    std::vector<sf::Sprite> adamSitSprites;
+    bool initialized = false;
+    sf::Texture chefIdleTexture;
+    sf::Texture chefRunTexture;
+    sf::Texture chefSitTexture;
+    std::vector<sf::Sprite> chefIdleSprites;
+    std::vector<sf::Sprite> chefRunSprites;
+    std::vector<sf::Sprite> chefSitSprites;
     float xPos = 0.0f;
     float yPos = 0.0f;
     float width = 16.0f;
@@ -17,7 +19,15 @@ private:
     bool texturesLoaded = false;
     int animFrame = 0;
     float animTime = 0.0f;
-    int animDirection = 0;
+    enum Directions animDirection = Directions::UP;
+
+    enum State state = State::IDLE;
+    float moveProgress = 0.0f;
+    float moveDistance = 0.0f;
+    float moveSpeed = 0.0f;
+    float startX = 0.0f;
+    float startY = 0.0f;
+    float idleTimer = 0.0f;
 public:
     Chef(int scaleFactor);
     bool loadTextures(int scaleFactor);

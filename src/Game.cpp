@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
+
 Game::Game() {
     this->window = new sf::RenderWindow(sf::VideoMode(this->width * this->scaleFactor, this->height * this->scaleFactor), "Restaurant Simulator", sf::Style::Titlebar | sf::Style::Close);
     this->currentScene = new Level(this->scaleFactor);

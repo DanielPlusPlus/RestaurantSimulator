@@ -3,6 +3,7 @@
 #include "Scene.hpp"
 #include "../characters/Chef.hpp"
 
+
 class Level : public Scene {
 private:
     sf::Texture backgroundTexture;
