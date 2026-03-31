@@ -1,0 +1,10 @@
+enum class ChefStatesEnum {
+    TURNING_RIGHT,
+    MOVING_RIGHT,
+    PREPARING_TO_PUTTING_DOWN,
+    PUTTING_DOWN,
+    TURNING_LEFT,
+    MOVING_LEFT,
+    TURNING_UP,
+    COOKING
+};

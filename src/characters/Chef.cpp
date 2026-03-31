@@ -3,10 +3,20 @@
 #include <iostream>
 
 
-Chef::Chef(int scaleFactor) : Character(scaleFactor) {
+Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth) : Character(scaleFactor) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;
+
+    xPos = wallWidth + tileWidth * 2;
+    yPos = tileHeight * 1.5f;
+    startX = xPos;
+    startY = yPos;
+    state = ChefStatesEnum::TURNING_RIGHT;
+    moveDistance = 5.0f * tileWidth;
+    moveSpeed = tileWidth;
+    moveProgress = 0.0f;
+    animDirection = Directions::UP;
 }
 
 bool Chef::loadTextures(int scaleFactor) {
@@ -52,20 +62,12 @@ bool Chef::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Chef::update(sf::RenderWindow& window, float deltaTime, float tileWidth, float tileHeight, float wallWidth) {
-    if(!initialized) {
-        xPos = wallWidth + tileWidth * 2;
-        yPos = tileHeight * 1.5f;
-        startX = xPos;
-        startY = yPos;
-        state = State::TURNING_RIGHT;
-        moveDistance = 5.0f * tileWidth;
-        moveSpeed = tileWidth;
-        moveProgress = 0.0f;
-        animDirection = Directions::UP;
-        initialized = true;
-    }
+void Chef::update(sf::RenderWindow& window, float deltaTime) {
+    changeAnimation(deltaTime);
+    changeState(deltaTime);
+}
 
+void Chef::changeAnimation(float deltaTime) {
     animTime += deltaTime;
     if(animTime > 0.2f) {
         animTime = 0.0f;
@@ -74,14 +76,16 @@ void Chef::update(sf::RenderWindow& window, float deltaTime, float tileWidth, fl
             animFrame = 0;
         }
     }
+}
 
+void Chef::changeState(float deltaTime) {
     switch(state) {
-        case State::TURNING_RIGHT:
+        case ChefStatesEnum::TURNING_RIGHT:
             animDirection = Directions::RIGHT;
-            state = State::MOVING_RIGHT;
+            state = ChefStatesEnum::MOVING_RIGHT;
             moveProgress = 0.0f;
             break;
-        case State::MOVING_RIGHT:
+        case ChefStatesEnum::MOVING_RIGHT:
             if(moveProgress < moveDistance) {
                 float moveStep = moveSpeed * deltaTime;
                 float remaining = moveDistance - moveProgress;
@@ -90,15 +94,26 @@ void Chef::update(sf::RenderWindow& window, float deltaTime, float tileWidth, fl
                 moveProgress += step;
             }
             else {
-                state = State::TURNING_LEFT;
+                state = ChefStatesEnum::PREPARING_TO_PUTTING_DOWN;
             }
             break;
-        case State::TURNING_LEFT:
+        case ChefStatesEnum::PREPARING_TO_PUTTING_DOWN:
+            state = ChefStatesEnum::PUTTING_DOWN;
+            idleTimer = 0.0f;
+            break;
+        case ChefStatesEnum::PUTTING_DOWN:
+            idleTimer += deltaTime;
+            if(idleTimer > 2.0f) {
+                idleTimer = 0.0f;
+                state = ChefStatesEnum::TURNING_LEFT;
+            }
+            break;
+        case ChefStatesEnum::TURNING_LEFT:
             animDirection = Directions::LEFT;
-            state = State::MOVING_LEFT;
+            state = ChefStatesEnum::MOVING_LEFT;
             moveProgress = 0.0f;
             break;
-        case State::MOVING_LEFT:
+        case ChefStatesEnum::MOVING_LEFT:
             if(moveProgress < moveDistance) {
                 float moveStep = moveSpeed * deltaTime;
                 float remaining = moveDistance - moveProgress;
@@ -107,19 +122,19 @@ void Chef::update(sf::RenderWindow& window, float deltaTime, float tileWidth, fl
                 moveProgress += step;
             }
             else {
-                state = State::TURNING_UP;
+                state = ChefStatesEnum::TURNING_UP;
             }
             break;
-        case State::TURNING_UP:
+        case ChefStatesEnum::TURNING_UP:
             animDirection = Directions::UP;
-            state = State::IDLE;
+            state = ChefStatesEnum::COOKING;
             idleTimer = 0.0f;
             break;
-        case State::IDLE:
+        case ChefStatesEnum::COOKING:
             idleTimer += deltaTime;
             if(idleTimer > 5.0f) {
                 idleTimer = 0.0f;
-                state = State::TURNING_RIGHT;
+                state = ChefStatesEnum::TURNING_RIGHT;
             }
             break;
         default:
@@ -132,7 +147,7 @@ void Chef::render(sf::RenderWindow& window) {
     std::vector<sf::Sprite>* spriteSet = &chefIdleSprites;
 
     int framesPerAnim = 6;
-    if(state == State::MOVING_RIGHT || state == State::MOVING_LEFT) {
+    if(state == ChefStatesEnum::MOVING_RIGHT || state == ChefStatesEnum::MOVING_LEFT) {
         spriteSet = &chefRunSprites;
     }
     int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;

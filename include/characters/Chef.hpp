@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Character.hpp"
+#include "enums/ChefStatesEnum.hpp"
 
 
 class Chef : public Character {
 private:
-    bool initialized = false;
     sf::Texture chefIdleTexture;
     sf::Texture chefRunTexture;
     sf::Texture chefSitTexture;
@@ -21,7 +21,7 @@ private:
     float animTime = 0.0f;
     enum Directions animDirection = Directions::UP;
 
-    enum State state = State::IDLE;
+    enum ChefStatesEnum state = ChefStatesEnum::COOKING;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
     float moveSpeed = 0.0f;
@@ -29,9 +29,10 @@ private:
     float startY = 0.0f;
     float idleTimer = 0.0f;
 public:
-    Chef(int scaleFactor);
+    Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth);
     bool loadTextures(int scaleFactor);
-    void update(sf::RenderWindow& window, float deltaTime, float tileWidth, 
-                float tileHeight, float wallWidth) override;
+    void update(sf::RenderWindow& window, float deltaTime) override;
+    void changeAnimation(float deltaTime);
+    void changeState(float deltaTime);
     void render(sf::RenderWindow& window) override;
 };

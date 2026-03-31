@@ -8,7 +8,7 @@ Level::Level(int scaleFactor) : Scene(scaleFactor) {
     tileWidth = tileWidth * scaleFactor;
     tileHeight = tileHeight * scaleFactor;
     wallWidth = wallWidth * scaleFactor;
-    chef = new Chef(scaleFactor);
+    chef = new Chef(scaleFactor, tileWidth, tileHeight, wallWidth);
     this->texturesLoaded = loadTextures(scaleFactor);
 }
 
@@ -36,7 +36,7 @@ bool Level::loadTextures(int scaleFactor) {
 
 void Level::update(sf::RenderWindow& window, float deltaTime) {
     this->timeElapsed += deltaTime;
-    this->chef->update(window, deltaTime, tileWidth, tileHeight, wallWidth);
+    this->chef->update(window, deltaTime);
 }
 
 void Level::render(sf::RenderWindow& window) {
