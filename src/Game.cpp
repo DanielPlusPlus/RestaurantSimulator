@@ -19,10 +19,10 @@ void Game::run() {
     while (window->isOpen()) {
         float deltaTime = clock.restart().asSeconds();
         
-        currentScene->update(*window, deltaTime);
+        currentScene->update(deltaTime);
         
         // window->clear();
-        currentScene->render(*window);
+        currentScene->render(window);
         window->display();
     }
 }

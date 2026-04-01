@@ -3,12 +3,12 @@
 #include <iostream>
 
 
-Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth) : Character(scaleFactor) {
+Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, DishesManager* dishesManager) : Character(scaleFactor), dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;
 
-    xPos = wallWidth + tileWidth * 2;
+    xPos = wallWidth + tileWidth * 2.0f;
     yPos = tileHeight * 1.5f;
     startX = xPos;
     startY = yPos;
@@ -62,9 +62,10 @@ bool Chef::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Chef::update(sf::RenderWindow& window, float deltaTime) {
+void Chef::update(float deltaTime) {
     changeAnimation(deltaTime);
     changeState(deltaTime);
+
 }
 
 void Chef::changeAnimation(float deltaTime) {
@@ -102,6 +103,9 @@ void Chef::changeState(float deltaTime) {
             idleTimer = 0.0f;
             break;
         case ChefStatesEnum::PUTTING_DOWN:
+            if(idleTimer == 0.0f) {
+                dishesManager->addDish(scaleFactor, 1);
+            }
             idleTimer += deltaTime;
             if(idleTimer > 2.0f) {
                 idleTimer = 0.0f;
@@ -142,7 +146,7 @@ void Chef::changeState(float deltaTime) {
     }
 }
 
-void Chef::render(sf::RenderWindow& window) {
+void Chef::render(sf::RenderWindow* window) {
     sf::Event event;
     std::vector<sf::Sprite>* spriteSet = &chefIdleSprites;
 
@@ -154,7 +158,7 @@ void Chef::render(sf::RenderWindow& window) {
     if(texturesLoaded && spriteIndex < spriteSet->size()) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
         sprite.setPosition(xPos, yPos);
-        window.draw(sprite);
-        std::cout << "Drawing sprite index: " << spriteIndex << " of " << spriteSet->size() << std::endl;
+        window->draw(sprite);
+        // std::cout << "Drawing sprite index: " << spriteIndex << " of " << spriteSet->size() << std::endl;
     }
 }

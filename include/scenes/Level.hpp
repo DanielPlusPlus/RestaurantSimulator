@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Scene.hpp"
-#include "../characters/Chef.hpp"
+#include "characters/Chef.hpp"
+#include "items/DishesManager.hpp"
 
 
 class Level : public Scene {
@@ -13,13 +14,14 @@ private:
     sf::Texture flowersTexture;
     sf::Sprite flowersSprite;
     bool texturesLoaded = false;
-    Chef* chef;
     float tileWidth = 16.0f;
     float tileHeight = 16.0f;
     float wallWidth = 6.0f;
+    Chef* chef;
+    DishesManager* dishesManager;
 public:
     Level(int scaleFactor);
     bool loadTextures(int scaleFactor);
-    void update(sf::RenderWindow& window, float deltaTime) override;
-    void render(sf::RenderWindow& window) override;
+    void update(float deltaTime) override;
+    void render(sf::RenderWindow* window) override;
 };

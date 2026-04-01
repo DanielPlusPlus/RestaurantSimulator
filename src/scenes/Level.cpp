@@ -8,7 +8,9 @@ Level::Level(int scaleFactor) : Scene(scaleFactor) {
     tileWidth = tileWidth * scaleFactor;
     tileHeight = tileHeight * scaleFactor;
     wallWidth = wallWidth * scaleFactor;
-    chef = new Chef(scaleFactor, tileWidth, tileHeight, wallWidth);
+    dishesManager = new DishesManager(tileWidth, tileHeight, wallWidth);
+    chef = new Chef(scaleFactor, tileWidth, tileHeight, wallWidth, dishesManager);
+    
     this->texturesLoaded = loadTextures(scaleFactor);
 }
 
@@ -34,22 +36,23 @@ bool Level::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Level::update(sf::RenderWindow& window, float deltaTime) {
+void Level::update(float deltaTime) {
     this->timeElapsed += deltaTime;
-    this->chef->update(window, deltaTime);
+    this->chef->update(deltaTime);
 }
 
-void Level::render(sf::RenderWindow& window) {
+void Level::render(sf::RenderWindow* window) {
     sf::Event event;
-    while(window.pollEvent(event)) {
+    while(window->pollEvent(event)) {
         if(event.type == sf::Event::Closed)
-            window.close();
+            window->close();
     }
     
     if(texturesLoaded) {
-        window.draw(backgroundSprite);
-        window.draw(wallsSprite);
-        window.draw(flowersSprite);
+        window->draw(backgroundSprite);
+        window->draw(wallsSprite);
+        window->draw(flowersSprite);
         this->chef->render(window);
+        this->dishesManager->render(window);
     }
 }

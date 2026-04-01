@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Character.hpp"
+#include "items/DishesManager.hpp"
 #include "enums/ChefStatesEnum.hpp"
 
 
@@ -28,11 +29,15 @@ private:
     float startX = 0.0f;
     float startY = 0.0f;
     float idleTimer = 0.0f;
-public:
-    Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth);
+
+    DishesManager* dishesManager;
+
     bool loadTextures(int scaleFactor);
-    void update(sf::RenderWindow& window, float deltaTime) override;
     void changeAnimation(float deltaTime);
     void changeState(float deltaTime);
-    void render(sf::RenderWindow& window) override;
+public:
+    Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, 
+         DishesManager* dishesManager);
+    void update(float deltaTime) override;
+    void render(sf::RenderWindow* window) override;
 };
