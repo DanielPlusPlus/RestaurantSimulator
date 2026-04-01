@@ -10,7 +10,7 @@ DishesManager::DishesManager(float tileWidth, float tileHeight, float wallWidth)
 
 void DishesManager::addDish(int scaleFactor, int tableNumber) {
     srand(time(NULL));
-    Dish* newDish = new Dish(scaleFactor, dishesTextures[rand() % (sizeof(dishesTextures) / sizeof(std::string))], 
+    Dish* newDish = new Dish(scaleFactor, dishesTexturesPaths[rand() % (sizeof(dishesTexturesPaths) / sizeof(std::string))], 
                              readyDishesXPos, readyDishesYPos, tableNumber);
     readyDishes.push(newDish);
 }

@@ -1,0 +1,2 @@
+#include "characters/CharactersManager.hpp"
+

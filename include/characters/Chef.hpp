@@ -7,6 +7,11 @@
 
 class Chef : public Character {
 private:
+    const CharactersTexturesPaths chefTexturesPaths = CharactersTexturesPaths{
+        "assets/characters/chef/chef_idle.png", 
+        "assets/characters/chef/chef_run.png", 
+        "assets/characters/chef/chef_sit.png"
+    };
     sf::Texture chefIdleTexture;
     sf::Texture chefRunTexture;
     sf::Texture chefSitTexture;
@@ -34,10 +39,10 @@ private:
 
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
-    void changeState(float deltaTime);
+    void changeState(float deltaTime, int scaleFactor);
 public:
     Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, 
          DishesManager* dishesManager);
-    void update(float deltaTime) override;
+    void update(float deltaTime, int scaleFactor) override;
     void render(sf::RenderWindow* window) override;
 };

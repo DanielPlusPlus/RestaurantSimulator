@@ -37,8 +37,7 @@ bool Level::loadTextures(int scaleFactor) {
 }
 
 void Level::update(float deltaTime) {
-    this->timeElapsed += deltaTime;
-    this->chef->update(deltaTime);
+    this->chef->update(deltaTime, scaleFactor);
 }
 
 void Level::render(sf::RenderWindow* window) {

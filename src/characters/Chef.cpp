@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, DishesManager* dishesManager) : Character(scaleFactor), dishesManager(dishesManager) {
+Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, DishesManager* dishesManager) : dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;
@@ -23,7 +23,7 @@ bool Chef::loadTextures(int scaleFactor) {
     int frameWidth = 16;
     int frameHeight = 32;
 
-    if(!chefIdleTexture.loadFromFile("assets/characters/chef/chef_idle.png"))
+    if(!chefIdleTexture.loadFromFile(chefTexturesPaths.idleTexturePath))
         return false;
     int idleFrameCount = chefIdleTexture.getSize().x / frameWidth;
     chefIdleSprites.clear();
@@ -35,7 +35,7 @@ bool Chef::loadTextures(int scaleFactor) {
         chefIdleSprites.push_back(sprite);
     }
 
-    if(!chefRunTexture.loadFromFile("assets/characters/chef/chef_run.png"))
+    if(!chefRunTexture.loadFromFile(chefTexturesPaths.runTexturePath))
         return false;
     int runFrameCount = chefRunTexture.getSize().x / frameWidth;
     chefRunSprites.clear();
@@ -47,7 +47,7 @@ bool Chef::loadTextures(int scaleFactor) {
         chefRunSprites.push_back(sprite);
     }
 
-    if(!chefSitTexture.loadFromFile("assets/characters/chef/chef_sit.png"))
+    if(!chefSitTexture.loadFromFile(chefTexturesPaths.sitTexturePath))
         return false;
     int sitFrameCount = chefSitTexture.getSize().x / frameWidth;
     chefSitSprites.clear();
@@ -62,10 +62,9 @@ bool Chef::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Chef::update(float deltaTime) {
+void Chef::update(float deltaTime, int scaleFactor) {
     changeAnimation(deltaTime);
-    changeState(deltaTime);
-
+    changeState(deltaTime, scaleFactor);
 }
 
 void Chef::changeAnimation(float deltaTime) {
@@ -79,7 +78,7 @@ void Chef::changeAnimation(float deltaTime) {
     }
 }
 
-void Chef::changeState(float deltaTime) {
+void Chef::changeState(float deltaTime, int scaleFactor) {
     switch(state) {
         case ChefStatesEnum::TURNING_RIGHT:
             animDirection = Directions::RIGHT;

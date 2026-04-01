@@ -8,7 +8,7 @@
 
 class TablesManager {
 private:
-    const std::string twoChairstablesTextures[8] = {
+    const std::string twoChairstablesTexturesPaths[8] = {
         "assets/interiors/tables/table2_1.png",
         "assets/interiors/tables/table2_2.png",
         "assets/interiors/tables/table2_3.png",
@@ -18,7 +18,7 @@ private:
         "assets/interiors/tables/table2_7.png",
         "assets/interiors/tables/table2_8.png"
     };
-    const std::string fourChairstablesTextures[3] = {
+    const std::string fourChairstablesTexturesPaths[3] = {
         "assets/interiors/tables/table4_1.png",
         "assets/interiors/tables/table4_2.png",
         "assets/interiors/tables/table4_3.png"
