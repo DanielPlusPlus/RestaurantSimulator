@@ -107,7 +107,7 @@ void Chef::changeState(float deltaTime) {
                 dishesManager->addDish(scaleFactor, 1);
             }
             idleTimer += deltaTime;
-            if(idleTimer > 2.0f) {
+            if(idleTimer > 1.0f) {
                 idleTimer = 0.0f;
                 state = ChefStatesEnum::TURNING_LEFT;
             }

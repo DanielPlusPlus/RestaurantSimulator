@@ -3,6 +3,7 @@
 #include "Scene.hpp"
 #include "characters/Chef.hpp"
 #include "items/DishesManager.hpp"
+#include "interiors/TablesManager.hpp"
 
 
 class Level : public Scene {
@@ -19,6 +20,7 @@ private:
     float wallWidth = 6.0f;
     Chef* chef;
     DishesManager* dishesManager;
+    TablesManager* tablesManager;
 public:
     Level(int scaleFactor);
     bool loadTextures(int scaleFactor);

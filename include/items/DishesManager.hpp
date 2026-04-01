@@ -10,7 +10,7 @@ class DishesManager {
 private:
     float readyDishesXPos = 0.0f;
     float readyDishesYPos = 0.0f;
-    std::vector<std::string> dishesTextures = {
+    const std::string dishesTextures[5] = {
         "assets/items/dishes/soup.png",
         "assets/items/dishes/soup_2.png",
         "assets/items/dishes/cake.png",
