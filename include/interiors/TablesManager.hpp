@@ -2,6 +2,8 @@
 
 #include "TwoChairsTable.hpp"
 #include "FourChairsTable.hpp"
+#include "structures/TwoChairsTablesPositions.hpp"
+#include "structures/FourChairsTablesPositions.hpp"
 
 #include <queue>
 #include <SFML/Graphics.hpp>
@@ -24,6 +26,22 @@ private:
         "assets/interiors/tables/table4_2.png",
         "assets/interiors/tables/table4_3.png"
     };
+    const TwoChairsTablesPositions twoChairsTablesPositions[8] = {
+        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
+        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
+        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
+        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
+        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
+        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
+        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
+        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f)
+    };
+    const FourChairsTablesPositions fourChairsTablesPositions[3] = {
+        FourChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+        FourChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+        FourChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f)
+    };
+
     std::vector<TwoChairsTable*> twoChairsTables;
     std::vector<FourChairsTable*> fourChairsTables;
 public:

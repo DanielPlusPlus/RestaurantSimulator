@@ -9,12 +9,12 @@ TablesManager::TablesManager(int scaleFactor, int twoChairsTablesNumber, int fou
 void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber) {
     for(int i = 0; i < twoChairsTablesNumber; i++) {
         TwoChairsTable* newTable = new TwoChairsTable(scaleFactor, twoChairstablesTexturesPaths[i % (sizeof(twoChairstablesTexturesPaths) / sizeof(std::string))], 
-                                    i + 1);
+                                                      twoChairsTablesPositions[i], i + 1);
         twoChairsTables.push_back(newTable);
     }
     for(int i = 0; i < fourChairsTablesNumber; i++) {
         FourChairsTable* newTable = new FourChairsTable(scaleFactor, fourChairstablesTexturesPaths[i % (sizeof(fourChairstablesTexturesPaths) / sizeof(std::string))], 
-                                    i + 1);
+                                                        fourChairsTablesPositions[i], i + 1);
         fourChairsTables.push_back(newTable);
     }
 }
