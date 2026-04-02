@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Table.hpp"
+#include "TwoChairsTable.hpp"
+#include "FourChairsTable.hpp"
 
 #include <queue>
 #include <SFML/Graphics.hpp>
@@ -23,8 +24,8 @@ private:
         "assets/interiors/tables/table4_2.png",
         "assets/interiors/tables/table4_3.png"
     };
-    std::vector<Table*> twoChairsTables;
-    std::vector<Table*> fourChairsTables;
+    std::vector<TwoChairsTable*> twoChairsTables;
+    std::vector<FourChairsTable*> fourChairsTables;
 public:
     TablesManager(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber);
     void setUpTables(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber);

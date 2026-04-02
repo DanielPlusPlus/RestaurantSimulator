@@ -4,14 +4,13 @@
 
 
 class Table {
-private:
+protected:
     sf::Texture tableTexture;
     sf::Sprite tableSprite;
     int tableNumber = 0;
-    int numberOfSeats = 2;
 
-    bool loadTexture(int scaleFactor, std::string texturePath);
+    virtual bool loadTexture(int scaleFactor, std::string texturePath) = 0;
 public:
-    Table(int scaleFactor, std::string texturePath, int tableNumber, int numberOfSeats);
-    void render(sf::RenderWindow* window);
+    Table(int tableNumber) : tableNumber(tableNumber) {};
+    virtual void render(sf::RenderWindow* window) = 0;
 };
