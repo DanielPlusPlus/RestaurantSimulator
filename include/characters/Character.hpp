@@ -1,5 +1,6 @@
 #pragma once
 
+#include "structures/Positions.hpp"
 #include "structures/CharactersTexturesPaths.hpp"
 #include "enums/DirectionsEnum.hpp"
 

@@ -3,15 +3,16 @@
 #include <iostream>
 
 
-Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, DishesManager* dishesManager) : dishesManager(dishesManager) {
+Chef::Chef(int scaleFactor, float tileWidth, float moveXSpeed, 
+           float moveYSpeed, int chefsNumber, Positions positions, 
+           DishesManager* dishesManager) : positions(positions), 
+           dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
-    width = width * scaleFactor;
-    height = height * scaleFactor;
+    width *= scaleFactor;
+    height *= scaleFactor;
+    this->positions.xPos *= scaleFactor;
+    this->positions.yPos *= scaleFactor;
 
-    xPos = wallWidth + tileWidth * 2.0f;
-    yPos = tileHeight * 1.5f;
-    startX = xPos;
-    startY = yPos;
     state = ChefStatesEnum::TURNING_RIGHT;
     moveDistance = 5.0f * tileWidth;
     moveSpeed = tileWidth;
@@ -90,7 +91,7 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
                 float moveStep = moveSpeed * deltaTime;
                 float remaining = moveDistance - moveProgress;
                 float step = (moveStep < remaining) ? moveStep : remaining;
-                xPos += step;
+                positions.xPos += step;
                 moveProgress += step;
             }
             else {
@@ -121,7 +122,7 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
                 float moveStep = moveSpeed * deltaTime;
                 float remaining = moveDistance - moveProgress;
                 float step = (moveStep < remaining) ? moveStep : remaining;
-                xPos -= step;
+                positions.xPos -= step;
                 moveProgress += step;
             }
             else {
@@ -156,7 +157,7 @@ void Chef::render(sf::RenderWindow* window) {
     int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
     if(texturesLoaded && spriteIndex < spriteSet->size()) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
-        sprite.setPosition(xPos, yPos);
+        sprite.setPosition(positions.xPos, positions.yPos);
         window->draw(sprite);
         // std::cout << "Drawing sprite index: " << spriteIndex << " of " << spriteSet->size() << std::endl;
     }

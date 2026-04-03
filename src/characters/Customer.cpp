@@ -5,10 +5,10 @@ Customer::Customer(int scaleFactor, float tileWidth, float tileHeight, float wal
     width = width * scaleFactor;
     height = height * scaleFactor;
 
-    xPos = wallWidth + tileWidth * 2.0f;
-    yPos = tileHeight * 1.5f;
-    startX = xPos;
-    startY = yPos;
+    positions.xPos = wallWidth + tileWidth * 2.0f;
+    positions.yPos = tileHeight * 1.5f;
+    startX = positions.xPos;
+    startY = positions.yPos;
     moveDistance = 5.0f * tileWidth;
     moveSpeed = tileWidth;
     moveProgress = 0.0f;

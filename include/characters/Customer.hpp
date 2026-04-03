@@ -13,8 +13,7 @@ private:
     std::vector<sf::Sprite> customerIdleSprites;
     std::vector<sf::Sprite> customerRunSprites;
     std::vector<sf::Sprite> customerSitSprites;
-    float xPos = 0.0f;
-    float yPos = 0.0f;
+    Positions positions{1.0f, 1.0f};
     float width = 16.0f;
     float height = 32.0f;
     bool texturesLoaded = false;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "structures/Positions.hpp"
 #include "Dish.hpp"
 
 #include <queue>
@@ -8,8 +9,7 @@
 
 class DishesManager {
 private:
-    float readyDishesXPos = 0.0f;
-    float readyDishesYPos = 0.0f;
+    Positions readyDishesPositions{134.0f, 40.0f};
     const std::string dishesTexturesPaths[5] = {
         "assets/items/dishes/soup.png",
         "assets/items/dishes/soup_2.png",
@@ -19,7 +19,7 @@ private:
     };
     std::queue<Dish*> readyDishes;
 public:
-    DishesManager(float tileWidth, float tileHeight, float wallWidth);
+    DishesManager(int scaleFactor);
     void addDish(int scaleFactor, int tableNumber);
     void removeDish();
     void render(sf::RenderWindow* window);

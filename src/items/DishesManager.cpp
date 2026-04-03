@@ -3,15 +3,15 @@
 #include <ctime>
 #include <cstdlib>
 
-DishesManager::DishesManager(float tileWidth, float tileHeight, float wallWidth) {
-    readyDishesXPos = wallWidth + tileWidth * 8.0f;
-    readyDishesYPos = tileHeight * 2.5f;
+DishesManager::DishesManager(int scaleFactor) {
+    readyDishesPositions.xPos *= scaleFactor;
+    readyDishesPositions.yPos *= scaleFactor;
 }
 
 void DishesManager::addDish(int scaleFactor, int tableNumber) {
     srand(time(NULL));
     Dish* newDish = new Dish(scaleFactor, dishesTexturesPaths[rand() % (sizeof(dishesTexturesPaths) / sizeof(std::string))], 
-                             readyDishesXPos, readyDishesYPos, tableNumber);
+                             readyDishesPositions, tableNumber);
     readyDishes.push(newDish);
 }
 

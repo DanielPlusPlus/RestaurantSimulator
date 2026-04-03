@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ChairPosition.hpp"
+#include "Positions.hpp"
 
 
 struct TwoChairsTablesPositions {
-    ChairPosition chair1;
-    ChairPosition chair2;
+    Positions chair1;
+    Positions chair2;
     TwoChairsTablesPositions(
         float chair1XPos, float chair1YPos,
         float chair2XPos, float chair2YPos

@@ -8,7 +8,7 @@
 class Game {
 private:
     int width = 302;
-    int height = 218;
+    int height = 234;
     int scaleFactor = 4;
     sf::RenderWindow* window;
     Scene* currentScene;

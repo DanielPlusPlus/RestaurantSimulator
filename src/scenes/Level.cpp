@@ -5,12 +5,11 @@
 
 
 Level::Level(int scaleFactor) : Scene(scaleFactor) {
-    tileWidth = tileWidth * scaleFactor;
-    tileHeight = tileHeight * scaleFactor;
-    wallWidth = wallWidth * scaleFactor;
-    dishesManager = new DishesManager(tileWidth, tileHeight, wallWidth);
+    tileWidth *= scaleFactor;
+    tileHeight *= scaleFactor;
+    dishesManager = new DishesManager(scaleFactor);
     tablesManager = new TablesManager(scaleFactor, 8, 3); // do poprawy - liczba stolików powinna być parametrem, a nie stałą
-    chef = new Chef(scaleFactor, tileWidth, tileHeight, wallWidth, dishesManager);
+    charactersManager = new CharactersManager(scaleFactor, tileWidth, tileHeight, 3, 0, dishesManager); // do poprawy - liczba postaci powinna być parametrem, a nie stałą
     this->texturesLoaded = loadTextures(scaleFactor);
 }
 
@@ -37,7 +36,7 @@ bool Level::loadTextures(int scaleFactor) {
 }
 
 void Level::update(float deltaTime) {
-    this->chef->update(deltaTime, scaleFactor);
+    this->charactersManager->update(deltaTime, scaleFactor);
 }
 
 void Level::render(sf::RenderWindow* window) {
@@ -49,9 +48,9 @@ void Level::render(sf::RenderWindow* window) {
     
     if(texturesLoaded) {
         window->draw(backgroundSprite);
-        window->draw(wallsSprite);
         window->draw(flowersSprite);
-        this->chef->render(window);
+        window->draw(wallsSprite);
+        this->charactersManager->render(window);
         this->dishesManager->render(window);
         this->tablesManager->render(window);
     }

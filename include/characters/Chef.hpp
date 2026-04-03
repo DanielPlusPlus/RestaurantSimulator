@@ -12,14 +12,14 @@ private:
         "assets/characters/chef/chef_run.png", 
         "assets/characters/chef/chef_sit.png"
     };
+    int chefNumber = 0;
     sf::Texture chefIdleTexture;
     sf::Texture chefRunTexture;
     sf::Texture chefSitTexture;
     std::vector<sf::Sprite> chefIdleSprites;
     std::vector<sf::Sprite> chefRunSprites;
     std::vector<sf::Sprite> chefSitSprites;
-    float xPos = 0.0f;
-    float yPos = 0.0f;
+    Positions positions;
     float width = 16.0f;
     float height = 32.0f;
     bool texturesLoaded = false;
@@ -31,8 +31,6 @@ private:
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
     float moveSpeed = 0.0f;
-    float startX = 0.0f;
-    float startY = 0.0f;
     float idleTimer = 0.0f;
 
     DishesManager* dishesManager;
@@ -41,8 +39,9 @@ private:
     void changeAnimation(float deltaTime);
     void changeState(float deltaTime, int scaleFactor);
 public:
-    Chef(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, 
-         DishesManager* dishesManager);
+    Chef(int scaleFactor, float tileWidth, float moveXSpeed, 
+        float moveYSpeed, int chefsNumber, Positions positions, 
+        DishesManager* dishesManager);
     void update(float deltaTime, int scaleFactor) override;
     void render(sf::RenderWindow* window) override;
 };

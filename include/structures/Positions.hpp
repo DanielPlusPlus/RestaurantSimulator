@@ -1,7 +1,7 @@
 #pragma once
 
 
-struct ChairPosition {
+struct Positions {
     float xPos;
     float yPos;
 };

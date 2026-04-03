@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Scene.hpp"
-#include "characters/Chef.hpp"
 #include "items/DishesManager.hpp"
 #include "interiors/TablesManager.hpp"
+#include "characters/CharactersManager.hpp"
 
 
 class Level : public Scene {
@@ -17,10 +17,9 @@ private:
     bool texturesLoaded = false;
     float tileWidth = 16.0f;
     float tileHeight = 16.0f;
-    float wallWidth = 6.0f;
-    Chef* chef;
     DishesManager* dishesManager;
     TablesManager* tablesManager;
+    CharactersManager* charactersManager;
 public:
     Level(int scaleFactor);
     bool loadTextures(int scaleFactor);

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "ChairPosition.hpp"
+#include "Positions.hpp"
 
 
 struct FourChairsTablesPositions {
-    ChairPosition chair1;
-    ChairPosition chair2;
-    ChairPosition chair3;
-    ChairPosition chair4;
+    Positions chair1;
+    Positions chair2;
+    Positions chair3;
+    Positions chair4;
     FourChairsTablesPositions(
         float chair1XPos, float chair1YPos,
         float chair2XPos, float chair2YPos,
