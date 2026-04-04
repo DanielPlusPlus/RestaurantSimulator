@@ -9,7 +9,7 @@
 
 class DishesManager {
 private:
-    Positions readyDishesPositions{134.0f, 40.0f};
+    Positions readyDishesPositions{134.0f, 47.0f};
     const std::string dishesTexturesPaths[5] = {
         "assets/items/dishes/soup.png",
         "assets/items/dishes/soup_2.png",
@@ -22,5 +22,6 @@ public:
     DishesManager(int scaleFactor);
     void addDish(int scaleFactor, int tableNumber);
     void removeDish();
+    Positions getReadyDishesPositions();
     void render(sf::RenderWindow* window);
 };

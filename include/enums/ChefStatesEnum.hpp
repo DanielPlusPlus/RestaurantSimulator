@@ -1,4 +1,8 @@
+#pragma once
+
 enum class ChefStatesEnum {
+    WAITING_TO_START,
+    COOKING,
     TURNING_RIGHT,
     MOVING_RIGHT,
     PREPARING_TO_PUTTING_DOWN,
@@ -6,5 +10,6 @@ enum class ChefStatesEnum {
     TURNING_LEFT,
     MOVING_LEFT,
     TURNING_UP,
-    COOKING
+    TURNING_DOWN,
+    PREPARING_TO_COOKING
 };

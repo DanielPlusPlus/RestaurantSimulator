@@ -49,8 +49,8 @@ void Level::render(sf::RenderWindow* window) {
     if(texturesLoaded) {
         window->draw(backgroundSprite);
         window->draw(flowersSprite);
-        window->draw(wallsSprite);
         this->charactersManager->render(window);
+        window->draw(wallsSprite);
         this->dishesManager->render(window);
         this->tablesManager->render(window);
     }

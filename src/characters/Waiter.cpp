@@ -1,6 +1,6 @@
 #include "characters/Waiter.hpp"
 
-Waiter::Waiter(int scaleFactor, float tileWidth, float tileHeight, float wallWidth) {
+Waiter::Waiter(int scaleFactor, float tileWidth, float tileHeight, float wallWidth) : Character(Positions{0.0f, 0.0f}) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;

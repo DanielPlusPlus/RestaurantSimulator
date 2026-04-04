@@ -1,6 +1,6 @@
 #include "characters/Customer.hpp"
 
-Customer::Customer(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, CharactersTexturesPaths texturesPaths) {
+Customer::Customer(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, CharactersTexturesPaths texturesPaths) : Character(Positions{0.0f, 0.0f}) {
     texturesLoaded = loadTextures(scaleFactor, texturesPaths);
     width = width * scaleFactor;
     height = height * scaleFactor;

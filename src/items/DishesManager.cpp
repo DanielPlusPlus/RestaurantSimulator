@@ -1,7 +1,6 @@
 #include "items/DishesManager.hpp"
 
-#include <ctime>
-#include <cstdlib>
+#include <random>
 
 DishesManager::DishesManager(int scaleFactor) {
     readyDishesPositions.xPos *= scaleFactor;
@@ -9,10 +8,15 @@ DishesManager::DishesManager(int scaleFactor) {
 }
 
 void DishesManager::addDish(int scaleFactor, int tableNumber) {
-    srand(time(NULL));
-    Dish* newDish = new Dish(scaleFactor, dishesTexturesPaths[rand() % (sizeof(dishesTexturesPaths) / sizeof(std::string))], 
+    extern std::mt19937 globalRNG;
+    std::uniform_int_distribution<int> dist(2, 5);
+    Dish* newDish = new Dish(scaleFactor, dishesTexturesPaths[dist(globalRNG) % (sizeof(dishesTexturesPaths) / sizeof(std::string))], 
                              readyDishesPositions, tableNumber);
     readyDishes.push(newDish);
+}
+
+Positions DishesManager::getReadyDishesPositions() {
+    return readyDishesPositions;
 }
 
 void DishesManager::removeDish() {

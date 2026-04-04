@@ -1,6 +1,7 @@
 #pragma once
 
 #include "structures/CharactersTexturesPaths.hpp"
+#include "enums/DirectionsEnum.hpp"
 #include "Chef.hpp"
 #include "Waiter.hpp"
 #include "Customer.hpp"
@@ -19,9 +20,14 @@ private:
                                 "assets/characters/customer_2/customer2_sit.png"}
     };
     const Positions chefsStartPositions[3] = {
+        Positions{102.0f, 40.0f},
         Positions{38.0f, 24.0f},
-        Positions{38.0f, 24.0f},
-        Positions{38.0f, 24.0f}
+        Positions{38.0f, 40.0f}
+    };
+    const enum Directions chefsStartDirections[3] = {
+        Directions::DOWN,
+        Directions::UP,
+        Directions::DOWN
     };
     const Positions waitersStartPositions[3] = {
         Positions{38.0f, 24.0f},
@@ -34,9 +40,8 @@ private:
     std::vector<Waiter*> waiters;
     std::queue<Customer*> waitingCustomers;
     std::vector<Customer*> insideCustomers;
-    void addChefs(int scaleFactor, float tileWidth, float moveXSpeed, 
-                  float moveYSpeed, int chefsNumber, Positions positions, 
-                  DishesManager* dishesManager);
+    void addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
+                  float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, int waitersNumber);
     void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, 
                      CharactersTexturesPaths texturesPaths);

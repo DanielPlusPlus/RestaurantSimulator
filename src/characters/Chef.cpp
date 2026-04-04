@@ -1,23 +1,28 @@
 #include "characters/Chef.hpp"
 
 #include <iostream>
+#include <random>
 
 
-Chef::Chef(int scaleFactor, float tileWidth, float moveXSpeed, 
-           float moveYSpeed, int chefsNumber, Positions positions, 
-           DishesManager* dishesManager) : positions(positions), 
-           dishesManager(dishesManager) {
+Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
+           float moveYSpeed, int chefNumber, Positions startPositions, Directions startDirection,
+           DishesManager* dishesManager) : Character(startPositions), startAnimDirection(startDirection), 
+           chefNumber(chefNumber), dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
     width *= scaleFactor;
     height *= scaleFactor;
+    this->startPositions.xPos *= scaleFactor;
+    this->startPositions.yPos *= scaleFactor;
     this->positions.xPos *= scaleFactor;
     this->positions.yPos *= scaleFactor;
+    Positions dishesPositions = dishesManager->getReadyDishesPositions();
+    destinationPositions.xPos = dishesPositions.xPos - tileWidth;
+    destinationPositions.yPos = dishesPositions.yPos - tileHeight;
 
-    state = ChefStatesEnum::TURNING_RIGHT;
-    moveDistance = 5.0f * tileWidth;
+    state = ChefStatesEnum::PREPARING_TO_COOKING;
     moveSpeed = tileWidth;
     moveProgress = 0.0f;
-    animDirection = Directions::UP;
+    animDirection = startAnimDirection;
 }
 
 bool Chef::loadTextures(int scaleFactor) {
@@ -81,23 +86,41 @@ void Chef::changeAnimation(float deltaTime) {
 
 void Chef::changeState(float deltaTime, int scaleFactor) {
     switch(state) {
+        case ChefStatesEnum::PREPARING_TO_COOKING: {
+            state = ChefStatesEnum::COOKING;
+            extern std::mt19937 globalRNG;
+            std::uniform_int_distribution<int> dist(2, 5);
+            cookingTime = dist(globalRNG);
+        break;
+        }
+        case ChefStatesEnum::COOKING:
+            idleTimer += deltaTime;
+            if(idleTimer > cookingTime) {
+                idleTimer = 0.0f;
+                state = ChefStatesEnum::TURNING_RIGHT;
+            }
+            break;
         case ChefStatesEnum::TURNING_RIGHT:
             animDirection = Directions::RIGHT;
             state = ChefStatesEnum::MOVING_RIGHT;
-            moveProgress = 0.0f;
             break;
-        case ChefStatesEnum::MOVING_RIGHT:
-            if(moveProgress < moveDistance) {
-                float moveStep = moveSpeed * deltaTime;
-                float remaining = moveDistance - moveProgress;
+        case ChefStatesEnum::MOVING_RIGHT: {
+            float moveStep = moveSpeed * deltaTime;
+            float targetX = destinationPositions.xPos;
+            if(positions.xPos < destinationPositions.xPos) {
+                float remaining = targetX - positions.xPos;
                 float step = (moveStep < remaining) ? moveStep : remaining;
                 positions.xPos += step;
-                moveProgress += step;
+                if(positions.xPos >= targetX) {
+                    positions.xPos = targetX;
+                    state = ChefStatesEnum::PREPARING_TO_PUTTING_DOWN;
+                }
             }
             else {
                 state = ChefStatesEnum::PREPARING_TO_PUTTING_DOWN;
             }
             break;
+        }
         case ChefStatesEnum::PREPARING_TO_PUTTING_DOWN:
             state = ChefStatesEnum::PUTTING_DOWN;
             idleTimer = 0.0f;
@@ -115,35 +138,49 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
         case ChefStatesEnum::TURNING_LEFT:
             animDirection = Directions::LEFT;
             state = ChefStatesEnum::MOVING_LEFT;
-            moveProgress = 0.0f;
             break;
-        case ChefStatesEnum::MOVING_LEFT:
-            if(moveProgress < moveDistance) {
-                float moveStep = moveSpeed * deltaTime;
-                float remaining = moveDistance - moveProgress;
+        case ChefStatesEnum::MOVING_LEFT: {
+            float moveStep = moveSpeed * deltaTime;
+            float startX = destinationPositions.xPos;
+            float targetX = positions.xPos - moveDistance;
+            if(positions.xPos > startPositions.xPos) {
+                float remaining = positions.xPos - startPositions.xPos;
                 float step = (moveStep < remaining) ? moveStep : remaining;
                 positions.xPos -= step;
-                moveProgress += step;
+                if (positions.xPos <= startPositions.xPos) {
+                    positions.xPos = startPositions.xPos;
+                    state = defineStateByStartDirection();
+                }
             }
             else {
-                state = ChefStatesEnum::TURNING_UP;
+                state = defineStateByStartDirection();
             }
             break;
+        }
         case ChefStatesEnum::TURNING_UP:
             animDirection = Directions::UP;
-            state = ChefStatesEnum::COOKING;
+            state = ChefStatesEnum::PREPARING_TO_COOKING;
             idleTimer = 0.0f;
             break;
-        case ChefStatesEnum::COOKING:
-            idleTimer += deltaTime;
-            if(idleTimer > 5.0f) {
-                idleTimer = 0.0f;
-                state = ChefStatesEnum::TURNING_RIGHT;
-            }
+        case ChefStatesEnum::TURNING_DOWN:
+            animDirection = Directions::DOWN;
+            state = ChefStatesEnum::PREPARING_TO_COOKING;
+            idleTimer = 0.0f;
             break;
         default:
             break;
     }
+}
+
+enum ChefStatesEnum Chef::defineStateByStartDirection() {
+    if(startAnimDirection == Directions::UP) {
+        return ChefStatesEnum::TURNING_UP;
+    }
+    else if(startAnimDirection == Directions::DOWN) {
+        return ChefStatesEnum::TURNING_DOWN;
+    }
+    // wyjatek trzeba obsłużyć, ale na razie zakładam, że kucharze zawsze będą zaczynać animację zwróceni w górę lub w dół
+    return ChefStatesEnum::TURNING_UP;
 }
 
 void Chef::render(sf::RenderWindow* window) {
