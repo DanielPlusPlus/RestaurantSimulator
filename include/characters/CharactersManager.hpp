@@ -12,12 +12,12 @@
 class CharactersManager {
 private:
     const CharactersTexturesPaths customersTexturesPaths[2] = {
-        CharactersTexturesPaths{"assets/characters/customer_1/customer1_idle.png", 
-                                "assets/characters/customer_1/customer1_run.png", 
-                                "assets/characters/customer_1/customer1_sit.png"},
-        CharactersTexturesPaths{"assets/characters/customer_2/customer2_idle.png", 
-                                "assets/characters/customer_2/customer2_run.png", 
-                                "assets/characters/customer_2/customer2_sit.png"}
+        CharactersTexturesPaths{"assets/characters/customer_1/customer_1_idle.png", 
+                                "assets/characters/customer_1/customer_1_run.png", 
+                                "assets/characters/customer_1/customer_1_sit.png"},
+        CharactersTexturesPaths{"assets/characters/customer_2/customer_2_idle.png", 
+                                "assets/characters/customer_2/customer_2_run.png", 
+                                "assets/characters/customer_2/customer_2_sit.png"}
     };
     const Positions chefsStartPositions[3] = {
         Positions{102.0f, 40.0f},
@@ -34,21 +34,28 @@ private:
         Positions{38.0f, 24.0f},
         Positions{38.0f, 24.0f}
     };
-    const Positions customersStartPosition{38.0f, 24.0f};
+    const Positions customersStartPosition{302.0f, 178.0f};
+    // y - 162, x - 131 lewa, 171 prawa, srodek 131 + (171 - 131) / 2 = 151
+    // const Positions waitersQueueServingPositions = Positions{143.0f, 162.0f};
+    const Positions rightDoorPosition = Positions{155.0f, 162.0f};
+    
+    float moveXSpeed = 0.0f;
+    float moveYSpeed = 0.0f;
+    float timeToAddCustomer = 0.0f;
+    float addCustomerTimer = 0.0f;
 
     std::vector<Chef*> chefs;
     std::vector<Waiter*> waiters;
-    std::queue<Customer*> waitingCustomers;
+    std::vector<Customer*> waitingCustomers;
     std::vector<Customer*> insideCustomers;
     void addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, int waitersNumber);
-    void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, 
-                     CharactersTexturesPaths texturesPaths);
+    void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
     void removeCustomer();
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
-    void update(float deltaTime, int scaleFactor);
+    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight);
     void render(sf::RenderWindow* window);
 };

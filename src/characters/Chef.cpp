@@ -1,6 +1,5 @@
 #include "characters/Chef.hpp"
 
-#include <iostream>
 #include <random>
 
 
@@ -15,12 +14,11 @@ Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed,
     this->startPositions.yPos *= scaleFactor;
     this->positions.xPos *= scaleFactor;
     this->positions.yPos *= scaleFactor;
-    Positions dishesPositions = dishesManager->getReadyDishesPositions();
-    destinationPositions.xPos = dishesPositions.xPos - tileWidth;
-    destinationPositions.yPos = dishesPositions.yPos - tileHeight;
+    destinationPositions = dishesManager->getReadyDishesPositions();
+    destinationPositions.xPos -= tileWidth;
 
     state = ChefStatesEnum::PREPARING_TO_COOKING;
-    moveSpeed = tileWidth;
+    moveSpeed = moveXSpeed;
     moveProgress = 0.0f;
     animDirection = startAnimDirection;
 }
@@ -91,7 +89,7 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
             extern std::mt19937 globalRNG;
             std::uniform_int_distribution<int> dist(2, 5);
             cookingTime = dist(globalRNG);
-        break;
+            break;
         }
         case ChefStatesEnum::COOKING:
             idleTimer += deltaTime;
@@ -184,7 +182,6 @@ enum ChefStatesEnum Chef::defineStateByStartDirection() {
 }
 
 void Chef::render(sf::RenderWindow* window) {
-    sf::Event event;
     std::vector<sf::Sprite>* spriteSet = &chefIdleSprites;
 
     int framesPerAnim = 6;
@@ -196,6 +193,5 @@ void Chef::render(sf::RenderWindow* window) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
         sprite.setPosition(positions.xPos, positions.yPos);
         window->draw(sprite);
-        // std::cout << "Drawing sprite index: " << spriteIndex << " of " << spriteSet->size() << std::endl;
     }
 }

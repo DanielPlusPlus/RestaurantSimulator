@@ -2,6 +2,7 @@
 
 enum class ChefStatesEnum {
     WAITING_TO_START,
+    PREPARING_TO_COOKING,
     COOKING,
     TURNING_RIGHT,
     MOVING_RIGHT,
@@ -10,6 +11,5 @@ enum class ChefStatesEnum {
     TURNING_LEFT,
     MOVING_LEFT,
     TURNING_UP,
-    TURNING_DOWN,
-    PREPARING_TO_COOKING
+    TURNING_DOWN
 };

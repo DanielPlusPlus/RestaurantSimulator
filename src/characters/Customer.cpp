@@ -1,18 +1,25 @@
 #include "characters/Customer.hpp"
 
-Customer::Customer(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, CharactersTexturesPaths texturesPaths) : Character(Positions{0.0f, 0.0f}) {
-    texturesLoaded = loadTextures(scaleFactor, texturesPaths);
-    width = width * scaleFactor;
-    height = height * scaleFactor;
 
-    positions.xPos = wallWidth + tileWidth * 2.0f;
-    positions.yPos = tileHeight * 1.5f;
-    startX = positions.xPos;
-    startY = positions.yPos;
-    moveDistance = 5.0f * tileWidth;
+Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
+         float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
+         Positions rightDoorPositions) : Character(startPositions), 
+         customerNumber(customerNumber), queueStartingPositions(rightDoorPositions) {
+    texturesLoaded = loadTextures(scaleFactor, texturesPaths);
+    width *= scaleFactor;
+    height *= scaleFactor;
+    this->startPositions.xPos *= scaleFactor;
+    this->startPositions.yPos *= scaleFactor;
+    this->positions.xPos *= scaleFactor;
+    this->positions.yPos *= scaleFactor;
+    this->queueStartingPositions.xPos *= scaleFactor;
+    this->queueStartingPositions.yPos *= scaleFactor;
+    this->queueStartingPositions.yPos -= tileHeight;
+
+    state = CustomerStatesEnum::PREPARING_TO_MOVING;
     moveSpeed = tileWidth;
     moveProgress = 0.0f;
-    animDirection = Directions::UP;
+    animDirection = Directions::LEFT;
 }
 
 bool Customer::loadTextures(int scaleFactor, CharactersTexturesPaths texturesPaths) {
@@ -59,7 +66,7 @@ bool Customer::loadTextures(int scaleFactor, CharactersTexturesPaths texturesPat
 
 void Customer::update(float deltaTime, int scaleFactor) {
     changeAnimation(deltaTime);
-    changeState(deltaTime, scaleFactor);
+    changeState(deltaTime);
 }
 
 void Customer::changeAnimation(float deltaTime) {
@@ -73,12 +80,48 @@ void Customer::changeAnimation(float deltaTime) {
     }
 }
 
-void Customer::changeState(float deltaTime, int scaleFactor) {
-   
+void Customer::changeState(float deltaTime) {
+   switch(state) {
+        case CustomerStatesEnum::PREPARING_TO_MOVING:
+            animDirection = Directions::LEFT;
+            state = CustomerStatesEnum::MOVING_LEFT;
+        break;
+        case CustomerStatesEnum::MOVING_LEFT: {
+            float moveStep = moveSpeed * deltaTime;
+            float startX = queueStartingPositions.xPos;
+            float targetX = positions.xPos - moveDistance;
+            if(positions.xPos > queueStartingPositions.xPos) {
+                float remaining = positions.xPos - queueStartingPositions.xPos;
+                float step = (moveStep < remaining) ? moveStep : remaining;
+                positions.xPos -= step;
+                if (positions.xPos <= queueStartingPositions.xPos) {
+                    positions.xPos = queueStartingPositions.xPos;
+                    state = CustomerStatesEnum::TURNING_UP;
+                }
+            }
+            else {
+                state = CustomerStatesEnum::TURNING_UP;
+            }
+            break;
+            }
+        case CustomerStatesEnum::TURNING_UP:
+            animDirection = Directions::UP;
+            // state = CustomerStatesEnum::MOVING_UP;
+            break;
+    }
 }
 
 void Customer::render(sf::RenderWindow* window) {
-    if (!customerIdleSprites.empty()) {
-        window->draw(customerIdleSprites[animFrame % customerIdleSprites.size()]);
+    std::vector<sf::Sprite>* spriteSet = &customerIdleSprites;
+
+    int framesPerAnim = 6;
+    if(state == CustomerStatesEnum::MOVING_LEFT) {
+        spriteSet = &customerRunSprites;
+    }
+    int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
+    if(texturesLoaded && spriteIndex < spriteSet->size()) {
+        sf::Sprite sprite = spriteSet->at(spriteIndex);
+        sprite.setPosition(positions.xPos, positions.yPos);
+        window->draw(sprite);
     }
 }
