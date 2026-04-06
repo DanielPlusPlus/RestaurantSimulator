@@ -2,12 +2,17 @@
 
 #include <random>
 #include <algorithm>
-
+#include <iostream>
 
 CharactersManager::CharactersManager(int scaleFactor, float tileWidth, float tileHeight, int chefsNumber, 
-                                     int waitersNumber, DishesManager* dishesManager) {
+                                     int waitersNumber, DishesManager* dishesManager) : 
+                                     timeToAddCustomerDist(10.0f, 20.0f),
+                                     timeToRemoveCustomerDist(20.0f, 40.0f) {
     moveXSpeed = tileWidth;
     moveYSpeed = tileHeight;
+
+    extern std::mt19937 globalRNG;
+    timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
     
     addChefs(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed, chefsNumber, dishesManager);
 }
@@ -32,13 +37,18 @@ void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tile
                                          tileHeight, moveXSpeed, moveYSpeed, waitingCustomers.size() + 1, 
                                          customersStartPosition, rightDoorPosition);
     waitingCustomers.push_back(newCustomer);
-
-    std::uniform_real_distribution<float> timeToAddCustomerDist(10.0f, 20.0f);
     timeToAddCustomer = timeToAddCustomerDist(globalRNG);
 }
 
-void CharactersManager::removeCustomer() {
-    
+void CharactersManager::removeWaitingCustomer() {
+    extern std::mt19937 globalRNG;
+    std::uniform_int_distribution<int> waitingCustomerIndex(5, waitingCustomers.size() - 1);
+    int index = waitingCustomerIndex(globalRNG);
+    if(index >= 0 && index < waitingCustomers.size()) {
+        delete waitingCustomers[index];
+        waitingCustomers.erase(waitingCustomers.begin() + index);
+    }
+    timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
 }
 
 void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight) {
@@ -47,6 +57,15 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         addCustomerTimer = 0.0f;
         addCustomer(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed);
     }
+    if(waitingCustomers.size() > 5) {
+        removeWatingCustomerTimer += deltaTime;
+        if(removeWatingCustomerTimer > timeToRemoveWaitingCustomer) {
+            removeWatingCustomerTimer = 0.0f;
+            removeWaitingCustomer();
+        }
+    }
+    
+    std::cout << waitingCustomers.size() << std::endl;
     
     std::sort(chefs.begin(), chefs.end(), [](Chef* chef1, Chef* chef2) -> bool{
         return chef1->getYPos() < chef2->getYPos();

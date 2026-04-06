@@ -7,6 +7,8 @@
 #include "Customer.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <random>
+#include <algorithm>
 
 
 class CharactersManager {
@@ -39,10 +41,15 @@ private:
     // const Positions waitersQueueServingPositions = Positions{143.0f, 162.0f};
     const Positions rightDoorPosition = Positions{155.0f, 162.0f};
     
+    std::uniform_real_distribution<float> timeToAddCustomerDist;
+    std::uniform_real_distribution<float> timeToRemoveCustomerDist;
+
     float moveXSpeed = 0.0f;
     float moveYSpeed = 0.0f;
     float timeToAddCustomer = 0.0f;
+    float timeToRemoveWaitingCustomer = 0.0f;
     float addCustomerTimer = 0.0f;
+    float removeWatingCustomerTimer = 0.0f;
 
     std::vector<Chef*> chefs;
     std::vector<Waiter*> waiters;
@@ -52,7 +59,7 @@ private:
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, int waitersNumber);
     void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
-    void removeCustomer();
+    void removeWaitingCustomer();
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
