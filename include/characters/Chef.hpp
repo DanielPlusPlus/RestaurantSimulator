@@ -45,6 +45,6 @@ public:
     Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
         float moveYSpeed, int chefsNumber, Positions startPositions, Directions startDirection,
         DishesManager* dishesManager);
-    void update(float deltaTime, int scaleFactor) override;
+    void update(float deltaTime, int scaleFactor);
     void render(sf::RenderWindow* window) override;
 };

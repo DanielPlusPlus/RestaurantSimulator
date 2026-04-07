@@ -13,9 +13,11 @@ protected:
     Positions positions;
 public:
     Character(Positions positions) : startPositions(positions), positions(positions) {}
+    float getXPos() {
+        return positions.xPos; 
+    };
     float getYPos() {
         return positions.yPos; 
     };
-    virtual void update(float deltaTime, int scaleFactor) = 0;
     virtual void render(sf::RenderWindow* window) = 0;
 };

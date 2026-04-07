@@ -38,6 +38,6 @@ private:
     void changeState(float deltaTime, int scaleFactor);
 public:
     Waiter(int scaleFactor, float tileWidth, float tileHeight, float wallWidth);
-    void update(float deltaTime, int scaleFactor) override;
+    void update(float deltaTime, int scaleFactor);
     void render(sf::RenderWindow* window) override;
 };

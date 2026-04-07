@@ -20,7 +20,7 @@ private:
     float animTime = 0.0f;
     enum Directions animDirection = Directions::LEFT;
 
-    enum CustomerStatesEnum state = CustomerStatesEnum::PREPARING_TO_MOVING;
+    enum CustomerStatesEnum state = CustomerStatesEnum::PREPARING_TO_MOVE;
     Positions queueStartingPositions;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
@@ -28,13 +28,15 @@ private:
     float idleTimer = 0.0f;
     float cookingTime = 0.0f;
 
+    float previousQueueXPos = 0.0f;
+
     bool loadTextures(int scaleFactor, CharactersTexturesPaths texturesPaths);
     void changeAnimation(float deltaTime);
-    void changeState(float deltaTime);
+    void changeState(float deltaTime, float queueXPos);
 public:
     Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
              float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
              Positions queueStartingPositions);
-    void update(float deltaTime, int scaleFactor) override;
+    void update(float deltaTime, int scaleFactor, float queueXPos);
     void render(sf::RenderWindow* window) override;
 };

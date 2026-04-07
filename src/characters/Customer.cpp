@@ -16,7 +16,7 @@ Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float
     this->queueStartingPositions.yPos *= scaleFactor;
     this->queueStartingPositions.yPos -= tileHeight;
 
-    state = CustomerStatesEnum::PREPARING_TO_MOVING;
+    state = CustomerStatesEnum::PREPARING_TO_MOVE;
     moveSpeed = tileWidth;
     moveProgress = 0.0f;
     animDirection = Directions::LEFT;
@@ -64,9 +64,9 @@ bool Customer::loadTextures(int scaleFactor, CharactersTexturesPaths texturesPat
     return true;
 }
 
-void Customer::update(float deltaTime, int scaleFactor) {
+void Customer::update(float deltaTime, int scaleFactor, float queueXPos) {
     changeAnimation(deltaTime);
-    changeState(deltaTime);
+    changeState(deltaTime, queueXPos);
 }
 
 void Customer::changeAnimation(float deltaTime) {
@@ -80,33 +80,41 @@ void Customer::changeAnimation(float deltaTime) {
     }
 }
 
-void Customer::changeState(float deltaTime) {
+void Customer::changeState(float deltaTime, float queueXPos) {
    switch(state) {
-        case CustomerStatesEnum::PREPARING_TO_MOVING:
+        case CustomerStatesEnum::PREPARING_TO_MOVE:
             animDirection = Directions::LEFT;
             state = CustomerStatesEnum::MOVING_LEFT;
         break;
         case CustomerStatesEnum::MOVING_LEFT: {
             float moveStep = moveSpeed * deltaTime;
-            float startX = queueStartingPositions.xPos;
+            float startX = queueXPos;
             float targetX = positions.xPos - moveDistance;
-            if(positions.xPos > queueStartingPositions.xPos) {
-                float remaining = positions.xPos - queueStartingPositions.xPos;
+            if(positions.xPos > queueXPos) {
+                float remaining = positions.xPos - queueXPos;
                 float step = (moveStep < remaining) ? moveStep : remaining;
                 positions.xPos -= step;
-                if (positions.xPos <= queueStartingPositions.xPos) {
-                    positions.xPos = queueStartingPositions.xPos;
-                    state = CustomerStatesEnum::TURNING_UP;
+                if(positions.xPos <= queueXPos) {
+                    positions.xPos = queueXPos;
+                    previousQueueXPos = queueXPos;
+                    state = CustomerStatesEnum::WAITING_TO_MOVE;
                 }
             }
             else {
-                state = CustomerStatesEnum::TURNING_UP;
+                state = CustomerStatesEnum::WAITING_TO_MOVE;
             }
             break;
             }
+        case CustomerStatesEnum::WAITING_TO_MOVE:
+            if(queueXPos < previousQueueXPos) {
+                state = CustomerStatesEnum::MOVING_LEFT;
+            }
+            else if(queueXPos <= queueStartingPositions.xPos) {
+                state = CustomerStatesEnum::TURNING_UP;
+            }
+            break;
         case CustomerStatesEnum::TURNING_UP:
             animDirection = Directions::UP;
-            // state = CustomerStatesEnum::MOVING_UP;
             break;
     }
 }

@@ -65,17 +65,21 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         }
     }
     
-    std::cout << waitingCustomers.size() << std::endl;
-    
     std::sort(chefs.begin(), chefs.end(), [](Chef* chef1, Chef* chef2) -> bool{
         return chef1->getYPos() < chef2->getYPos();
     });
     for(Chef* chef : chefs) {
         chef->update(deltaTime, scaleFactor);
     }
-    for(Customer* customer : waitingCustomers) {
-        customer->update(deltaTime, scaleFactor);
+    for(int i = 0; i < waitingCustomers.size(); i++) {
+        if(i == 0) {
+            waitingCustomers[i]->update(deltaTime, scaleFactor, rightDoorPosition.xPos * scaleFactor);
+        }
+        else {
+            waitingCustomers[i]->update(deltaTime, scaleFactor, waitingCustomers[i - 1]->getXPos() + tileWidth);
+        }
     }
+    std::cout << "Waiting customers: " << waitingCustomers.size() << std::endl;
 }
 
 void CharactersManager::render(sf::RenderWindow* window) {
