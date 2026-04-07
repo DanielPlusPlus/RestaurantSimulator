@@ -55,11 +55,13 @@ private:
     std::vector<Waiter*> waiters;
     std::vector<Customer*> waitingCustomers;
     std::vector<Customer*> insideCustomers;
+    std::vector<Customer*> resigningCustomers;
     void addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, int waitersNumber);
     void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
-    void removeWaitingCustomer();
+    void moveWaitingCustomerToResignation();
+    void removeResigningCustomer(int index);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);

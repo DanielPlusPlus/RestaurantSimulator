@@ -3,8 +3,9 @@
 
 Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
          float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
-         Positions rightDoorPositions) : Character(startPositions), 
-         customerNumber(customerNumber), queueStartingPositions(rightDoorPositions) {
+         Positions rightDoorPositions) : Character(startPositions), moveXSpeed(moveXSpeed), 
+         moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
+         queueStartingPositions(rightDoorPositions) {
     texturesLoaded = loadTextures(scaleFactor, texturesPaths);
     width *= scaleFactor;
     height *= scaleFactor;
@@ -12,12 +13,13 @@ Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float
     this->startPositions.yPos *= scaleFactor;
     this->positions.xPos *= scaleFactor;
     this->positions.yPos *= scaleFactor;
+    this->resignationPositions.xPos = this->startPositions.xPos;
+    this->resignationPositions.yPos = this->startPositions.yPos + tileHeight;
     this->queueStartingPositions.xPos *= scaleFactor;
     this->queueStartingPositions.yPos *= scaleFactor;
     this->queueStartingPositions.yPos -= tileHeight;
 
     state = CustomerStatesEnum::PREPARING_TO_MOVE;
-    moveSpeed = tileWidth;
     moveProgress = 0.0f;
     animDirection = Directions::LEFT;
 }
@@ -64,9 +66,14 @@ bool Customer::loadTextures(int scaleFactor, CharactersTexturesPaths texturesPat
     return true;
 }
 
-void Customer::update(float deltaTime, int scaleFactor, float queueXPos) {
+void Customer::updateIfWaiting(float deltaTime, int scaleFactor, float queueXPos) {
     changeAnimation(deltaTime);
-    changeState(deltaTime, queueXPos);
+    changeWaitingState(deltaTime, queueXPos);
+}
+
+void Customer::updateIfResigning(float deltaTime, int scaleFactor) {
+    changeAnimation(deltaTime);
+    changeResigningState(deltaTime);
 }
 
 void Customer::changeAnimation(float deltaTime) {
@@ -80,14 +87,14 @@ void Customer::changeAnimation(float deltaTime) {
     }
 }
 
-void Customer::changeState(float deltaTime, float queueXPos) {
+void Customer::changeWaitingState(float deltaTime, float queueXPos) {
    switch(state) {
         case CustomerStatesEnum::PREPARING_TO_MOVE:
             animDirection = Directions::LEFT;
             state = CustomerStatesEnum::MOVING_LEFT;
         break;
         case CustomerStatesEnum::MOVING_LEFT: {
-            float moveStep = moveSpeed * deltaTime;
+            float moveStep = moveXSpeed * deltaTime;
             float startX = queueXPos;
             float targetX = positions.xPos - moveDistance;
             if(positions.xPos > queueXPos) {
@@ -119,11 +126,63 @@ void Customer::changeState(float deltaTime, float queueXPos) {
     }
 }
 
+void Customer::changeResigningState(float deltaTime) {
+    switch(state) {
+        case CustomerStatesEnum::TURNING_DOWN:
+            animDirection = Directions::DOWN;
+            state = CustomerStatesEnum::MOVING_DOWN;
+            break;
+        case CustomerStatesEnum::MOVING_DOWN: {
+            float moveStep = moveYSpeed * deltaTime;
+            float targetY = resignationPositions.yPos;
+            if(positions.yPos < targetY) {
+                float remaining = targetY - positions.yPos;
+                float step = (moveStep < remaining) ? moveStep : remaining;
+                positions.yPos += step;
+                if(positions.yPos >= targetY) {
+                    positions.yPos = targetY;
+                    state = CustomerStatesEnum::TURNING_RIGHT;
+                }
+            }
+            else {
+                state = CustomerStatesEnum::TURNING_RIGHT;
+            }
+            break;
+        }
+        case CustomerStatesEnum::TURNING_RIGHT:
+            animDirection = Directions::RIGHT;
+            state = CustomerStatesEnum::MOVING_RIGHT;
+            break;
+        case CustomerStatesEnum::MOVING_RIGHT: {
+            float moveStep = moveXSpeed * deltaTime;
+            float targetX = resignationPositions.xPos;
+            if(positions.xPos < targetX) {
+                float remaining = targetX - positions.xPos;
+                float step = (moveStep < remaining) ? moveStep : remaining;
+                positions.xPos += step;
+                if(positions.xPos >= targetX) {
+                    positions.xPos = targetX;
+                    state = CustomerStatesEnum::WAITING_TO_REMOVE;
+                }
+            }
+            else {
+                state = CustomerStatesEnum::WAITING_TO_REMOVE;
+            }
+            break;
+        }
+        case CustomerStatesEnum::WAITING_TO_REMOVE:
+            setAssignedToRemove(true);
+            break;
+    }
+}
+
 void Customer::render(sf::RenderWindow* window) {
     std::vector<sf::Sprite>* spriteSet = &customerIdleSprites;
 
     int framesPerAnim = 6;
-    if(state == CustomerStatesEnum::MOVING_LEFT) {
+    if(state == CustomerStatesEnum::MOVING_LEFT || 
+       state == CustomerStatesEnum::MOVING_DOWN || 
+       state == CustomerStatesEnum::MOVING_RIGHT) {
         spriteSet = &customerRunSprites;
     }
     int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;

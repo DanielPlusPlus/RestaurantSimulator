@@ -22,21 +22,40 @@ private:
 
     enum CustomerStatesEnum state = CustomerStatesEnum::PREPARING_TO_MOVE;
     Positions queueStartingPositions;
+    Positions resignationPositions;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
-    float moveSpeed = 0.0f;
+    float moveXSpeed = 0.0f;
+    float moveYSpeed = 0.0f;
     float idleTimer = 0.0f;
     float cookingTime = 0.0f;
 
     float previousQueueXPos = 0.0f;
+    bool resigning = false;
+    bool assignedToRemove = false;
 
     bool loadTextures(int scaleFactor, CharactersTexturesPaths texturesPaths);
     void changeAnimation(float deltaTime);
-    void changeState(float deltaTime, float queueXPos);
+    void changeWaitingState(float deltaTime, float queueXPos);
+    void changeResigningState(float deltaTime);
+    bool getResigningStatus() {
+        return resigning;
+    }
+    void setAssignedToRemove(bool value) {
+        assignedToRemove = value;
+    }
 public:
     Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
              float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
              Positions queueStartingPositions);
-    void update(float deltaTime, int scaleFactor, float queueXPos);
+    void updateIfWaiting(float deltaTime, int scaleFactor, float queueXPos);
+    void updateIfResigning(float deltaTime, int scaleFactor);
     void render(sf::RenderWindow* window) override;
+    void setResigning(bool value) {
+        resigning = value;
+        state = CustomerStatesEnum::TURNING_DOWN;
+    }
+    bool getAssignedToRemoveStatus() {
+        return assignedToRemove;
+    }
 };

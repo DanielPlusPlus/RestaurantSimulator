@@ -40,15 +40,24 @@ void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tile
     timeToAddCustomer = timeToAddCustomerDist(globalRNG);
 }
 
-void CharactersManager::removeWaitingCustomer() {
+void CharactersManager::moveWaitingCustomerToResignation() {
     extern std::mt19937 globalRNG;
     std::uniform_int_distribution<int> waitingCustomerIndex(5, waitingCustomers.size() - 1);
     int index = waitingCustomerIndex(globalRNG);
     if(index >= 0 && index < waitingCustomers.size()) {
-        delete waitingCustomers[index];
+        Customer* customer = waitingCustomers[index];
+        customer->setResigning(true);
+        resigningCustomers.push_back(customer);
         waitingCustomers.erase(waitingCustomers.begin() + index);
     }
     timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
+}
+
+void CharactersManager::removeResigningCustomer(int index) {
+    if(index >= 0 && index < resigningCustomers.size()) {
+        delete resigningCustomers[index];
+        resigningCustomers.erase(resigningCustomers.begin() + index);
+    }
 }
 
 void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight) {
@@ -61,7 +70,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         removeWatingCustomerTimer += deltaTime;
         if(removeWatingCustomerTimer > timeToRemoveWaitingCustomer) {
             removeWatingCustomerTimer = 0.0f;
-            removeWaitingCustomer();
+            moveWaitingCustomerToResignation();
         }
     }
     
@@ -73,20 +82,28 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
     }
     for(int i = 0; i < waitingCustomers.size(); i++) {
         if(i == 0) {
-            waitingCustomers[i]->update(deltaTime, scaleFactor, rightDoorPosition.xPos * scaleFactor);
+            waitingCustomers[i]->updateIfWaiting(deltaTime, scaleFactor, rightDoorPosition.xPos * scaleFactor);
         }
         else {
-            waitingCustomers[i]->update(deltaTime, scaleFactor, waitingCustomers[i - 1]->getXPos() + tileWidth);
+            waitingCustomers[i]->updateIfWaiting(deltaTime, scaleFactor, waitingCustomers[i - 1]->getXPos() + tileWidth);
         }
     }
-    std::cout << "Waiting customers: " << waitingCustomers.size() << std::endl;
+    for(int i = resigningCustomers.size() - 1; i >= 0; i--) {
+        if(resigningCustomers[i]->getAssignedToRemoveStatus()) {
+            removeResigningCustomer(i);
+        }
+        resigningCustomers[i]->updateIfResigning(deltaTime, scaleFactor);
+    }
 }
 
 void CharactersManager::render(sf::RenderWindow* window) {
     for(Chef* chef : chefs) {
         chef->render(window);
     }
-    for(Customer* customer : waitingCustomers) {
-        customer->render(window);
+    for(Customer* waitingCustomer : waitingCustomers) {
+        waitingCustomer->render(window);
+    }
+    for(Customer* resigningCustomer : resigningCustomers) {
+        resigningCustomer->render(window);
     }
 }

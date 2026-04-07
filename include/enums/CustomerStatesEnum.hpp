@@ -5,5 +5,10 @@ enum class CustomerStatesEnum {
     PREPARING_TO_MOVE,
     MOVING_LEFT,
     WAITING_TO_MOVE,
-    TURNING_UP
+    TURNING_UP,
+    TURNING_DOWN,
+    MOVING_DOWN,
+    TURNING_RIGHT,
+    MOVING_RIGHT,
+    WAITING_TO_REMOVE
 };
