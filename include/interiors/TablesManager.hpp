@@ -26,20 +26,20 @@ private:
         "assets/interiors/tables/table4_2.png",
         "assets/interiors/tables/table4_3.png"
     };
-    const TwoChairsTablesPositions twoChairsTablesPositions[8] = {
-        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
-        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
-        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
-        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
-        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
-        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
-        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f),
-        TwoChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f)
+    TwoChairsTablesPositions twoChairsTablesPositions[8] = {
+        TwoChairsTablesPositions(55.0f, 130.0f, 86.0f, 130.0f),
+        TwoChairsTablesPositions(179.0f, 130.0f, 209.0f, 130.0f),
+        TwoChairsTablesPositions(7.0f, 130.0f, 37.0f, 130.0f),
+        TwoChairsTablesPositions(7.0f, 101.0f, 37.0f, 101.0f),
+        TwoChairsTablesPositions(7.0f, 72.0f, 37.0f, 72.0f),
+        TwoChairsTablesPositions(104.0f, 72.0f, 134.0f, 72.0f),
+        TwoChairsTablesPositions(160.0f, 9.0f, 190.0f, 9.0f),
+        TwoChairsTablesPositions(239.0f, 9.0f, 269.0f, 9.0f)
     };
-    const FourChairsTablesPositions fourChairsTablesPositions[3] = {
-        FourChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
-        FourChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f),
-        FourChairsTablesPositions(1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f)
+    FourChairsTablesPositions fourChairsTablesPositions[3] = {
+        FourChairsTablesPositions(227.0f, 132.0f, 279.0f, 132.0f, 227.0f, 120.0f, 279.0f, 120.0f),
+        FourChairsTablesPositions(227.0f, 91.0f, 279.0f, 91.0f, 227.0f, 79.0f, 279.0f, 79.0f),
+        FourChairsTablesPositions(227.0f, 50.0f, 279.0f, 50.0f, 227.0f, 38.0f, 279.0f, 38.0f)
     };
 
     std::vector<TwoChairsTable*> twoChairsTables;

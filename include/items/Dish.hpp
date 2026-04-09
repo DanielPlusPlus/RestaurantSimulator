@@ -9,7 +9,7 @@ class Dish {
 private:
     sf::Texture dishTexture;
     sf::Sprite dishSprite;
-    Positions positions{0.0f, 0.0f};
+    Positions positions;
     int tableNumber = 0;
 
     bool loadTexture(int scaleFactor, std::string texturePath);

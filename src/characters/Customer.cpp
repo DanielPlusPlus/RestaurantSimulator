@@ -3,9 +3,9 @@
 
 Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
          float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
-         Positions rightDoorPositions) : Character(startPositions), moveXSpeed(moveXSpeed), 
+         Positions queueStartingPositions) : Character(startPositions), moveXSpeed(moveXSpeed), 
          moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
-         queueStartingPositions(rightDoorPositions) {
+         queueStartingPositions(queueStartingPositions) {
     texturesLoaded = loadTextures(scaleFactor, texturesPaths);
     width *= scaleFactor;
     height *= scaleFactor;
@@ -13,11 +13,10 @@ Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float
     this->startPositions.yPos *= scaleFactor;
     this->positions.xPos *= scaleFactor;
     this->positions.yPos *= scaleFactor;
-    this->resignationPositions.xPos = this->startPositions.xPos;
-    this->resignationPositions.yPos = this->startPositions.yPos + tileHeight;
     this->queueStartingPositions.xPos *= scaleFactor;
     this->queueStartingPositions.yPos *= scaleFactor;
-    this->queueStartingPositions.yPos -= tileHeight;
+    this->resignationPositions.xPos = this->startPositions.xPos;
+    this->resignationPositions.yPos = this->startPositions.yPos + tileHeight;
 
     state = CustomerStatesEnum::PREPARING_TO_MOVE;
     moveProgress = 0.0f;
@@ -123,6 +122,8 @@ void Customer::changeWaitingState(float deltaTime, float queueXPos) {
         case CustomerStatesEnum::TURNING_UP:
             animDirection = Directions::UP;
             break;
+        default:
+            break;
     }
 }
 
@@ -172,6 +173,8 @@ void Customer::changeResigningState(float deltaTime) {
         }
         case CustomerStatesEnum::WAITING_TO_REMOVE:
             setAssignedToRemove(true);
+            break;
+        default:
             break;
     }
 }

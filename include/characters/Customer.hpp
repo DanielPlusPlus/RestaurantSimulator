@@ -28,7 +28,6 @@ private:
     float moveXSpeed = 0.0f;
     float moveYSpeed = 0.0f;
     float idleTimer = 0.0f;
-    float cookingTime = 0.0f;
 
     float previousQueueXPos = 0.0f;
     bool resigning = false;

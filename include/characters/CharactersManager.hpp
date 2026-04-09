@@ -36,10 +36,14 @@ private:
         Positions{38.0f, 24.0f},
         Positions{38.0f, 24.0f}
     };
-    const Positions customersStartPosition{302.0f, 178.0f};
+    const Positions customersStartPositions{302.0f, 178.0f};
     // y - 162, x - 131 lewa, 171 prawa, srodek 131 + (171 - 131) / 2 = 151
     // const Positions waitersQueueServingPositions = Positions{143.0f, 162.0f};
-    const Positions rightDoorPosition = Positions{155.0f, 162.0f};
+    const Positions waiterQueueHandlingPositions{135.0f, 162.0f};
+    const Positions waiterDishPickupPositions{151.0f, 40.0f};
+    const Positions waiterDishDropoffPositions{70.0f, 72.0f};
+    const Positions customersQueueStartingPositions{155.0f, 178.0f};
+     
     
     std::uniform_real_distribution<float> timeToAddCustomerDist;
     std::uniform_real_distribution<float> timeToRemoveCustomerDist;
@@ -66,5 +70,6 @@ public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
     void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight);
-    void render(sf::RenderWindow* window);
+    void renderChefs(sf::RenderWindow* window);
+    void renderWaitersAndCustomers(sf::RenderWindow* window);
 };

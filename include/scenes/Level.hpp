@@ -10,8 +10,10 @@ class Level : public Scene {
 private:
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
-    sf::Texture wallsTexture;
-    sf::Sprite wallsSprite;
+    sf::Texture kitchenWallsTexture;
+    sf::Sprite kitchenWallsSprite;
+    sf::Texture entranceWallsTexture;
+    sf::Sprite entranceWallsSprite;
     sf::Texture flowersTexture;
     sf::Sprite flowersSprite;
     bool texturesLoaded = false;

@@ -1,18 +1,21 @@
 #include "characters/Waiter.hpp"
 
-Waiter::Waiter(int scaleFactor, float tileWidth, float tileHeight, float wallWidth) : Character(Positions{0.0f, 0.0f}) {
+Waiter::Waiter(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
+           float moveYSpeed, int waiterNumber, Positions startPositions, 
+           Positions doorsPositions, Positions dishPickupPositions, 
+           Positions dishDropoffPositions) : Character(startPositions), waiterNumber(waiterNumber) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;
 
-    positions.xPos = wallWidth + tileWidth * 2.0f;
-    positions.yPos = tileHeight * 1.5f;
-    startX = positions.xPos;
-    startY = positions.yPos;
-    moveDistance = 5.0f * tileWidth;
-    moveSpeed = tileWidth;
-    moveProgress = 0.0f;
-    animDirection = Directions::UP;
+    // positions.xPos = wallWidth + tileWidth * 2.0f;
+    // positions.yPos = tileHeight * 1.5f;
+    // startX = positions.xPos;
+    // startY = positions.yPos;
+    // moveDistance = 5.0f * tileWidth;
+    // moveSpeed = tileWidth;
+    // moveProgress = 0.0f;
+    // animDirection = Directions::UP;
 }
 
 bool Waiter::loadTextures(int scaleFactor) {

@@ -35,7 +35,7 @@ void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tile
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], tileWidth, 
                                          tileHeight, moveXSpeed, moveYSpeed, waitingCustomers.size() + 1, 
-                                         customersStartPosition, rightDoorPosition);
+                                         customersStartPositions, customersQueueStartingPositions);
     waitingCustomers.push_back(newCustomer);
     timeToAddCustomer = timeToAddCustomerDist(globalRNG);
 }
@@ -82,7 +82,8 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
     }
     for(int i = 0; i < waitingCustomers.size(); i++) {
         if(i == 0) {
-            waitingCustomers[i]->updateIfWaiting(deltaTime, scaleFactor, rightDoorPosition.xPos * scaleFactor);
+            waitingCustomers[i]->updateIfWaiting(deltaTime, scaleFactor, 
+                                                 customersQueueStartingPositions.xPos * scaleFactor);
         }
         else {
             waitingCustomers[i]->updateIfWaiting(deltaTime, scaleFactor, waitingCustomers[i - 1]->getXPos() + tileWidth);
@@ -96,10 +97,13 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
     }
 }
 
-void CharactersManager::render(sf::RenderWindow* window) {
+void CharactersManager::renderChefs(sf::RenderWindow* window) {
     for(Chef* chef : chefs) {
         chef->render(window);
     }
+}
+
+void CharactersManager::renderWaitersAndCustomers(sf::RenderWindow* window) {
     for(Customer* waitingCustomer : waitingCustomers) {
         waitingCustomer->render(window);
     }

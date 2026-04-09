@@ -20,11 +20,17 @@ bool Level::loadTextures(int scaleFactor) {
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setScale(static_cast<float>(scaleFactor), static_cast<float>(scaleFactor));
 
-    if (!wallsTexture.loadFromFile("assets/interiors/walls.png")) {
+    if (!kitchenWallsTexture.loadFromFile("assets/interiors/kitchen_walls.png")) {
         return false;
     }
-    wallsSprite.setTexture(wallsTexture);
-    wallsSprite.setScale(static_cast<float>(scaleFactor), static_cast<float>(scaleFactor));
+    kitchenWallsSprite.setTexture(kitchenWallsTexture);
+    kitchenWallsSprite.setScale(static_cast<float>(scaleFactor), static_cast<float>(scaleFactor));
+
+    if (!entranceWallsTexture.loadFromFile("assets/interiors/entrance_walls.png")) {
+        return false;
+    }
+    entranceWallsSprite.setTexture(entranceWallsTexture);
+    entranceWallsSprite.setScale(static_cast<float>(scaleFactor), static_cast<float>(scaleFactor));
 
     if (!flowersTexture.loadFromFile("assets/interiors/flowers.png")) {
         return false;
@@ -49,9 +55,11 @@ void Level::render(sf::RenderWindow* window) {
     if(texturesLoaded) {
         window->draw(backgroundSprite);
         window->draw(flowersSprite);
-        this->charactersManager->render(window);
-        window->draw(wallsSprite);
-        this->dishesManager->render(window);
+        this->charactersManager->renderChefs(window);
+        window->draw(kitchenWallsSprite);
         this->tablesManager->render(window);
+        this->dishesManager->render(window);
+        window->draw(entranceWallsSprite);
+        this->charactersManager->renderWaitersAndCustomers(window);
     }
 }

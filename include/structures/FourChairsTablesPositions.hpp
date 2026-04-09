@@ -4,15 +4,17 @@
 
 
 struct FourChairsTablesPositions {
-    Positions chair1;
-    Positions chair2;
-    Positions chair3;
-    Positions chair4;
+    Positions downLeftChair;
+    Positions downRightChair;
+    Positions upLeftChair;
+    Positions upRightChair;
     FourChairsTablesPositions(
-        float chair1XPos, float chair1YPos,
-        float chair2XPos, float chair2YPos,
-        float chair3XPos, float chair3YPos,
-        float chair4XPos, float chair4YPos
-    ) : chair1{chair1XPos, chair1YPos}, chair2{chair2XPos, chair2YPos},
-        chair3{chair3XPos, chair3YPos}, chair4{chair4XPos, chair4YPos} {}
+        float downLeftChairXPos, float downLeftChairYPos,
+        float downRightChairXPos, float downRightChairYPos,
+        float upLeftChairXPos, float upLeftChairYPos,
+        float upRightChairXPos, float upRightChairYPos
+    ) : downLeftChair{downLeftChairXPos, downLeftChairYPos}, 
+        downRightChair{downRightChairXPos, downRightChairYPos},
+        upLeftChair{upLeftChairXPos, upLeftChairYPos}, 
+        upRightChair{upRightChairXPos, upRightChairYPos} {}
 };
