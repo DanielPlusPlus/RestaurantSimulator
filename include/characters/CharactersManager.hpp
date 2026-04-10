@@ -43,7 +43,17 @@ private:
     const Positions waiterDishPickupPositions{151.0f, 40.0f};
     const Positions waiterDishDropoffPositions{70.0f, 72.0f};
     const Positions customersQueueStartingPositions{155.0f, 178.0f};
-     
+    /*
+    Dozwolone pozycje poruszania:
+    wysokosc 24, dozwolone szerokosci od 151 do 269
+    wysokosc 40, dozwolone szerokosci od 151 do 212
+    wysokosc 56, dozwolone szerokosci od 151 do 212
+    wysokosc 72, dozwolone szerokosci od 72 do 88 i od 151 do 212
+    wysokosc 88, dozwolone szerokosci od od 7 do 279
+    wysokosc 104, dozwolone szerokosci od 52.0f do 279
+    wysokosc 120.0f, dozwolone szerokosci od 7 do 212
+    wysokosc 152.0f, dozwolone szerokosci od 7 do 279
+    */
     
     std::uniform_real_distribution<float> timeToAddCustomerDist;
     std::uniform_real_distribution<float> timeToRemoveCustomerDist;
