@@ -66,25 +66,47 @@ void Level::render(sf::RenderWindow* window) {
 }
 
 bool Level::isValidPosition(Positions positions) {
-    if(positions.xPos > 151.0f && positions.xPos < 269.0f && positions.yPos == 24.0f) {
+    if(positions.xPos >= (151.0f * scaleFactor) && 
+      positions.xPos <= (269.0f * scaleFactor) && 
+      positions.yPos == (24.0f * scaleFactor)) {
         return true;
     }
-    if(positions.xPos > 151.0f && positions.xPos < 212.0f && (positions.yPos == 40.0f || positions.yPos == 56.0f)) {
+    if(positions.xPos >= (151.0f * scaleFactor) 
+       && positions.xPos <= (212.0f * scaleFactor) 
+       && (positions.yPos == (40.0f * scaleFactor) 
+       || positions.yPos == (56.0f * scaleFactor))) {
         return true;
     }
-    if((positions.xPos > 72.0f && positions.xPos < 88.0f || positions.xPos > 151.0f && positions.xPos < 212.0f) && positions.yPos == 72.0f) {
+    if((positions.xPos >= (70.0f * scaleFactor) 
+       && positions.xPos <= (88.0f * scaleFactor) 
+       || positions.xPos >= (151.0f * scaleFactor) 
+       && positions.xPos <= (212.0f * scaleFactor)) 
+       && positions.yPos == (72.0f * scaleFactor)) {
         return true;
     }
-    if(positions.xPos > 7.0f && positions.xPos < 279.0f && positions.yPos == 88.0f) {
+    if(positions.xPos >= (7.0f * scaleFactor) 
+       && positions.xPos <= (279.0f * scaleFactor) 
+       && positions.yPos == (88.0f * scaleFactor)) {
         return true;
     }
-    if(positions.xPos > 52.0f && positions.xPos < 279.0f && positions.yPos == 104.0f) {
+    if(positions.xPos >= (52.0f * scaleFactor) 
+       && positions.xPos <= (279.0f * scaleFactor) 
+       && positions.yPos == (104.0f * scaleFactor)) {
         return true;
     }
-    if(positions.xPos > 7.0f && positions.xPos < 212.0f && positions.yPos == 120.0f) {
+    if(positions.xPos >= (7.0f * scaleFactor) 
+       && positions.xPos <= (212.0f * scaleFactor) 
+       && positions.yPos == (120.0f * scaleFactor)) {
         return true;
     }
-    if(positions.xPos > 7.0f && positions.xPos < 279.0f && positions.yPos == 152.0f) {
+    if(positions.xPos >= (7.0f * scaleFactor) 
+       && positions.xPos <= (279.0f * scaleFactor) 
+       && positions.yPos == (152.0f * scaleFactor)) {
+        return true;
+    }
+    if(positions.xPos >= (131.0f * scaleFactor) 
+       && positions.xPos <= (171.0f * scaleFactor) 
+       && positions.yPos == (168.0f * scaleFactor)) {
         return true;
     }
     return false;
