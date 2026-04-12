@@ -9,7 +9,10 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 #include <algorithm>
+#include <vector>
 
+
+class Level;
 
 class CharactersManager {
 private:
@@ -32,28 +35,16 @@ private:
         Directions::DOWN
     };
     const Positions waitersStartPositions[3] = {
-        Positions{38.0f, 24.0f},
-        Positions{38.0f, 24.0f},
-        Positions{38.0f, 24.0f}
+        Positions{143.0f, 162.0f},
+        Positions{151.0f, 40.0f},
+        Positions{70.0f, 72.0f}
     };
     const Positions customersStartPositions{302.0f, 178.0f};
     // y - 162, x - 131 lewa, 171 prawa, srodek 131 + (171 - 131) / 2 = 151
-    // const Positions waitersQueueServingPositions = Positions{143.0f, 162.0f};
-    const Positions waiterQueueHandlingPositions{135.0f, 162.0f};
+    const Positions waiterQueueHandlingPositions{143.0f, 162.0f};
     const Positions waiterDishPickupPositions{151.0f, 40.0f};
     const Positions waiterDishDropoffPositions{70.0f, 72.0f};
     const Positions customersQueueStartingPositions{155.0f, 178.0f};
-    /*
-    Dozwolone pozycje poruszania:
-    wysokosc 24, dozwolone szerokosci od 151 do 269
-    wysokosc 40, dozwolone szerokosci od 151 do 212
-    wysokosc 56, dozwolone szerokosci od 151 do 212
-    wysokosc 72, dozwolone szerokosci od 72 do 88 i od 151 do 212
-    wysokosc 88, dozwolone szerokosci od od 7 do 279
-    wysokosc 104, dozwolone szerokosci od 52.0f do 279
-    wysokosc 120.0f, dozwolone szerokosci od 7 do 212
-    wysokosc 152.0f, dozwolone szerokosci od 7 do 279
-    */
     
     std::uniform_real_distribution<float> timeToAddCustomerDist;
     std::uniform_real_distribution<float> timeToRemoveCustomerDist;
@@ -72,14 +63,15 @@ private:
     std::vector<Customer*> resigningCustomers;
     void addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
-    void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float wallWidth, int waitersNumber);
+    void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
+                    float moveYSpeed, int waitersNumber);
     void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
     void moveWaitingCustomerToResignation();
     void removeResigningCustomer(int index);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
-    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight);
+    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level);
     void renderChefs(sf::RenderWindow* window);
     void renderWaitersAndCustomers(sf::RenderWindow* window);
 };

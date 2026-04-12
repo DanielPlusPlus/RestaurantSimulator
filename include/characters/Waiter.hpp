@@ -4,6 +4,8 @@
 #include "enums/WaiterStatesEnum.hpp"
 
 
+class Level;
+
 class Waiter : public Character {
 private:
     const CharactersTexturesPaths waiterTexturesPaths = CharactersTexturesPaths{
@@ -37,12 +39,12 @@ private:
 
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
-    void changeState(float deltaTime, int scaleFactor);
+    void changeState(float deltaTime, int scaleFactor, Level* level);
 public:
     Waiter(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
            float moveYSpeed, int waiterNumber, Positions startPositions, 
            Positions doorsPositions, Positions dishPickupPositions, 
            Positions dishDropoffPositions);
-    void update(float deltaTime, int scaleFactor);
+    void update(float deltaTime, int scaleFactor, Level* level);
     void render(sf::RenderWindow* window) override;
 };

@@ -1,21 +1,31 @@
 #include "characters/Waiter.hpp"
+#include "scenes/Level.hpp"
+
 
 Waiter::Waiter(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
            float moveYSpeed, int waiterNumber, Positions startPositions, 
-           Positions doorsPositions, Positions dishPickupPositions, 
-           Positions dishDropoffPositions) : Character(startPositions), waiterNumber(waiterNumber) {
+           Positions queueHandlingPositions, Positions dishPickupPositions, 
+           Positions dishDropoffPositions) : Character(startPositions), waiterNumber(waiterNumber), 
+           queueHandlingPositions(queueHandlingPositions), dishPickupPositions(dishPickupPositions), 
+           dishDropoffPositions(dishDropoffPositions), moveXSpeed(moveXSpeed), moveYSpeed(moveYSpeed) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;
+    
+    this->startPositions.xPos *= scaleFactor;
+    this->startPositions.yPos *= scaleFactor;
+    this->positions.xPos *= scaleFactor;
+    this->positions.yPos *= scaleFactor;
+    this->queueHandlingPositions.xPos *= scaleFactor;
+    this->queueHandlingPositions.yPos *= scaleFactor;
+    this->dishPickupPositions.xPos *= scaleFactor;
+    this->dishPickupPositions.yPos *= scaleFactor;
+    this->dishDropoffPositions.xPos *= scaleFactor;
+    this->dishDropoffPositions.yPos *= scaleFactor;
 
-    // positions.xPos = wallWidth + tileWidth * 2.0f;
-    // positions.yPos = tileHeight * 1.5f;
-    // startX = positions.xPos;
-    // startY = positions.yPos;
-    // moveDistance = 5.0f * tileWidth;
-    // moveSpeed = tileWidth;
-    // moveProgress = 0.0f;
-    // animDirection = Directions::UP;
+    state = WaiterStatesEnum::WAITING_TO_START;
+    moveProgress = 0.0f;
+    animDirection = Directions::DOWN;
 }
 
 bool Waiter::loadTextures(int scaleFactor) {
@@ -60,9 +70,9 @@ bool Waiter::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Waiter::update(float deltaTime, int scaleFactor) {
+void Waiter::update(float deltaTime, int scaleFactor, Level* level) {
     changeAnimation(deltaTime);
-    changeState(deltaTime, scaleFactor);
+    changeState(deltaTime, scaleFactor, level);
 }
 
 void Waiter::changeAnimation(float deltaTime) {
@@ -76,12 +86,18 @@ void Waiter::changeAnimation(float deltaTime) {
     }
 }
 
-void Waiter::changeState(float deltaTime, int scaleFactor) {
-    
+void Waiter::changeState(float deltaTime, int scaleFactor, Level* level) {
+    level->isValidPosition(positions);
 }
 
 void Waiter::render(sf::RenderWindow* window) {
-    if (!waiterIdleSprites.empty()) {
-        window->draw(waiterIdleSprites[animFrame % waiterIdleSprites.size()]);
+    std::vector<sf::Sprite>* spriteSet = &waiterIdleSprites;
+
+    int framesPerAnim = 6;
+    int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
+    if(texturesLoaded && spriteIndex < spriteSet->size()) {
+        sf::Sprite sprite = spriteSet->at(spriteIndex);
+        sprite.setPosition(positions.xPos, positions.yPos);
+        window->draw(sprite);
     }
 }

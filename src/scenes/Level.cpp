@@ -1,5 +1,6 @@
 #include "scenes/Level.hpp"
 #include "scenes/Scene.hpp"
+#include "characters/CharactersManager.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -9,7 +10,7 @@ Level::Level(int scaleFactor) : Scene(scaleFactor) {
     tileHeight *= scaleFactor;
     dishesManager = new DishesManager(scaleFactor);
     tablesManager = new TablesManager(scaleFactor, 8, 3); // do poprawy - liczba stolików powinna być parametrem, a nie stałą
-    charactersManager = new CharactersManager(scaleFactor, tileWidth, tileHeight, 3, 0, dishesManager); // do poprawy - liczba postaci powinna być parametrem, a nie stałą
+    charactersManager = new CharactersManager(scaleFactor, tileWidth, tileHeight, 3, 3, dishesManager); // do poprawy - liczba postaci powinna być parametrem, a nie stałą
     this->texturesLoaded = loadTextures(scaleFactor);
 }
 
@@ -42,7 +43,7 @@ bool Level::loadTextures(int scaleFactor) {
 }
 
 void Level::update(float deltaTime) {
-    this->charactersManager->update(deltaTime, scaleFactor, tileWidth, tileHeight);
+    this->charactersManager->update(deltaTime, scaleFactor, tileWidth, tileHeight, this);
 }
 
 void Level::render(sf::RenderWindow* window) {
@@ -63,3 +64,28 @@ void Level::render(sf::RenderWindow* window) {
         this->charactersManager->renderWaitersAndCustomers(window);
     }
 }
+
+bool Level::isValidPosition(Positions positions) {
+    if(positions.xPos > 151.0f && positions.xPos < 269.0f && positions.yPos == 24.0f) {
+        return true;
+    }
+    if(positions.xPos > 151.0f && positions.xPos < 212.0f && (positions.yPos == 40.0f || positions.yPos == 56.0f)) {
+        return true;
+    }
+    if((positions.xPos > 72.0f && positions.xPos < 88.0f || positions.xPos > 151.0f && positions.xPos < 212.0f) && positions.yPos == 72.0f) {
+        return true;
+    }
+    if(positions.xPos > 7.0f && positions.xPos < 279.0f && positions.yPos == 88.0f) {
+        return true;
+    }
+    if(positions.xPos > 52.0f && positions.xPos < 279.0f && positions.yPos == 104.0f) {
+        return true;
+    }
+    if(positions.xPos > 7.0f && positions.xPos < 212.0f && positions.yPos == 120.0f) {
+        return true;
+    }
+    if(positions.xPos > 7.0f && positions.xPos < 279.0f && positions.yPos == 152.0f) {
+        return true;
+    }
+    return false;
+} 

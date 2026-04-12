@@ -3,7 +3,9 @@
 #include "Scene.hpp"
 #include "items/DishesManager.hpp"
 #include "interiors/TablesManager.hpp"
-#include "characters/CharactersManager.hpp"
+
+
+class CharactersManager;
 
 
 class Level : public Scene {
@@ -27,4 +29,5 @@ public:
     bool loadTextures(int scaleFactor);
     void update(float deltaTime) override;
     void render(sf::RenderWindow* window) override;
+    bool isValidPosition(Positions positions);
 };
