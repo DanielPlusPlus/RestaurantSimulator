@@ -33,7 +33,7 @@ void CharactersManager::addChefs(int scaleFactor, float tileWidth, float tileHei
 void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed, 
                                    int waitersNumber) {
     for(int i = 0; i < waitersNumber; i++) {
-        Waiter* newWaiter = new Waiter(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed, i + 1, 
+        Waiter* newWaiter = new Waiter(scaleFactor, moveXSpeed, moveYSpeed, i + 1, 
                                        waitersStartPositions[i], waiterQueueHandlingPositions, 
                                        waiterDishPickupPositions, waiterDishDropoffPositions);
         waiters.push_back(newWaiter);
@@ -92,7 +92,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         chef->update(deltaTime, scaleFactor);
     }
     for (Waiter* waiter : waiters) {
-        waiter->update(deltaTime, scaleFactor, level);
+        waiter->update(deltaTime, scaleFactor, tileWidth, tileHeight, level);
     }
     for(int i = 0; i < waitingCustomers.size(); i++) {
         if(i == 0) {

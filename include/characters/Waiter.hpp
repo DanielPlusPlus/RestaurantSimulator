@@ -27,7 +27,8 @@ private:
     float animTime = 0.0f;
     enum Directions animDirection = Directions::DOWN;
 
-    enum WaiterStatesEnum state = WaiterStatesEnum::WAITING_TO_START;
+    enum WaiterStatesEnum state = WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING;
+    enum WaiterStatesEnum movingState = WaiterStatesEnum::TURNING_DOWN;
     Positions queueHandlingPositions;
     Positions dishPickupPositions;
     Positions dishDropoffPositions;
@@ -39,12 +40,12 @@ private:
 
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
-    void changeState(float deltaTime, int scaleFactor, Level* level);
+    void changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level);
 public:
-    Waiter(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-           float moveYSpeed, int waiterNumber, Positions startPositions, 
-           Positions doorsPositions, Positions dishPickupPositions, 
+    Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
+           int waiterNumber, Positions startPositions, 
+           Positions queueHandlingPositions, Positions dishPickupPositions, 
            Positions dishDropoffPositions);
-    void update(float deltaTime, int scaleFactor, Level* level);
+    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level);
     void render(sf::RenderWindow* window) override;
 };

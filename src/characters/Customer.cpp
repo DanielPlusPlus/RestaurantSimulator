@@ -2,10 +2,10 @@
 
 
 Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
-         float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
-         Positions queueStartingPositions) : Character(startPositions), moveXSpeed(moveXSpeed), 
-         moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
-         queueStartingPositions(queueStartingPositions) {
+                   float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
+                   Positions queueStartingPositions) : Character(startPositions), moveXSpeed(moveXSpeed), 
+                   moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
+                   queueStartingPositions(queueStartingPositions) {
     texturesLoaded = loadTextures(scaleFactor, texturesPaths);
     width *= scaleFactor;
     height *= scaleFactor;

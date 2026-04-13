@@ -2,12 +2,12 @@
 #include "scenes/Level.hpp"
 
 
-Waiter::Waiter(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-           float moveYSpeed, int waiterNumber, Positions startPositions, 
-           Positions queueHandlingPositions, Positions dishPickupPositions, 
-           Positions dishDropoffPositions) : Character(startPositions), waiterNumber(waiterNumber), 
-           queueHandlingPositions(queueHandlingPositions), dishPickupPositions(dishPickupPositions), 
-           dishDropoffPositions(dishDropoffPositions), moveXSpeed(moveXSpeed), moveYSpeed(moveYSpeed) {
+Waiter::Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
+               int waiterNumber, Positions startPositions, 
+               Positions queueHandlingPositions, Positions dishPickupPositions, 
+               Positions dishDropoffPositions) : Character(startPositions), waiterNumber(waiterNumber), 
+               queueHandlingPositions(queueHandlingPositions), dishPickupPositions(dishPickupPositions), 
+               dishDropoffPositions(dishDropoffPositions), moveXSpeed(moveXSpeed), moveYSpeed(moveYSpeed) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;
@@ -23,7 +23,7 @@ Waiter::Waiter(int scaleFactor, float tileWidth, float tileHeight, float moveXSp
     this->dishDropoffPositions.xPos *= scaleFactor;
     this->dishDropoffPositions.yPos *= scaleFactor;
 
-    state = WaiterStatesEnum::WAITING_TO_START;
+    state = WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING;
     moveProgress = 0.0f;
     animDirection = Directions::DOWN;
 }
@@ -70,9 +70,9 @@ bool Waiter::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Waiter::update(float deltaTime, int scaleFactor, Level* level) {
+void Waiter::update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level) {
     changeAnimation(deltaTime);
-    changeState(deltaTime, scaleFactor, level);
+    changeState(deltaTime, scaleFactor, tileWidth, tileHeight, level);
 }
 
 void Waiter::changeAnimation(float deltaTime) {
@@ -86,8 +86,114 @@ void Waiter::changeAnimation(float deltaTime) {
     }
 }
 
-void Waiter::changeState(float deltaTime, int scaleFactor, Level* level) {
+void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level) {
     level->isValidPosition(positions);
+    switch(state) {
+        case WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING: {
+            switch(movingState) {
+                case WaiterStatesEnum::TURNING_UP:
+                    animDirection = Directions::UP;
+                    movingState = WaiterStatesEnum::MOVING_UP;
+                    break;
+                case WaiterStatesEnum::MOVING_UP: {
+                    float moveStep = moveYSpeed * deltaTime;
+                    float targetY = queueHandlingPositions.yPos;
+                    if(positions.yPos > targetY) {
+                        float remaining = positions.yPos - targetY;
+                        float step = (moveStep < remaining) ? moveStep : remaining;
+                        positions.yPos -= step;
+                        if(positions.yPos <= targetY) {
+                            positions.yPos = targetY;
+                            state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+                        }
+                    }
+                    else {
+                        state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+                    }
+                    break;
+                }
+                case WaiterStatesEnum::TURNING_RIGHT:
+                    animDirection = Directions::RIGHT;
+                    movingState = WaiterStatesEnum::MOVING_RIGHT;
+                    break;
+                case WaiterStatesEnum::MOVING_RIGHT: {
+                    float moveStep = moveXSpeed * deltaTime;
+                    float targetX = queueHandlingPositions.xPos;
+                    if(positions.xPos < targetX) {
+                        float remaining = targetX - positions.xPos;
+                        float step = (moveStep < remaining) ? moveStep : remaining;
+                        positions.xPos += step;
+                        if(positions.xPos >= targetX) {
+                            positions.xPos = targetX;
+                            state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+                        }
+                    }
+                    else {
+                        state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+                    }
+                    break;
+                }
+                case WaiterStatesEnum::TURNING_DOWN:
+                    animDirection = Directions::DOWN;
+                    movingState = WaiterStatesEnum::MOVING_DOWN;
+                    break;
+                case WaiterStatesEnum::MOVING_DOWN: {
+                    float moveStep = moveYSpeed * deltaTime;
+                    float targetY = queueHandlingPositions.yPos;
+                    if(positions.yPos < targetY) {
+                        float remaining = targetY - positions.yPos;
+                        float step = (moveStep < remaining) ? moveStep : remaining;
+                        positions.yPos += step;
+                        if(positions.yPos >= targetY) {
+                            positions.yPos = targetY;
+                            state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+                        }
+                    }
+                    else {
+                        state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+                    }
+                    break;
+                }
+                case WaiterStatesEnum::TURNING_LEFT:
+                    animDirection = Directions::LEFT;
+                    movingState = WaiterStatesEnum::MOVING_LEFT;
+                    break;
+                case WaiterStatesEnum::MOVING_LEFT: {
+                    float moveStep = moveXSpeed * deltaTime;
+                    float targetX = queueHandlingPositions.xPos;
+                    if(positions.xPos > targetX) {
+                        float remaining = positions.xPos - targetX;
+                        float step = (moveStep < remaining) ? moveStep : remaining;
+                        positions.xPos -= step;
+                        if(positions.xPos <= targetX) {
+                            positions.xPos = targetX;
+                            state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+                        }
+                    }
+                    else {
+                        state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+            break;
+        }
+        case WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING:
+            state = WaiterStatesEnum::QUEUE_HANDLING;
+            idleTimer = 0.0f;
+            break;
+        case WaiterStatesEnum::QUEUE_HANDLING:
+            idleTimer += deltaTime;
+            if(idleTimer > 1.0f) {
+                idleTimer = 0.0f;
+                state = WaiterStatesEnum::WAITING_TO_START;
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 void Waiter::render(sf::RenderWindow* window) {

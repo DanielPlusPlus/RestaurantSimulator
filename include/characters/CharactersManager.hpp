@@ -34,10 +34,15 @@ private:
         Directions::UP,
         Directions::DOWN
     };
+    // const Positions waitersStartPositions[3] = {
+    //     Positions{143.0f, 168.0f},
+    //     Positions{151.0f, 40.0f},
+    //     Positions{70.0f, 72.0f}
+    // };
     const Positions waitersStartPositions[3] = {
+        Positions{14.0f, 120.0f},
         Positions{143.0f, 168.0f},
-        Positions{151.0f, 40.0f},
-        Positions{70.0f, 72.0f}
+        Positions{143.0f, 168.0f}
     };
     const Positions customersStartPositions{302.0f, 178.0f};
     // y - 162, x - 131 lewa, 171 prawa, srodek 131 + (171 - 131) / 2 = 151

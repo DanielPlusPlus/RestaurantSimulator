@@ -100,7 +100,12 @@ bool Level::isValidPosition(Positions positions) {
         return true;
     }
     if(positions.xPos >= (7.0f * scaleFactor) 
-       && positions.xPos <= (279.0f * scaleFactor) 
+       && positions.xPos <= (212.0f * scaleFactor) 
+       && positions.yPos == (136.0f * scaleFactor)) {
+        return true;
+    }
+    if(positions.xPos >= (131.0f * scaleFactor) 
+       && positions.xPos <= (171.0f * scaleFactor) 
        && positions.yPos == (152.0f * scaleFactor)) {
         return true;
     }
