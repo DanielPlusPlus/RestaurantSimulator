@@ -28,7 +28,7 @@ private:
     enum Directions animDirection = Directions::DOWN;
 
     enum WaiterStatesEnum state = WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING;
-    enum WaiterStatesEnum movingState = WaiterStatesEnum::TURNING_DOWN;
+    enum WaiterStatesEnum movingState = WaiterStatesEnum::TURNING_UP;
     Positions queueHandlingPositions;
     Positions dishPickupPositions;
     Positions dishDropoffPositions;
@@ -41,6 +41,7 @@ private:
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
     void changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level);
+    bool moveToDestinationPositions(Positions destinationPositions, float deltaTime);
 public:
     Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
            int waiterNumber, Positions startPositions, 
