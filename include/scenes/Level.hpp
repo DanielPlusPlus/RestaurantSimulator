@@ -29,5 +29,5 @@ public:
     bool loadTextures(int scaleFactor);
     void update(float deltaTime) override;
     void render(sf::RenderWindow* window) override;
-    bool isValidPosition(Positions positions);
+    bool isValidPositions(Positions positions);
 };

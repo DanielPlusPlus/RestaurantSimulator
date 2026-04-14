@@ -32,16 +32,18 @@ private:
     Positions queueHandlingPositions;
     Positions dishPickupPositions;
     Positions dishDropoffPositions;
+    Positions lastCyclePosition;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
     float moveXSpeed = 0.0f;
     float moveYSpeed = 0.0f;
     float idleTimer = 0.0f;
+    int failedCycles = 0;
 
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
     void changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level);
-    bool moveToDestinationPositions(Positions destinationPositions, float deltaTime);
+    bool moveToDestinationPositions(Positions destinationPositions, float deltaTime, Level* level);
 public:
     Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
            int waiterNumber, Positions startPositions, 
