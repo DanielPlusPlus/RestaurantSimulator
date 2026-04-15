@@ -3,9 +3,8 @@
 #include "Scene.hpp"
 #include "items/DishesManager.hpp"
 #include "interiors/TablesManager.hpp"
-
-
-class CharactersManager;
+#include "characters/CharactersManager.hpp"
+#include "utils/PathFinder.hpp"
 
 
 class Level : public Scene {
@@ -24,6 +23,7 @@ private:
     DishesManager* dishesManager;
     TablesManager* tablesManager;
     CharactersManager* charactersManager;
+    PathFinder* pathFinder;
 public:
     Level(int scaleFactor);
     bool loadTextures(int scaleFactor);

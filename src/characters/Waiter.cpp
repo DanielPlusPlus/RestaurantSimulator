@@ -1,6 +1,8 @@
 #include "characters/Waiter.hpp"
-#include "scenes/Level.hpp"
+#include "utils/PathFinder.hpp"
+
 #include <cmath>
+
 
 Waiter::Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
                int waiterNumber, Positions startPositions, 
@@ -70,9 +72,9 @@ bool Waiter::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Waiter::update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level) {
+void Waiter::update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder) {
     changeAnimation(deltaTime);
-    changeState(deltaTime, scaleFactor, tileWidth, tileHeight, level);
+    changeState(deltaTime, scaleFactor, tileWidth, tileHeight, pathFinder);
 }
 
 void Waiter::changeAnimation(float deltaTime) {
@@ -86,16 +88,15 @@ void Waiter::changeAnimation(float deltaTime) {
     }
 }
 
-void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level) {
-    level->isValidPositions(positions);
+void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder) {
     switch(state) {
         case WaiterStatesEnum::PREPARING_TO_MOVE_TO_QUEUE_HANDLING:
-            animDirection = Directions::DOWN;
             state = WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING;
-            movingState = WaiterStatesEnum::TURNING_UP;
+            pathToFollow.clear();
+            currentPathIndex = 0;
             break;
         case WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING: {
-            if(moveToDestinationPositions(queueHandlingPositions, deltaTime, level)) {
+            if(moveToDestinationPositions(queueHandlingPositions, deltaTime, tileWidth, tileHeight, pathFinder)) {
                 state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
             }
             break;
@@ -103,6 +104,7 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
         case WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING:
             animDirection = Directions::DOWN;
             state = WaiterStatesEnum::QUEUE_HANDLING;
+            movingState = WaiterStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;
             break;
         case WaiterStatesEnum::QUEUE_HANDLING:
@@ -117,145 +119,83 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
     }
 }
 
-bool Waiter::moveToDestinationPositions(Positions destinationPositions, float deltaTime, Level* level) {
-    if(std::abs(positions.xPos - destinationPositions.xPos) < 1.0f && 
-        std::abs(positions.yPos - destinationPositions.yPos) < 1.0f) {
-        movingState = WaiterStatesEnum::TURNING_UP;
+bool Waiter::moveToDestinationPositions(Positions destinationPositions, float deltaTime, 
+                                        float tileWidth, float tileHeight, PathFinder* pathFinder) {
+
+    if(std::abs(positions.xPos - destinationPositions.xPos) == 0.0f && 
+        std::abs(positions.yPos - destinationPositions.yPos) == 0.0f) {
+        pathToFollow.clear();
+        currentPathIndex = 0;
         return true;
     }
 
-    if(movingState == WaiterStatesEnum::TURNING_UP) {
-        if((std::abs(positions.xPos - lastCyclePosition.xPos) < 0.1f) && 
-            (std::abs(positions.yPos - lastCyclePosition.yPos) < 0.1f)) {
+    if(pathToFollow.empty()) {
+        pathToFollow = pathFinder->findPath(positions, destinationPositions, tileWidth, tileHeight);
+        currentPathIndex = 0;
+
+        if(pathToFollow.empty()) {
             failedCycles++;
             if(failedCycles > 5) {
                 failedCycles = 0;
                 return true;
             }
+            return false;
         }
-        else {
+    }
+
+    if(currentPathIndex < pathToFollow.size()) {
+        Positions nextWaypoint = pathToFollow[currentPathIndex];
+        updateDirection(nextWaypoint);
+
+        float dx = nextWaypoint.xPos - positions.xPos;
+        float dy = nextWaypoint.yPos - positions.yPos;
+        float distance = std::sqrt(dx * dx + dy * dy);
+
+        float moveDistance = (std::sqrt(moveXSpeed * moveXSpeed + moveYSpeed * moveYSpeed)) * deltaTime;
+        
+        if(distance < moveDistance) {
+            positions = nextWaypoint;
+            currentPathIndex++;
             failedCycles = 0;
         }
-        lastCyclePosition = positions;
+        else {
+            float ratio = moveDistance / distance;
+            positions.xPos += dx * ratio;
+            positions.yPos += dy * ratio;
+        }
     }
-    
-    switch(movingState) {
-        case WaiterStatesEnum::TURNING_UP:
-            animDirection = Directions::UP;
-            movingState = WaiterStatesEnum::MOVING_UP;
-            break;
-        case WaiterStatesEnum::MOVING_UP: {
-            float moveStep = moveYSpeed * deltaTime;
-            float targetY = destinationPositions.yPos;
-            if (positions.yPos > targetY) {
-                float remaining = positions.yPos - targetY;
-                float step = (moveStep < remaining) ? moveStep : remaining;
-                Positions newPositionsitions = positions;
-                newPositionsitions.yPos -= step;
-                if(level->isValidPositions(newPositionsitions)) {
-                    positions.yPos = newPositionsitions.yPos;
-                    if(positions.yPos <= targetY) {
-                        positions.yPos = targetY;
-                        movingState = WaiterStatesEnum::TURNING_RIGHT;
-                    }
-                }
-                else {
-                    movingState = WaiterStatesEnum::TURNING_RIGHT;
-                }
-            }
-            else {
-                movingState = WaiterStatesEnum::TURNING_RIGHT;
-            }
-            break;
-        }
-        case WaiterStatesEnum::TURNING_RIGHT:
-            animDirection = Directions::RIGHT;
-            movingState = WaiterStatesEnum::MOVING_RIGHT;
-            break;
-        case WaiterStatesEnum::MOVING_RIGHT: {
-            float moveStep = moveXSpeed * deltaTime;
-            float targetX = destinationPositions.xPos;
-            if(positions.xPos < targetX) {
-                float remaining = targetX - positions.xPos;
-                float step = (moveStep < remaining) ? moveStep : remaining;
-                Positions newPositions = positions;
-                newPositions.xPos += step;
-                if(level->isValidPositions(newPositions)) {
-                    positions.xPos = newPositions.xPos;
-                    if(positions.xPos >= targetX) {
-                        positions.xPos = targetX;
-                        movingState = WaiterStatesEnum::TURNING_DOWN;
-                    }
-                }
-                else {
-                    movingState = WaiterStatesEnum::TURNING_DOWN;
-                }
-            }
-            else {
-                movingState = WaiterStatesEnum::TURNING_DOWN;
-            }
-            break;
-        }
-        case WaiterStatesEnum::TURNING_DOWN:
-            animDirection = Directions::DOWN;
-            movingState = WaiterStatesEnum::MOVING_DOWN;
-            break;
-        case WaiterStatesEnum::MOVING_DOWN: {
-            float moveStep = moveYSpeed * deltaTime;
-            float targetY = destinationPositions.yPos;
-            if (positions.yPos < targetY) {
-                float remaining = targetY - positions.yPos;
-                float step = (moveStep < remaining) ? moveStep : remaining;
-                Positions newPositions = positions;
-                newPositions.yPos += step;
-                if(level->isValidPositions(newPositions)) {
-                    positions.yPos = newPositions.yPos;
-                    if(positions.yPos >= targetY) {
-                        positions.yPos = targetY;
-                        movingState = WaiterStatesEnum::TURNING_LEFT;
-                    }
-                }
-                else {
-                    movingState = WaiterStatesEnum::TURNING_LEFT;
-                }
-            }
-            else {
-                movingState = WaiterStatesEnum::TURNING_LEFT;
-            }
-            break;
-        }
-        case WaiterStatesEnum::TURNING_LEFT:
-            animDirection = Directions::LEFT;
-            movingState = WaiterStatesEnum::MOVING_LEFT;
-            break;
-        case WaiterStatesEnum::MOVING_LEFT: {
-            float moveStep = moveXSpeed * deltaTime;
-            float targetX = destinationPositions.xPos;
-            if (positions.xPos > targetX) {
-                float remaining = positions.xPos - targetX;
-                float step = (moveStep < remaining) ? moveStep : remaining;
-                Positions newPositions = positions;
-                newPositions.xPos -= step;
-                if(level->isValidPositions(newPositions)) {
-                    positions.xPos = newPositions.xPos;
-                    if(positions.xPos <= targetX) {
-                        positions.xPos = targetX;
-                        movingState = WaiterStatesEnum::TURNING_UP;
-                    }
-                }
-                else {
-                    movingState = WaiterStatesEnum::TURNING_UP;
-                }
-            }
-            else {
-                movingState = WaiterStatesEnum::TURNING_UP;
-            }
-            break;
-        }
-        default:
-            break;
+    else {
+        pathToFollow.clear();
+        currentPathIndex = 0;
+        return true;
     }
     return false;
+}
+
+void Waiter::updateDirection(Positions nextPosition) {
+    float dx = nextPosition.xPos - positions.xPos;
+    float dy = nextPosition.yPos - positions.yPos;
+    
+    if(std::abs(dy) > std::abs(dx)) {
+        if(dy < 0) {
+            animDirection = Directions::UP;
+            movingState = WaiterStatesEnum::MOVING_UP;
+        }
+        else {
+            animDirection = Directions::DOWN;
+            movingState = WaiterStatesEnum::MOVING_DOWN;
+        }
+    }
+    else {
+        if(dx < 0) {
+            animDirection = Directions::LEFT;
+            movingState = WaiterStatesEnum::MOVING_LEFT;
+        }
+        else {
+            animDirection = Directions::RIGHT;
+            movingState = WaiterStatesEnum::MOVING_RIGHT;
+        }
+    }
 }
 
 void Waiter::render(sf::RenderWindow* window) {

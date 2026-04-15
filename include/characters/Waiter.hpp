@@ -4,7 +4,8 @@
 #include "enums/WaiterStatesEnum.hpp"
 
 
-class Level;
+
+class PathFinder;
 
 class Waiter : public Character {
 private:
@@ -28,7 +29,7 @@ private:
     enum Directions animDirection = Directions::DOWN;
 
     enum WaiterStatesEnum state = WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING;
-    enum WaiterStatesEnum movingState = WaiterStatesEnum::TURNING_UP;
+    enum WaiterStatesEnum movingState = WaiterStatesEnum::NO_MOVEMENT;
     Positions queueHandlingPositions;
     Positions dishPickupPositions;
     Positions dishDropoffPositions;
@@ -39,16 +40,21 @@ private:
     float moveYSpeed = 0.0f;
     float idleTimer = 0.0f;
     int failedCycles = 0;
+    
+    std::vector<Positions> pathToFollow;
+    int currentPathIndex = 0;
 
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
-    void changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level);
-    bool moveToDestinationPositions(Positions destinationPositions, float deltaTime, Level* level);
+    void changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder);
+    bool moveToDestinationPositions(Positions destinationPositions, float deltaTime, 
+                                    float tileWidth, float tileHeight, PathFinder* pathFinder);
+    void updateDirection(Positions nextPosition);
 public:
     Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
            int waiterNumber, Positions startPositions, 
            Positions queueHandlingPositions, Positions dishPickupPositions, 
            Positions dishDropoffPositions);
-    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level);
+    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder);
     void render(sf::RenderWindow* window) override;
 };

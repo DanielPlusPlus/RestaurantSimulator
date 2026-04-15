@@ -71,7 +71,7 @@ void CharactersManager::removeResigningCustomer(int index) {
 }
 
 void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth, 
-                               float tileHeight, Level* level) {
+                               float tileHeight, PathFinder* pathFinder) {
     addCustomerTimer += deltaTime;
     if(addCustomerTimer > timeToAddCustomer) {
         addCustomerTimer = 0.0f;
@@ -92,7 +92,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         chef->update(deltaTime, scaleFactor);
     }
     for (Waiter* waiter : waiters) {
-        waiter->update(deltaTime, scaleFactor, tileWidth, tileHeight, level);
+        waiter->update(deltaTime, scaleFactor, tileWidth, tileHeight, pathFinder);
     }
     for(int i = 0; i < waitingCustomers.size(); i++) {
         if(i == 0) {

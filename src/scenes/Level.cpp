@@ -1,6 +1,4 @@
 #include "scenes/Level.hpp"
-#include "scenes/Scene.hpp"
-#include "characters/CharactersManager.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -11,6 +9,7 @@ Level::Level(int scaleFactor) : Scene(scaleFactor) {
     dishesManager = new DishesManager(scaleFactor);
     tablesManager = new TablesManager(scaleFactor, 8, 3); // do poprawy - liczba stolików powinna być parametrem, a nie stałą
     charactersManager = new CharactersManager(scaleFactor, tileWidth, tileHeight, 3, 3, dishesManager); // do poprawy - liczba postaci powinna być parametrem, a nie stałą
+    pathFinder = new PathFinder(this);
     this->texturesLoaded = loadTextures(scaleFactor);
 }
 
@@ -43,7 +42,7 @@ bool Level::loadTextures(int scaleFactor) {
 }
 
 void Level::update(float deltaTime) {
-    this->charactersManager->update(deltaTime, scaleFactor, tileWidth, tileHeight, this);
+    this->charactersManager->update(deltaTime, scaleFactor, tileWidth, tileHeight, pathFinder);
 }
 
 void Level::render(sf::RenderWindow* window) {

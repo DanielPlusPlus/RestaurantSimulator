@@ -12,7 +12,7 @@
 #include <vector>
 
 
-class Level;
+class PathFinder;
 
 class CharactersManager {
 private:
@@ -76,7 +76,7 @@ private:
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
-    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, Level* level);
+    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder);
     void renderChefs(sf::RenderWindow* window);
     void renderWaitersAndCustomers(sf::RenderWindow* window);
 };
