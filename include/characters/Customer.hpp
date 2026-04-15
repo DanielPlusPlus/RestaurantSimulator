@@ -4,6 +4,8 @@
 #include "enums/CustomerStatesEnum.hpp"
 
 
+class PathFinder;
+
 class Customer : public Character {
 private:
     int customerNumber = 0;
@@ -21,37 +23,53 @@ private:
     enum Directions animDirection = Directions::LEFT;
 
     enum CustomerStatesEnum state = CustomerStatesEnum::PREPARING_TO_MOVE;
+    enum CustomerStatesEnum movingState = CustomerStatesEnum::NO_MOVEMENT;
     Positions queueStartingPositions;
     Positions resignationPositions;
     Positions chairPositions;
+    Positions enterRestaurantPositions;
     Positions enterChairPositions;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
     float moveXSpeed = 0.0f;
     float moveYSpeed = 0.0f;
     float idleTimer = 0.0f;
+    int failedCycles = 0;
 
     float previousQueueXPos = 0.0f;
     bool resigning = false;
     bool assignedToRemove = false;
     bool entered = false;
 
+    std::vector<Positions> pathToFollow;
+    int currentPathIndex = 0;
+
     bool loadTextures(int scaleFactor, CharactersTexturesPaths texturesPaths);
     void changeAnimation(float deltaTime);
     void changeWaitingState(float deltaTime, float queueXPos);
     void changeResigningState(float deltaTime);
+    void changeEnterState(float deltaTime, int scaleFactor, 
+                          float tileWidth, float tileHeight, 
+                          PathFinder* pathFinder);
     bool getResigningStatus() {
         return resigning;
     }
     void setAssignedToRemove(bool value) {
         assignedToRemove = value;
     }
+    bool moveToDestinationPositions(Positions destinationPositions, float deltaTime, 
+                                    float tileWidth, float tileHeight, 
+                                    PathFinder* pathFinder);
+    void updateDirection(Positions nextPosition);
 public:
     Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
              float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
-             Positions queueStartingPositions);
-    void updateIfWaiting(float deltaTime, int scaleFactor, float queueXPos);
-    void updateIfResigning(float deltaTime, int scaleFactor);
+             Positions queueStartingPositions, Positions enterRestaurantPositions);
+    void updateIfWaiting(float deltaTime, float queueXPos);
+    void updateIfResigning(float deltaTime);
+    void updateIfEntered(float deltaTime, int scaleFactor, 
+                         float tileWidth, float tileHeight, 
+                         PathFinder* pathFinder);
     void render(sf::RenderWindow* window) override;
     void setResigning(bool value) {
         resigning = value;
@@ -59,6 +77,7 @@ public:
     }
     void setEntered(bool value) {
         entered = value;
+        state = CustomerStatesEnum::PREPARING_TO_ENTER_RESTAURANT;
     }
     void setChairAndEnterChairPositions(Positions chairPositions, Positions enterChairPositions) {
         this->chairPositions = chairPositions;
@@ -67,4 +86,5 @@ public:
     bool getAssignedToRemoveStatus() {
         return assignedToRemove;
     }
+    bool isWaitingToEnter();
 };

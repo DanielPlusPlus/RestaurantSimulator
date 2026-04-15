@@ -12,6 +12,7 @@
 #include <vector>
 
 
+class TablesManager;;
 class PathFinder;
 
 class CharactersManager {
@@ -46,10 +47,11 @@ private:
     };
     const Positions customersStartPositions{302.0f, 178.0f};
     // y - 162, x - 131 lewa, 171 prawa, srodek 131 + (171 - 131) / 2 = 151
-    const Positions waiterQueueHandlingPositions{143.0f, 168.0f};
-    const Positions waiterDishPickupPositions{151.0f, 40.0f};
-    const Positions waiterDishDropoffPositions{70.0f, 72.0f};
+    const Positions waitersQueueHandlingPositions{143.0f, 168.0f};
+    const Positions waitersDishPickupPositions{151.0f, 40.0f};
+    const Positions waitersDishDropoffPositions{70.0f, 72.0f};
     const Positions customersQueueStartingPositions{155.0f, 178.0f};
+    const Positions customersEnterRestaurantPositions{155.0f, 152.0f};
     
     std::uniform_real_distribution<float> timeToAddCustomerDist;
     std::uniform_real_distribution<float> timeToRemoveCustomerDist;
@@ -72,11 +74,13 @@ private:
                     float moveYSpeed, int waitersNumber);
     void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
     void moveWaitingCustomerToResignation();
+    void moveWaitingCustomerToInside();
     void removeResigningCustomer(int index);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
-    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder);
+    void update(float deltaTime, int scaleFactor, float tileWidth, 
+                float tileHeight, TablesManager* tablesManager, PathFinder* pathFinder);
     void renderChefs(sf::RenderWindow* window);
     void renderWaitersAndCustomers(sf::RenderWindow* window);
 };

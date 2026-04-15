@@ -1,11 +1,17 @@
 #include "characters/Customer.hpp"
+#include "utils/PathFinder.hpp"
+
+#include <cmath>
+#include <iostream>
 
 
 Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
                    float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
-                   Positions queueStartingPositions) : Character(startPositions), moveXSpeed(moveXSpeed), 
+                   Positions queueStartingPositions, Positions enterRestaurantPositions) : 
+                   Character(startPositions), moveXSpeed(moveXSpeed), 
                    moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
-                   queueStartingPositions(queueStartingPositions) {
+                   queueStartingPositions(queueStartingPositions), 
+                   enterRestaurantPositions(enterRestaurantPositions) {
     texturesLoaded = loadTextures(scaleFactor, texturesPaths);
     width *= scaleFactor;
     height *= scaleFactor;
@@ -15,6 +21,8 @@ Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float
     this->positions.yPos *= scaleFactor;
     this->queueStartingPositions.xPos *= scaleFactor;
     this->queueStartingPositions.yPos *= scaleFactor;
+    this->enterRestaurantPositions.xPos *= scaleFactor;
+    this->enterRestaurantPositions.yPos *= scaleFactor;
     this->resignationPositions.xPos = this->startPositions.xPos;
     this->resignationPositions.yPos = this->startPositions.yPos + tileHeight;
 
@@ -65,14 +73,23 @@ bool Customer::loadTextures(int scaleFactor, CharactersTexturesPaths texturesPat
     return true;
 }
 
-void Customer::updateIfWaiting(float deltaTime, int scaleFactor, float queueXPos) {
+void Customer::updateIfWaiting(float deltaTime, float queueXPos) {
     changeAnimation(deltaTime);
     changeWaitingState(deltaTime, queueXPos);
 }
 
-void Customer::updateIfResigning(float deltaTime, int scaleFactor) {
+void Customer::updateIfResigning(float deltaTime) {
     changeAnimation(deltaTime);
     changeResigningState(deltaTime);
+    changeResigningState(deltaTime);
+}
+
+void Customer::updateIfEntered(float deltaTime, int scaleFactor, 
+                               float tileWidth, float tileHeight, 
+                               PathFinder* pathFinder) {
+    changeAnimation(deltaTime);
+    changeResigningState(deltaTime);
+    changeEnterState(deltaTime, scaleFactor, tileWidth, tileHeight, pathFinder);
 }
 
 void Customer::changeAnimation(float deltaTime) {
@@ -121,6 +138,9 @@ void Customer::changeWaitingState(float deltaTime, float queueXPos) {
             break;
         case CustomerStatesEnum::TURNING_UP:
             animDirection = Directions::UP;
+            state = CustomerStatesEnum::WAITING_TO_ENTER;
+            break;
+        case CustomerStatesEnum::WAITING_TO_ENTER:
             break;
         default:
             break;
@@ -179,6 +199,136 @@ void Customer::changeResigningState(float deltaTime) {
     }
 }
 
+void Customer::changeEnterState(float deltaTime, int scaleFactor, 
+                                float tileWidth, float tileHeight, 
+                                PathFinder* pathFinder) {
+    switch(state) {
+        case CustomerStatesEnum::PREPARING_TO_ENTER_RESTAURANT:
+            animDirection = Directions::UP;
+            state = CustomerStatesEnum::ENTER_TO_RESTAURANT;
+            movingState = CustomerStatesEnum::MOVING_UP;
+            break;
+        case CustomerStatesEnum::ENTER_TO_RESTAURANT: {
+            float moveStep = moveYSpeed * deltaTime;
+            float targetY = enterRestaurantPositions.yPos;
+            if(positions.yPos > targetY) {
+                float remaining = positions.yPos - targetY;
+                float step = (moveStep < remaining) ? moveStep : remaining;
+                positions.yPos -= step;
+                if(positions.yPos <= targetY) {
+                    positions.yPos = targetY;
+                    state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_CHAIR;
+                }
+            }
+            else {
+                state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_CHAIR;
+            }
+            break;
+        }
+        case CustomerStatesEnum::PREPARING_TO_MOVE_TO_CHAIR:
+            state = CustomerStatesEnum::MOVING_TO_CHAIR;
+            enterChairPositions.xPos *= scaleFactor;
+            enterChairPositions.yPos *= scaleFactor;
+            pathToFollow.clear();
+            currentPathIndex = 0;
+            break;
+        case CustomerStatesEnum::MOVING_TO_CHAIR:
+            if(moveToDestinationPositions(enterChairPositions, deltaTime, 
+                                          tileWidth, tileHeight, pathFinder)) {
+                state = CustomerStatesEnum::PREPARING_TO_SIT;
+            }
+            break;
+        case CustomerStatesEnum::PREPARING_TO_SIT:
+            animDirection = Directions::RIGHT;
+            state = CustomerStatesEnum::SITTING;
+            movingState = CustomerStatesEnum::NO_MOVEMENT;
+            idleTimer = 0.0f;
+            break;
+        default:
+            break;
+    }
+}
+
+bool Customer::moveToDestinationPositions(Positions destinationPositions, float deltaTime, 
+                                          float tileWidth, float tileHeight, 
+                                          PathFinder* pathFinder) {
+    if(std::abs(positions.xPos - destinationPositions.xPos) == 0.0f && 
+        std::abs(positions.yPos - destinationPositions.yPos) == 0.0f) {
+        pathToFollow.clear();
+        currentPathIndex = 0;
+        return true;
+    }
+
+    if(pathToFollow.empty()) {
+        pathToFollow = pathFinder->findPath(positions, destinationPositions, tileWidth, tileHeight);
+        currentPathIndex = 0;
+
+        if(pathToFollow.empty()) {
+            failedCycles++;
+            if(failedCycles > 5) {
+                failedCycles = 0;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    if(currentPathIndex < pathToFollow.size()) {
+        Positions nextWaypoint = pathToFollow[currentPathIndex];
+        updateDirection(nextWaypoint);
+
+        float dx = nextWaypoint.xPos - positions.xPos;
+        float dy = nextWaypoint.yPos - positions.yPos;
+        float distance = std::sqrt(dx * dx + dy * dy);
+
+        float moveDistance = (std::sqrt(moveXSpeed * moveXSpeed + 
+                              moveYSpeed * moveYSpeed)) * deltaTime;
+        
+        if(distance < moveDistance) {
+            positions = nextWaypoint;
+            currentPathIndex++;
+            failedCycles = 0;
+        }
+        else {
+            float ratio = moveDistance / distance;
+            positions.xPos += dx * ratio;
+            positions.yPos += dy * ratio;
+        }
+    }
+    else {
+        pathToFollow.clear();
+        currentPathIndex = 0;
+        return true;
+    }
+    return false;
+}
+
+void Customer::updateDirection(Positions nextPosition) {
+    float dx = nextPosition.xPos - positions.xPos;
+    float dy = nextPosition.yPos - positions.yPos;
+    
+    if(std::abs(dy) > std::abs(dx)) {
+        if(dy < 0) {
+            animDirection = Directions::UP;
+            movingState = CustomerStatesEnum::MOVING_UP;
+        }
+        else {
+            animDirection = Directions::DOWN;
+            movingState = CustomerStatesEnum::MOVING_DOWN;
+        }
+    }
+    else {
+        if(dx < 0) {
+            animDirection = Directions::LEFT;
+            movingState = CustomerStatesEnum::MOVING_LEFT;
+        }
+        else {
+            animDirection = Directions::RIGHT;
+            movingState = CustomerStatesEnum::MOVING_RIGHT;
+        }
+    }
+}
+
 void Customer::render(sf::RenderWindow* window) {
     std::vector<sf::Sprite>* spriteSet = &customerIdleSprites;
 
@@ -188,10 +338,20 @@ void Customer::render(sf::RenderWindow* window) {
        state == CustomerStatesEnum::MOVING_RIGHT) {
         spriteSet = &customerRunSprites;
     }
+    if(movingState == CustomerStatesEnum::MOVING_LEFT || 
+       movingState == CustomerStatesEnum::MOVING_DOWN || 
+       movingState == CustomerStatesEnum::MOVING_RIGHT ||
+       movingState == CustomerStatesEnum::MOVING_UP) {
+        spriteSet = &customerRunSprites;
+    }
     int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
     if(texturesLoaded && spriteIndex < spriteSet->size()) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
         sprite.setPosition(positions.xPos, positions.yPos);
         window->draw(sprite);
     }
+}
+
+bool Customer::isWaitingToEnter() {
+    return state == CustomerStatesEnum::WAITING_TO_ENTER;
 }

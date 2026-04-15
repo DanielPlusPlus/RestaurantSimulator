@@ -34,8 +34,8 @@ void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileH
                                    int waitersNumber) {
     for(int i = 0; i < waitersNumber; i++) {
         Waiter* newWaiter = new Waiter(scaleFactor, moveXSpeed, moveYSpeed, i + 1, 
-                                       waitersStartPositions[i], waiterQueueHandlingPositions, 
-                                       waiterDishPickupPositions, waiterDishDropoffPositions);
+                                       waitersStartPositions[i], waitersQueueHandlingPositions, 
+                                       waitersDishPickupPositions, waitersDishDropoffPositions);
         waiters.push_back(newWaiter);
     }
 }
@@ -45,7 +45,8 @@ void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tile
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], tileWidth, 
                                          tileHeight, moveXSpeed, moveYSpeed, waitingCustomers.size() + 1, 
-                                         customersStartPositions, customersQueueStartingPositions);
+                                         customersStartPositions, customersQueueStartingPositions, 
+                                         customersEnterRestaurantPositions);
     waitingCustomers.push_back(newCustomer);
     timeToAddCustomer = timeToAddCustomerDist(globalRNG);
 }
@@ -63,6 +64,19 @@ void CharactersManager::moveWaitingCustomerToResignation() {
     timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
 }
 
+void CharactersManager::moveWaitingCustomerToInside() {
+    if(!waitingCustomers.empty()) {
+        Customer* customer = waitingCustomers[0];
+        if(customer->isWaitingToEnter()) {
+            customer->setEntered(true);
+            customer->setChairAndEnterChairPositions(waitersQueueHandlingPositions, 
+                                                     waitersDishPickupPositions);
+            insideCustomers.push_back(customer);
+            waitingCustomers.erase(waitingCustomers.begin());
+        }
+    }
+}
+
 void CharactersManager::removeResigningCustomer(int index) {
     if(index >= 0 && index < resigningCustomers.size()) {
         delete resigningCustomers[index];
@@ -71,7 +85,7 @@ void CharactersManager::removeResigningCustomer(int index) {
 }
 
 void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth, 
-                               float tileHeight, PathFinder* pathFinder) {
+                               float tileHeight, TablesManager* tablesManager, PathFinder* pathFinder) {
     addCustomerTimer += deltaTime;
     if(addCustomerTimer > timeToAddCustomer) {
         addCustomerTimer = 0.0f;
@@ -92,22 +106,29 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         chef->update(deltaTime, scaleFactor);
     }
     for (Waiter* waiter : waiters) {
-        waiter->update(deltaTime, scaleFactor, tileWidth, tileHeight, pathFinder);
+        waiter->update(deltaTime, tileWidth, tileHeight, pathFinder);
+        if(waiter->isQueueHandling()) {
+            moveWaitingCustomerToInside();
+        }
     }
     for(int i = 0; i < waitingCustomers.size(); i++) {
         if(i == 0) {
-            waitingCustomers[i]->updateIfWaiting(deltaTime, scaleFactor, 
-                                                 customersQueueStartingPositions.xPos * scaleFactor);
+            waitingCustomers[i]->updateIfWaiting(deltaTime, customersQueueStartingPositions.xPos * scaleFactor);
         }
         else {
-            waitingCustomers[i]->updateIfWaiting(deltaTime, scaleFactor, waitingCustomers[i - 1]->getXPos() + tileWidth);
+            waitingCustomers[i]->updateIfWaiting(deltaTime, waitingCustomers[i - 1]->getXPos() + tileWidth);
         }
     }
     for(int i = resigningCustomers.size() - 1; i >= 0; i--) {
         if(resigningCustomers[i]->getAssignedToRemoveStatus()) {
             removeResigningCustomer(i);
         }
-        resigningCustomers[i]->updateIfResigning(deltaTime, scaleFactor);
+        resigningCustomers[i]->updateIfResigning(deltaTime);
+    }
+    for(Customer* insideCustomer : insideCustomers) {
+        insideCustomer->updateIfEntered(deltaTime, scaleFactor, 
+                                        tileWidth, tileHeight, 
+                                        pathFinder);
     }
 }
 
@@ -126,5 +147,8 @@ void CharactersManager::renderWaitersAndCustomers(sf::RenderWindow* window) {
     }
     for(Customer* resigningCustomer : resigningCustomers) {
         resigningCustomer->render(window);
+    }
+    for(Customer* insideCustomer : insideCustomers) {
+        insideCustomer->render(window);
     }
 }

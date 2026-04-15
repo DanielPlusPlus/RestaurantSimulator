@@ -9,6 +9,10 @@
 class FourChairsTable : public Table {
 private:
     FourChairsTablesPositions chairsPositions;
+    bool isDownLeftChairOccupied = false;
+    bool isDownRightChairOccupied = false;
+    bool isUpLeftChairOccupied = false;
+    bool isUpRightChairOccupied = false;
     bool loadTexture(int scaleFactor, std::string texturePath) override;
 public:
     FourChairsTable(int scaleFactor, std::string texturePath, FourChairsTablesPositions chairsPositions,

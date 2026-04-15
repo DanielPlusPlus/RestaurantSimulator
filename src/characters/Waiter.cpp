@@ -72,9 +72,10 @@ bool Waiter::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Waiter::update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder) {
+void Waiter::update(float deltaTime, float tileWidth, 
+                    float tileHeight, PathFinder* pathFinder) {
     changeAnimation(deltaTime);
-    changeState(deltaTime, scaleFactor, tileWidth, tileHeight, pathFinder);
+    changeState(deltaTime, tileWidth, tileHeight, pathFinder);
 }
 
 void Waiter::changeAnimation(float deltaTime) {
@@ -88,7 +89,8 @@ void Waiter::changeAnimation(float deltaTime) {
     }
 }
 
-void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder) {
+void Waiter::changeState(float deltaTime, float tileWidth, 
+                         float tileHeight, PathFinder* pathFinder) {
     switch(state) {
         case WaiterStatesEnum::PREPARING_TO_MOVE_TO_QUEUE_HANDLING:
             state = WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING;
@@ -96,7 +98,8 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
             currentPathIndex = 0;
             break;
         case WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING:
-            if(moveToDestinationPositions(queueHandlingPositions, deltaTime, tileWidth, tileHeight, pathFinder)) {
+            if(moveToDestinationPositions(queueHandlingPositions, deltaTime, 
+                                          tileWidth, tileHeight, pathFinder)) {
                 state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
             }
             break;
@@ -104,14 +107,8 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
             animDirection = Directions::DOWN;
             state = WaiterStatesEnum::QUEUE_HANDLING;
             movingState = WaiterStatesEnum::NO_MOVEMENT;
-            idleTimer = 0.0f;
             break;
         case WaiterStatesEnum::QUEUE_HANDLING:
-            idleTimer += deltaTime;
-            if(idleTimer > 1.0f) {
-                idleTimer = 0.0f;
-                state = WaiterStatesEnum::WAITING_TO_START;
-            }
             break;
         case WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_PICKUP:
             state = WaiterStatesEnum::MOVING_TO_DISH_PICKUP;
@@ -119,7 +116,8 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
             currentPathIndex = 0;
             break;
         case WaiterStatesEnum::MOVING_TO_DISH_PICKUP:
-            if(moveToDestinationPositions(dishPickupPositions, deltaTime, tileWidth, tileHeight, pathFinder)) {
+            if(moveToDestinationPositions(dishPickupPositions, deltaTime, 
+                                          tileWidth, tileHeight, pathFinder)) {
                 state = WaiterStatesEnum::PREPARING_TO_DISH_PICKUP;
             }
             break;
@@ -142,7 +140,8 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
             currentPathIndex = 0;
             break;
         case WaiterStatesEnum::MOVING_TO_DISH_DROPOFF:
-            if(moveToDestinationPositions(dishDropoffPositions, deltaTime, tileWidth, tileHeight, pathFinder)) {
+            if(moveToDestinationPositions(dishDropoffPositions, deltaTime, 
+                                          tileWidth, tileHeight, pathFinder)) {
                 state = WaiterStatesEnum::PREPARING_TO_DISH_DROPOFF;
             }
             break;
@@ -165,8 +164,8 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
 }
 
 bool Waiter::moveToDestinationPositions(Positions destinationPositions, float deltaTime, 
-                                        float tileWidth, float tileHeight, PathFinder* pathFinder) {
-
+                                        float tileWidth, float tileHeight, 
+                                        PathFinder* pathFinder) {
     if(std::abs(positions.xPos - destinationPositions.xPos) == 0.0f && 
         std::abs(positions.yPos - destinationPositions.yPos) == 0.0f) {
         pathToFollow.clear();
@@ -196,7 +195,8 @@ bool Waiter::moveToDestinationPositions(Positions destinationPositions, float de
         float dy = nextWaypoint.yPos - positions.yPos;
         float distance = std::sqrt(dx * dx + dy * dy);
 
-        float moveDistance = (std::sqrt(moveXSpeed * moveXSpeed + moveYSpeed * moveYSpeed)) * deltaTime;
+        float moveDistance = (std::sqrt(moveXSpeed * moveXSpeed + 
+                              moveYSpeed * moveYSpeed)) * deltaTime;
         
         if(distance < moveDistance) {
             positions = nextWaypoint;
@@ -258,4 +258,8 @@ void Waiter::render(sf::RenderWindow* window) {
         sprite.setPosition(positions.xPos, positions.yPos);
         window->draw(sprite);
     }
+}
+
+bool Waiter::isQueueHandling() {
+    return state == WaiterStatesEnum::QUEUE_HANDLING;
 }

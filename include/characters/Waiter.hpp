@@ -4,7 +4,6 @@
 #include "enums/WaiterStatesEnum.hpp"
 
 
-
 class PathFinder;
 
 class Waiter : public Character {
@@ -46,15 +45,19 @@ private:
 
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
-    void changeState(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder);
+    void changeState(float deltaTime, float tileWidth, 
+                     float tileHeight, PathFinder* pathFinder);
     bool moveToDestinationPositions(Positions destinationPositions, float deltaTime, 
-                                    float tileWidth, float tileHeight, PathFinder* pathFinder);
+                                    float tileWidth, float tileHeight, 
+                                    PathFinder* pathFinder);
     void updateDirection(Positions nextPosition);
 public:
     Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
            int waiterNumber, Positions startPositions, 
            Positions queueHandlingPositions, Positions dishPickupPositions, 
            Positions dishDropoffPositions);
-    void update(float deltaTime, int scaleFactor, float tileWidth, float tileHeight, PathFinder* pathFinder);
+    void update(float deltaTime, float tileWidth, 
+                float tileHeight, PathFinder* pathFinder);
     void render(sf::RenderWindow* window) override;
+    bool isQueueHandling();
 };
