@@ -22,7 +22,7 @@ void Game::run() {
     while (window->isOpen()) {
         float deltaTime = clock.restart().asSeconds();
         
-        currentScene->update(deltaTime);
+        currentScene->update(deltaTime * 2);
         
         // window->clear();
         currentScene->render(window);

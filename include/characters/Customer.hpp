@@ -23,6 +23,8 @@ private:
     enum CustomerStatesEnum state = CustomerStatesEnum::PREPARING_TO_MOVE;
     Positions queueStartingPositions;
     Positions resignationPositions;
+    Positions chairPositions;
+    Positions enterChairPositions;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
     float moveXSpeed = 0.0f;
@@ -32,6 +34,7 @@ private:
     float previousQueueXPos = 0.0f;
     bool resigning = false;
     bool assignedToRemove = false;
+    bool entered = false;
 
     bool loadTextures(int scaleFactor, CharactersTexturesPaths texturesPaths);
     void changeAnimation(float deltaTime);
@@ -53,6 +56,13 @@ public:
     void setResigning(bool value) {
         resigning = value;
         state = CustomerStatesEnum::TURNING_DOWN;
+    }
+    void setEntered(bool value) {
+        entered = value;
+    }
+    void setChairAndEnterChairPositions(Positions chairPositions, Positions enterChairPositions) {
+        this->chairPositions = chairPositions;
+        this->enterChairPositions = enterChairPositions;
     }
     bool getAssignedToRemoveStatus() {
         return assignedToRemove;

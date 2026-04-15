@@ -95,12 +95,11 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
             pathToFollow.clear();
             currentPathIndex = 0;
             break;
-        case WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING: {
+        case WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING:
             if(moveToDestinationPositions(queueHandlingPositions, deltaTime, tileWidth, tileHeight, pathFinder)) {
                 state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
             }
             break;
-        }
         case WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING:
             animDirection = Directions::DOWN;
             state = WaiterStatesEnum::QUEUE_HANDLING;
@@ -108,6 +107,52 @@ void Waiter::changeState(float deltaTime, int scaleFactor, float tileWidth, floa
             idleTimer = 0.0f;
             break;
         case WaiterStatesEnum::QUEUE_HANDLING:
+            idleTimer += deltaTime;
+            if(idleTimer > 1.0f) {
+                idleTimer = 0.0f;
+                state = WaiterStatesEnum::WAITING_TO_START;
+            }
+            break;
+        case WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_PICKUP:
+            state = WaiterStatesEnum::MOVING_TO_DISH_PICKUP;
+            pathToFollow.clear();
+            currentPathIndex = 0;
+            break;
+        case WaiterStatesEnum::MOVING_TO_DISH_PICKUP:
+            if(moveToDestinationPositions(dishPickupPositions, deltaTime, tileWidth, tileHeight, pathFinder)) {
+                state = WaiterStatesEnum::PREPARING_TO_DISH_PICKUP;
+            }
+            break;
+        case WaiterStatesEnum::PREPARING_TO_DISH_PICKUP:
+            animDirection = Directions::LEFT;
+            state = WaiterStatesEnum::DISH_PICKUP;
+            movingState = WaiterStatesEnum::NO_MOVEMENT;
+            idleTimer = 0.0f;
+            break;
+        case WaiterStatesEnum::DISH_PICKUP:
+            idleTimer += deltaTime;
+            if(idleTimer > 1.0f) {
+                idleTimer = 0.0f;
+                state = WaiterStatesEnum::WAITING_TO_START;
+            }
+            break;
+        case WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_DROPOFF:
+            state = WaiterStatesEnum::MOVING_TO_DISH_DROPOFF;
+            pathToFollow.clear();
+            currentPathIndex = 0;
+            break;
+        case WaiterStatesEnum::MOVING_TO_DISH_DROPOFF:
+            if(moveToDestinationPositions(dishDropoffPositions, deltaTime, tileWidth, tileHeight, pathFinder)) {
+                state = WaiterStatesEnum::PREPARING_TO_DISH_DROPOFF;
+            }
+            break;
+        case WaiterStatesEnum::PREPARING_TO_DISH_DROPOFF:
+            animDirection = Directions::RIGHT;
+            state = WaiterStatesEnum::DISH_DROPOFF;
+            movingState = WaiterStatesEnum::NO_MOVEMENT;
+            idleTimer = 0.0f;
+            break;
+        case WaiterStatesEnum::DISH_DROPOFF:
             idleTimer += deltaTime;
             if(idleTimer > 1.0f) {
                 idleTimer = 0.0f;

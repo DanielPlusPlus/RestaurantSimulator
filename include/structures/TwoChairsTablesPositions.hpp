@@ -4,11 +4,17 @@
 
 
 struct TwoChairsTablesPositions {
-    Positions leftChair;
-    Positions rightChair;
+    Positions leftChairPositions;
+    Positions rightChairPositions;
+    Positions leftChairEnterPositions;
+    Positions rightChairEnterPositions;
     TwoChairsTablesPositions(
         float leftChairXPos, float leftChairYPos,
-        float rightChairXPos, float rightChairYPos
-    ) : leftChair{leftChairXPos, leftChairYPos}, 
-        rightChair{rightChairXPos, rightChairYPos} {}
+        float rightChairXPos, float rightChairYPos,
+        float leftChairEnterXPos, float leftChairEnterYPos,
+        float rightChairEnterXPos, float rightChairEnterYPos
+    ) : leftChairPositions{leftChairXPos, leftChairYPos}, 
+        rightChairPositions{rightChairXPos, rightChairYPos},
+        leftChairEnterPositions{leftChairEnterXPos, leftChairEnterYPos},
+        rightChairEnterPositions{rightChairEnterXPos, rightChairEnterYPos} {}
 };
