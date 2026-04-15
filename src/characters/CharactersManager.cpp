@@ -2,10 +2,11 @@
 #include "characters/Chef.hpp"
 #include "characters/Waiter.hpp"
 #include "characters/Customer.hpp"
+#include "interiors/TablesManager.hpp"
 
 #include <random>
 #include <algorithm>
-#include <iostream>
+
 
 CharactersManager::CharactersManager(int scaleFactor, float tileWidth, float tileHeight, int chefsNumber, 
                                      int waitersNumber, DishesManager* dishesManager) : 
@@ -21,8 +22,9 @@ CharactersManager::CharactersManager(int scaleFactor, float tileWidth, float til
     addWaiters(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed, waitersNumber);
 }
 
-void CharactersManager::addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed, 
-                                 int chefsNumber, DishesManager* dishesManager) {
+void CharactersManager::addChefs(int scaleFactor, float tileWidth, float tileHeight, 
+                                 float moveXSpeed, float moveYSpeed, int chefsNumber, 
+                                 DishesManager* dishesManager) {
     for(int i = 0; i < chefsNumber; i++) {
         Chef* newChef = new Chef(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed, i + 1, 
                                  chefsStartPositions[i], chefsStartDirections[i], dishesManager);
@@ -30,8 +32,8 @@ void CharactersManager::addChefs(int scaleFactor, float tileWidth, float tileHei
     }
 }
 
-void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed, 
-                                   int waitersNumber) {
+void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileHeight, 
+                                   float moveXSpeed, float moveYSpeed, int waitersNumber) {
     for(int i = 0; i < waitersNumber; i++) {
         Waiter* newWaiter = new Waiter(scaleFactor, moveXSpeed, moveYSpeed, i + 1, 
                                        waitersStartPositions[i], waitersQueueHandlingPositions, 
@@ -40,7 +42,8 @@ void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileH
     }
 }
 
-void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed) {
+void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tileHeight, 
+                                    float moveXSpeed, float moveYSpeed) {
     extern std::mt19937 globalRNG;
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], tileWidth, 
@@ -64,13 +67,16 @@ void CharactersManager::moveWaitingCustomerToResignation() {
     timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
 }
 
-void CharactersManager::moveWaitingCustomerToInside() {
+void CharactersManager::moveWaitingCustomerToInside(int tableNumber, TablesManager* tablesManager) {
     if(!waitingCustomers.empty()) {
         Customer* customer = waitingCustomers[0];
         if(customer->isWaitingToEnter()) {
+            Positions chairPositions;
+            Positions enterChairPositions;
+            std::tie(chairPositions, enterChairPositions) = tablesManager->getFreeChairPositions(tableNumber);
             customer->setEntered(true);
-            customer->setChairAndEnterChairPositions(waitersQueueHandlingPositions, 
-                                                     waitersDishPickupPositions);
+            customer->setTableNumber(tableNumber);
+            customer->setChairAndEnterChairPositions(chairPositions, enterChairPositions);
             insideCustomers.push_back(customer);
             waitingCustomers.erase(waitingCustomers.begin());
         }
@@ -85,7 +91,8 @@ void CharactersManager::removeResigningCustomer(int index) {
 }
 
 void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth, 
-                               float tileHeight, TablesManager* tablesManager, PathFinder* pathFinder) {
+                               float tileHeight, TablesManager* tablesManager, 
+                               PathFinder* pathFinder) {
     addCustomerTimer += deltaTime;
     if(addCustomerTimer > timeToAddCustomer) {
         addCustomerTimer = 0.0f;
@@ -105,10 +112,13 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
     for(Chef* chef : chefs) {
         chef->update(deltaTime, scaleFactor);
     }
-    for (Waiter* waiter : waiters) {
+    for(Waiter* waiter : waiters) {
         waiter->update(deltaTime, tileWidth, tileHeight, pathFinder);
-        if(waiter->isQueueHandling()) {
-            moveWaitingCustomerToInside();
+        if(tablesManager->isFreeTable()) {
+            int tableNumber = tablesManager->getFreeTableNumber();
+            if(waiter->isQueueHandling() && tablesManager->isFreeChair(tableNumber)) {
+                moveWaitingCustomerToInside(tableNumber, tablesManager);
+            }
         }
     }
     for(int i = 0; i < waitingCustomers.size(); i++) {

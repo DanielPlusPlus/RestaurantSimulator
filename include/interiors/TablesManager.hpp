@@ -59,5 +59,9 @@ public:
     TablesManager(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber);
     void setUpTables(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber);
     void removeTable();
+    bool isFreeTable();
+    int getFreeTableNumber();
+    bool isFreeChair(int tableNumber);
+    std::pair<Positions, Positions> getFreeChairPositions(int tableNumber);
     void render(sf::RenderWindow* window);
 };

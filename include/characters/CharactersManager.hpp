@@ -74,7 +74,7 @@ private:
                     float moveYSpeed, int waitersNumber);
     void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
     void moveWaitingCustomerToResignation();
-    void moveWaitingCustomerToInside();
+    void moveWaitingCustomerToInside(int tableNumber, TablesManager* tablesManager);
     void removeResigningCustomer(int index);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 

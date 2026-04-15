@@ -9,6 +9,7 @@
 class FourChairsTable : public Table {
 private:
     FourChairsTablesPositions chairsPositions;
+    int availableChairs = 4;
     bool isDownLeftChairOccupied = false;
     bool isDownRightChairOccupied = false;
     bool isUpLeftChairOccupied = false;
@@ -17,5 +18,7 @@ private:
 public:
     FourChairsTable(int scaleFactor, std::string texturePath, FourChairsTablesPositions chairsPositions,
                     int tableNumber);
+    std::pair<Positions, Positions> occupyChairAndGetPositions() override;
+    void resetTableOccupancy() override;
     void render(sf::RenderWindow* window) override;
 };

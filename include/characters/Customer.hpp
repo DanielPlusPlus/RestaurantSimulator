@@ -9,6 +9,7 @@ class PathFinder;
 class Customer : public Character {
 private:
     int customerNumber = 0;
+    int tableNumber = 0;
     sf::Texture customerIdleTexture;
     sf::Texture customerRunTexture;
     sf::Texture customerSitTexture;
@@ -78,6 +79,9 @@ public:
     void setEntered(bool value) {
         entered = value;
         state = CustomerStatesEnum::PREPARING_TO_ENTER_RESTAURANT;
+    }
+    void setTableNumber(int tableNumber) {
+        this->tableNumber = tableNumber;
     }
     void setChairAndEnterChairPositions(Positions chairPositions, Positions enterChairPositions) {
         this->chairPositions = chairPositions;

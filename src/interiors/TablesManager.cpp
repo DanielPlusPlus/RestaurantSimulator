@@ -1,4 +1,5 @@
 #include "interiors/TablesManager.hpp"
+#include <iostream>
 
 TablesManager::TablesManager(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber) {
     twoChairsTablesNumber = (twoChairsTablesNumber > 8) ? 8 : twoChairsTablesNumber;
@@ -7,14 +8,21 @@ TablesManager::TablesManager(int scaleFactor, int twoChairsTablesNumber, int fou
 }
 
 void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber) {
+    int tableNumber = 0;
     for(int i = 0; i < twoChairsTablesNumber; i++) {
-        TwoChairsTable* newTable = new TwoChairsTable(scaleFactor, twoChairstablesTexturesPaths[i % (sizeof(twoChairstablesTexturesPaths) / sizeof(std::string))], 
-                                                      twoChairsTablesPositions[i], i + 1);
+        tableNumber++;
+        TwoChairsTable* newTable = new TwoChairsTable(scaleFactor, 
+                                                      twoChairstablesTexturesPaths[i % (sizeof(twoChairstablesTexturesPaths) / 
+                                                      sizeof(std::string))], 
+                                                      twoChairsTablesPositions[i], tableNumber);
         twoChairsTables.push_back(newTable);
     }
     for(int i = 0; i < fourChairsTablesNumber; i++) {
-        FourChairsTable* newTable = new FourChairsTable(scaleFactor, fourChairstablesTexturesPaths[i % (sizeof(fourChairstablesTexturesPaths) / sizeof(std::string))], 
-                                                        fourChairsTablesPositions[i], i + 1);
+        tableNumber++;
+        FourChairsTable* newTable = new FourChairsTable(scaleFactor, 
+                                                        fourChairstablesTexturesPaths[i % (sizeof(fourChairstablesTexturesPaths) / 
+                                                        sizeof(std::string))], 
+                                                        fourChairsTablesPositions[i], tableNumber);
         fourChairsTables.push_back(newTable);
     }
 }
@@ -28,6 +36,62 @@ void TablesManager::removeTable() {
         delete fourChairsTables.back();
         fourChairsTables.pop_back();
     }
+}
+
+bool TablesManager::isFreeTable() {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(!table->getOccupiedStatus()){
+            return true;
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(!table->getOccupiedStatus()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int TablesManager::getFreeTableNumber() {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(!table->getOccupiedStatus()){
+            return table->getTableNumber();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(!table->getOccupiedStatus()) {
+            return table->getTableNumber();
+        }
+    }
+    return -1;
+}
+
+bool TablesManager::isFreeChair(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return !table->getOccupiedStatus();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return !table->getOccupiedStatus();
+        }
+    }
+    return false;
+}
+
+std::pair<Positions, Positions> TablesManager::getFreeChairPositions(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return table->occupyChairAndGetPositions();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return table->occupyChairAndGetPositions();
+        }
+    }
+    return std::pair<Positions, Positions>(Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f});
 }
 
 void TablesManager::render(sf::RenderWindow* window) {

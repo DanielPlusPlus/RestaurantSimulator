@@ -67,7 +67,7 @@ void Level::render(sf::RenderWindow* window) {
 
 bool Level::isValidPositions(Positions positions) {
     if(positions.xPos >= (151.0f * scaleFactor) && 
-      positions.xPos <= (279.0f * scaleFactor) && 
+      positions.xPos <= (280.0f * scaleFactor) && 
       positions.yPos == (24.0f * scaleFactor)) {
         return true;
     }
@@ -89,7 +89,7 @@ bool Level::isValidPositions(Positions positions) {
         return true;
     }
     if(positions.xPos > (151.0f * scaleFactor) 
-       && positions.xPos <= (279.0f * scaleFactor)
+       && positions.xPos <= (280.0f * scaleFactor)
        && positions.yPos == (72.0f * scaleFactor)) {
         return true;
     }
@@ -117,7 +117,7 @@ bool Level::isValidPositions(Positions positions) {
         return true;
     }
     if(positions.xPos >= (52.0f * scaleFactor) 
-       && positions.xPos <= (279.0f * scaleFactor) 
+       && positions.xPos <= (280.0f * scaleFactor) 
        && positions.yPos == (104.0f * scaleFactor)) {
         return true;
     }
@@ -145,7 +145,7 @@ bool Level::isValidPositions(Positions positions) {
         return true;
     }
     if(positions.xPos >= (7.0f * scaleFactor) 
-       && positions.xPos <= (279.0f * scaleFactor) 
+       && positions.xPos <= (280.0f * scaleFactor) 
        && positions.yPos == (152.0f * scaleFactor)) {
         return true;
     }
