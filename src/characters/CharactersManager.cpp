@@ -67,16 +67,18 @@ void CharactersManager::moveWaitingCustomerToResignation() {
     timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
 }
 
-void CharactersManager::moveWaitingCustomerToInside(int tableNumber, TablesManager* tablesManager) {
+void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNumber, 
+                                                    TablesManager* tablesManager) {
     if(!waitingCustomers.empty()) {
         Customer* customer = waitingCustomers[0];
         if(customer->isWaitingToEnter()) {
-            Positions chairPositions;
-            Positions enterChairPositions;
-            std::tie(chairPositions, enterChairPositions) = tablesManager->getFreeChairPositions(tableNumber);
+            ChairPositionsAndDirection chairPositionsAndDirection = tablesManager->getFreeChairPositions(tableNumber);
             customer->setEntered(true);
             customer->setTableNumber(tableNumber);
-            customer->setChairAndEnterChairPositions(chairPositions, enterChairPositions);
+            customer->setChairAndEnterChairPositions(scaleFactor, tableNumber, 
+                                                     chairPositionsAndDirection.chairPositions, 
+                                                     chairPositionsAndDirection.enterChairPositions);
+            customer->setSittingDirection(chairPositionsAndDirection.chairDirection);
             insideCustomers.push_back(customer);
             waitingCustomers.erase(waitingCustomers.begin());
         }
@@ -117,7 +119,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         if(tablesManager->isFreeTable()) {
             int tableNumber = tablesManager->getFreeTableNumber();
             if(waiter->isQueueHandling() && tablesManager->isFreeChair(tableNumber)) {
-                moveWaitingCustomerToInside(tableNumber, tablesManager);
+                moveWaitingCustomerToInside(scaleFactor, tableNumber, tablesManager);
             }
         }
     }

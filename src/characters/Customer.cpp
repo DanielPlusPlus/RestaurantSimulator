@@ -58,7 +58,7 @@ bool Customer::loadTextures(int scaleFactor, CharactersTexturesPaths texturesPat
         sprite.setScale(static_cast<float>(scaleFactor), static_cast<float>(scaleFactor));
         customerRunSprites.push_back(sprite);
     }
-
+    
     if(!customerSitTexture.loadFromFile(texturesPaths.sitTexturePath))
         return false;
     int sitFrameCount = customerSitTexture.getSize().x / frameWidth;
@@ -227,8 +227,6 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
         }
         case CustomerStatesEnum::PREPARING_TO_MOVE_TO_CHAIR:
             state = CustomerStatesEnum::MOVING_TO_CHAIR;
-            enterChairPositions.xPos *= scaleFactor;
-            enterChairPositions.yPos *= scaleFactor;
             pathToFollow.clear();
             currentPathIndex = 0;
             break;
@@ -239,10 +237,14 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
             }
             break;
         case CustomerStatesEnum::PREPARING_TO_SIT:
-            animDirection = Directions::RIGHT;
+            animDirection = sittingDirection;
             state = CustomerStatesEnum::SITTING;
             movingState = CustomerStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;
+            break;
+        case CustomerStatesEnum::SITTING:
+            positions.xPos = chairPositions.xPos;
+            positions.yPos = chairPositions.yPos;
             break;
         default:
             break;
@@ -281,8 +283,7 @@ bool Customer::moveToDestinationPositions(Positions destinationPositions, float 
         float dy = nextWaypoint.yPos - positions.yPos;
         float distance = std::sqrt(dx * dx + dy * dy);
 
-        float moveDistance = (std::sqrt(moveXSpeed * moveXSpeed + 
-                              moveYSpeed * moveYSpeed)) * deltaTime;
+        float moveDistance = moveYSpeed * deltaTime;
         
         if(distance < moveDistance) {
             positions = nextWaypoint;
@@ -344,7 +345,18 @@ void Customer::render(sf::RenderWindow* window) {
        movingState == CustomerStatesEnum::MOVING_UP) {
         spriteSet = &customerRunSprites;
     }
-    int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
+    if(state == CustomerStatesEnum::SITTING) {
+        spriteSet = &customerSitSprites;
+    }
+    
+    int spriteIndex;
+    if(state == CustomerStatesEnum::SITTING) {
+        int directionIndex = (animDirection == Directions::LEFT) ? 0 : 1;
+        spriteIndex = directionIndex * framesPerAnim + animFrame;
+    } else {
+        spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
+    }
+    
     if(texturesLoaded && spriteIndex < spriteSet->size()) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
         sprite.setPosition(positions.xPos, positions.yPos);
@@ -354,4 +366,14 @@ void Customer::render(sf::RenderWindow* window) {
 
 bool Customer::isWaitingToEnter() {
     return state == CustomerStatesEnum::WAITING_TO_ENTER;
+}
+
+void Customer::setChairAndEnterChairPositions(int scaleFactor, int tableNumber, 
+                                              Positions chairPositions, 
+                                              Positions enterChairPositions) {
+    this->tableNumber = tableNumber;
+    this->chairPositions.xPos = chairPositions.xPos * scaleFactor;
+    this->chairPositions.yPos = chairPositions.yPos * scaleFactor;
+    this->enterChairPositions.xPos = enterChairPositions.xPos * scaleFactor;
+    this->enterChairPositions.yPos = enterChairPositions.yPos * scaleFactor;
 }

@@ -51,18 +51,6 @@ bool Chef::loadTextures(int scaleFactor) {
         chefRunSprites.push_back(sprite);
     }
 
-    if(!chefSitTexture.loadFromFile(chefTexturesPaths.sitTexturePath))
-        return false;
-    int sitFrameCount = chefSitTexture.getSize().x / frameWidth;
-    chefSitSprites.clear();
-    for(int i = 0; i < sitFrameCount; i++) {
-        sf::Sprite sprite;
-        sprite.setTexture(chefSitTexture);
-        sprite.setTextureRect(sf::IntRect(i * frameWidth, 0, frameWidth, frameHeight));
-        sprite.setScale(static_cast<float>(scaleFactor), static_cast<float>(scaleFactor));
-        chefSitSprites.push_back(sprite);
-    }
-
     return true;
 }
 

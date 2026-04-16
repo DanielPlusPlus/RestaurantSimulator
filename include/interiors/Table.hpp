@@ -1,8 +1,7 @@
 #pragma once
 
-#include "structures/Positions.hpp"
+#include "structures/ChairPositionsAndDirection.hpp"
 
-#include <utility>
 #include <SFML/Graphics.hpp>
 
 
@@ -16,7 +15,7 @@ protected:
     virtual bool loadTexture(int scaleFactor, std::string texturePath) = 0;
 public:
     Table(int tableNumber) : tableNumber(tableNumber) {};
-    virtual std::pair<Positions, Positions> occupyChairAndGetPositions() = 0;
+    virtual ChairPositionsAndDirection occupyChairAndGetPositions() = 0;
     virtual void resetTableOccupancy() = 0;
     virtual void render(sf::RenderWindow* window) = 0;
     int getTableNumber() {

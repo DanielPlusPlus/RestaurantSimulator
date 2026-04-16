@@ -16,9 +16,10 @@ private:
     bool isUpRightChairOccupied = false;
     bool loadTexture(int scaleFactor, std::string texturePath) override;
 public:
-    FourChairsTable(int scaleFactor, std::string texturePath, FourChairsTablesPositions chairsPositions,
+    FourChairsTable(int scaleFactor, std::string texturePath, 
+                    FourChairsTablesPositions chairsPositions, 
                     int tableNumber);
-    std::pair<Positions, Positions> occupyChairAndGetPositions() override;
+    ChairPositionsAndDirection occupyChairAndGetPositions() override;
     void resetTableOccupancy() override;
     void render(sf::RenderWindow* window) override;
 };

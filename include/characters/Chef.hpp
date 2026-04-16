@@ -18,7 +18,6 @@ private:
     sf::Texture chefSitTexture;
     std::vector<sf::Sprite> chefIdleSprites;
     std::vector<sf::Sprite> chefRunSprites;
-    std::vector<sf::Sprite> chefSitSprites;
     float width = 16.0f;
     float height = 32.0f;
     bool texturesLoaded = false;

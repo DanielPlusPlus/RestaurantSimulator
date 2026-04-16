@@ -13,7 +13,7 @@ bool TwoChairsTable::loadTexture(int scaleFactor, std::string texturePath) {
     return true;
 }
 
-std::pair<Positions, Positions> TwoChairsTable::occupyChairAndGetPositions() {
+ChairPositionsAndDirection TwoChairsTable::occupyChairAndGetPositions() {
     if(availableChairs > 0) {
         availableChairs--;
         if(availableChairs == 0) {
@@ -21,16 +21,14 @@ std::pair<Positions, Positions> TwoChairsTable::occupyChairAndGetPositions() {
         }
         if(!isLeftChairOccupied) {
             isLeftChairOccupied = true;
-            return std::pair<Positions, Positions>(chairsPositions.leftChairPositions, 
-                                                   chairsPositions.leftChairEnterPositions);
+            return chairsPositions.leftChairPositionsAndDirection;
         }
         else if(!isRightChairOccupied) {
             isRightChairOccupied = true;
-            return std::pair<Positions, Positions>(chairsPositions.rightChairPositions, 
-                                                    chairsPositions.rightChairEnterPositions);
+            return chairsPositions.rightChairPositionsAndDirection;
         }
     }
-    return std::pair<Positions, Positions>(Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f});
+    return ChairPositionsAndDirection{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, Directions::RIGHT};
 }
 
 void TwoChairsTable::resetTableOccupancy() {

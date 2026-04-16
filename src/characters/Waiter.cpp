@@ -58,17 +58,6 @@ bool Waiter::loadTextures(int scaleFactor) {
         waiterRunSprites.push_back(sprite);
     }
 
-    if(!waiterSitTexture.loadFromFile(waiterTexturesPaths.sitTexturePath))
-        return false;
-    int sitFrameCount = waiterSitTexture.getSize().x / frameWidth;
-    waiterSitSprites.clear();
-    for(int i = 0; i < sitFrameCount; i++) {
-        sf::Sprite sprite;
-        sprite.setTexture(waiterSitTexture);
-        sprite.setTextureRect(sf::IntRect(i * frameWidth, 0, frameWidth, frameHeight));
-        sprite.setScale(static_cast<float>(scaleFactor), static_cast<float>(scaleFactor));
-        waiterSitSprites.push_back(sprite);
-    }
     return true;
 }
 
@@ -195,8 +184,7 @@ bool Waiter::moveToDestinationPositions(Positions destinationPositions, float de
         float dy = nextWaypoint.yPos - positions.yPos;
         float distance = std::sqrt(dx * dx + dy * dy);
 
-        float moveDistance = (std::sqrt(moveXSpeed * moveXSpeed + 
-                              moveYSpeed * moveYSpeed)) * deltaTime;
+        float moveDistance = moveYSpeed * deltaTime;
         
         if(distance < moveDistance) {
             positions = nextWaypoint;

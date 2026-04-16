@@ -1,17 +1,13 @@
 #pragma once
 
-#include "Positions.hpp"
+#include "ChairPositionsAndDirection.hpp"
 
 
 struct FourChairsTablesPositions {
-    Positions downLeftChairPositions;
-    Positions downRightChairPositions;
-    Positions upLeftChairPositions;
-    Positions upRightChairPositions;
-    Positions downLeftChairEnterPositions;
-    Positions downRightChairEnterPositions;
-    Positions upLeftChairEnterPositions;
-    Positions upRightChairEnterPositions;
+    ChairPositionsAndDirection downLeftChairPositionsAndDirection;
+    ChairPositionsAndDirection downRightChairPositionsAndDirection;
+    ChairPositionsAndDirection upLeftChairPositionsAndDirection;
+    ChairPositionsAndDirection upRightChairPositionsAndDirection;
     FourChairsTablesPositions(
         float downLeftChairXPos, float downLeftChairYPos,
         float downRightChairXPos, float downRightChairYPos,
@@ -21,12 +17,17 @@ struct FourChairsTablesPositions {
         float downRightChairEnterXPos, float downRightChairEnterYPos,
         float upLeftChairEnterXPos, float upLeftChairEnterYPos,
         float upRightChairEnterXPos, float upRightChairEnterYPos
-    ) : downLeftChairPositions{downLeftChairXPos, downLeftChairYPos}, 
-        downRightChairPositions{downRightChairXPos, downRightChairYPos},
-        upLeftChairPositions{upLeftChairXPos, upLeftChairYPos}, 
-        upRightChairPositions{upRightChairXPos, upRightChairYPos},
-        downLeftChairEnterPositions{downLeftChairEnterXPos, downLeftChairEnterYPos},
-        downRightChairEnterPositions{downRightChairEnterXPos, downRightChairEnterYPos},
-        upLeftChairEnterPositions{upLeftChairEnterXPos, upLeftChairEnterYPos},
-        upRightChairEnterPositions{upRightChairEnterXPos, upRightChairEnterYPos} {}
+    ) : downLeftChairPositionsAndDirection{Positions{downLeftChairXPos, downLeftChairYPos}, 
+                                           Positions{downLeftChairEnterXPos, downLeftChairEnterYPos}, 
+                                           Directions::LEFT},
+        downRightChairPositionsAndDirection{Positions{downRightChairXPos, downRightChairYPos}, 
+                                            Positions{downRightChairEnterXPos, 
+                                            downRightChairEnterYPos}, 
+                                            Directions::RIGHT},
+        upLeftChairPositionsAndDirection{Positions{upLeftChairXPos, upLeftChairYPos}, 
+                                         Positions{upLeftChairEnterXPos, upLeftChairEnterYPos}, 
+                                         Directions::LEFT},
+        upRightChairPositionsAndDirection{Positions{upRightChairXPos, upRightChairYPos}, 
+                                          Positions{upRightChairEnterXPos, upRightChairEnterYPos}, 
+                                          Directions::RIGHT} {}
 };

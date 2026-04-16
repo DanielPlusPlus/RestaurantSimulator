@@ -14,9 +14,10 @@ private:
     bool isRightChairOccupied = false;
     bool loadTexture(int scaleFactor, std::string texturePath) override;
 public:
-    TwoChairsTable(int scaleFactor, std::string texturePath, TwoChairsTablesPositions chairsPositions,
+    TwoChairsTable(int scaleFactor, std::string texturePath, 
+                   TwoChairsTablesPositions chairsPositions,
                    int tableNumber);
-    std::pair<Positions, Positions> occupyChairAndGetPositions() override;
+    ChairPositionsAndDirection occupyChairAndGetPositions() override;
     void resetTableOccupancy() override;
     void render(sf::RenderWindow* window) override;
 };

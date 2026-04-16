@@ -1,5 +1,5 @@
 #include "interiors/TablesManager.hpp"
-#include <iostream>
+
 
 TablesManager::TablesManager(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber) {
     twoChairsTablesNumber = (twoChairsTablesNumber > 8) ? 8 : twoChairsTablesNumber;
@@ -80,7 +80,7 @@ bool TablesManager::isFreeChair(int tableNumber) {
     return false;
 }
 
-std::pair<Positions, Positions> TablesManager::getFreeChairPositions(int tableNumber) {
+ChairPositionsAndDirection TablesManager::getFreeChairPositions(int tableNumber) {
     for(TwoChairsTable* table : twoChairsTables) {
         if(table->getTableNumber() == tableNumber){
             return table->occupyChairAndGetPositions();
@@ -91,7 +91,7 @@ std::pair<Positions, Positions> TablesManager::getFreeChairPositions(int tableNu
             return table->occupyChairAndGetPositions();
         }
     }
-    return std::pair<Positions, Positions>(Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f});
+    return ChairPositionsAndDirection{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, Directions::RIGHT};
 }
 
 void TablesManager::render(sf::RenderWindow* window) {

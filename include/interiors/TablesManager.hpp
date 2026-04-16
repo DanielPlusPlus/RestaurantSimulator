@@ -62,6 +62,6 @@ public:
     bool isFreeTable();
     int getFreeTableNumber();
     bool isFreeChair(int tableNumber);
-    std::pair<Positions, Positions> getFreeChairPositions(int tableNumber);
+    ChairPositionsAndDirection getFreeChairPositions(int tableNumber);
     void render(sf::RenderWindow* window);
 };

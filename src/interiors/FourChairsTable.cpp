@@ -1,5 +1,6 @@
 #include "interiors/FourChairsTable.hpp"
 
+
 FourChairsTable::FourChairsTable(int scaleFactor, std::string texturePath, FourChairsTablesPositions chairsPositions, int tableNumber) : 
                                  Table(tableNumber), chairsPositions(chairsPositions) {
     loadTexture(scaleFactor, texturePath);
@@ -13,7 +14,7 @@ bool FourChairsTable::loadTexture(int scaleFactor, std::string texturePath) {
     return true;
 }
 
-std::pair<Positions, Positions> FourChairsTable::occupyChairAndGetPositions() {
+ChairPositionsAndDirection FourChairsTable::occupyChairAndGetPositions() {
     if(availableChairs > 0) {
         availableChairs--;
         if(availableChairs == 0) {
@@ -21,27 +22,22 @@ std::pair<Positions, Positions> FourChairsTable::occupyChairAndGetPositions() {
         }
         if(!isDownLeftChairOccupied) {
             isDownLeftChairOccupied = true;
-            return std::pair<Positions, Positions>(chairsPositions.downLeftChairPositions, 
-                                                   chairsPositions.downLeftChairEnterPositions);
+            return chairsPositions.downLeftChairPositionsAndDirection;
         }
         else if(!isDownRightChairOccupied) {
             isDownRightChairOccupied = true;
-            return std::pair<Positions, Positions>(chairsPositions.downRightChairPositions, 
-                                                   chairsPositions.downRightChairEnterPositions);
+            return chairsPositions.downRightChairPositionsAndDirection;
         }
         else if(!isUpLeftChairOccupied) {
             isUpLeftChairOccupied = true;
-            return std::pair<Positions, Positions>(chairsPositions.upLeftChairPositions, 
-                                                   chairsPositions.upLeftChairEnterPositions);
+            return chairsPositions.upLeftChairPositionsAndDirection;
         }
         else if(!isUpRightChairOccupied) {
             isUpRightChairOccupied = true;
-            return std::pair<Positions, Positions>(chairsPositions.upRightChairPositions, 
-                                                   chairsPositions.upRightChairEnterPositions);
+            return chairsPositions.upRightChairPositionsAndDirection;
         }
     }
-    return std::pair<Positions, Positions>
-           (Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f});
+    return ChairPositionsAndDirection{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, Directions::RIGHT};
 }
 
 void FourChairsTable::resetTableOccupancy() {
