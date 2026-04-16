@@ -49,7 +49,8 @@ void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tile
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], tileWidth, 
                                          tileHeight, moveXSpeed, moveYSpeed, waitingCustomers.size() + 1, 
                                          customersStartPositions, customersQueueStartingPositions, 
-                                         customersEnterRestaurantPositions);
+                                         customersEnterRestaurantPositions, 
+                                         customersExitRestaurantPositions);
     waitingCustomers.push_back(newCustomer);
     timeToAddCustomer = timeToAddCustomerDist(globalRNG);
 }
@@ -85,10 +86,26 @@ void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNu
     }
 }
 
+void CharactersManager::moveInsideCustomerToLeaving(int index) {
+    if(index >= 0 && index < insideCustomers.size()) {
+        Customer* customer = insideCustomers[index];
+        customer->setLeaving(true);
+        leavingCustomers.push_back(customer);
+        insideCustomers.erase(insideCustomers.begin() + index);
+    }
+}
+
 void CharactersManager::removeResigningCustomer(int index) {
     if(index >= 0 && index < resigningCustomers.size()) {
         delete resigningCustomers[index];
         resigningCustomers.erase(resigningCustomers.begin() + index);
+    }
+}
+
+void CharactersManager::removeLeavingCustomer(int index) {
+    if(index >= 0 && index < leavingCustomers.size()) {
+        delete leavingCustomers[index];
+        leavingCustomers.erase(leavingCustomers.begin() + index);
     }
 }
 
@@ -132,15 +149,24 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         }
     }
     for(int i = resigningCustomers.size() - 1; i >= 0; i--) {
+        resigningCustomers[i]->updateIfResigning(deltaTime);
         if(resigningCustomers[i]->getAssignedToRemoveStatus()) {
             removeResigningCustomer(i);
         }
-        resigningCustomers[i]->updateIfResigning(deltaTime);
     }
-    for(Customer* insideCustomer : insideCustomers) {
-        insideCustomer->updateIfEntered(deltaTime, scaleFactor, 
-                                        tileWidth, tileHeight, 
-                                        pathFinder);
+    for(int i = 0; i < insideCustomers.size(); i++) {
+        insideCustomers[i]->updateIfEntered(deltaTime, scaleFactor, 
+                                            tileWidth, tileHeight, 
+                                            pathFinder);
+        if(insideCustomers[i]->getLeaveRestaurantStatus()) {
+            moveInsideCustomerToLeaving(i);
+        }
+    }
+    for(int i = leavingCustomers.size() - 1; i >= 0; i--) {
+        leavingCustomers[i]->updateIfLeaving(deltaTime);
+        if(leavingCustomers[i]->getAssignedToRemoveStatus()) {
+            removeLeavingCustomer(i);
+        }
     }
 }
 
@@ -162,5 +188,8 @@ void CharactersManager::renderWaitersAndCustomers(sf::RenderWindow* window) {
     }
     for(Customer* insideCustomer : insideCustomers) {
         insideCustomer->render(window);
+    }
+    for(Customer* leavingCustomer : leavingCustomers) {
+        leavingCustomer->render(window);
     }
 }

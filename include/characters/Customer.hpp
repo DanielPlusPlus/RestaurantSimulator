@@ -28,8 +28,10 @@ private:
     enum CustomerStatesEnum movingState = CustomerStatesEnum::NO_MOVEMENT;
     Positions queueStartingPositions;
     Positions resignationPositions;
-    Positions chairPositions;
+    Positions leavingPositions;
     Positions enterRestaurantPositions;
+    Positions exitRestaurantPositions;
+    Positions chairPositions;
     Positions enterChairPositions;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
@@ -40,6 +42,7 @@ private:
 
     float previousQueueXPos = 0.0f;
     bool resigning = false;
+    bool leaving = false;
     bool assignedToRemove = false;
     bool entered = false;
 
@@ -53,6 +56,7 @@ private:
     void changeEnterState(float deltaTime, int scaleFactor, 
                           float tileWidth, float tileHeight, 
                           PathFinder* pathFinder);
+    void changeLeavingState(float deltaTime);
     bool getResigningStatus() {
         return resigning;
     }
@@ -66,12 +70,14 @@ private:
 public:
     Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
              float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
-             Positions queueStartingPositions, Positions enterRestaurantPositions);
+             Positions queueStartingPositions, Positions enterRestaurantPositions, 
+             Positions exitRestaurantPositions);
     void updateIfWaiting(float deltaTime, float queueXPos);
     void updateIfResigning(float deltaTime);
     void updateIfEntered(float deltaTime, int scaleFactor, 
                          float tileWidth, float tileHeight, 
                          PathFinder* pathFinder);
+    void updateIfLeaving(float deltaTime);
     void render(sf::RenderWindow* window) override;
     void setResigning(bool value) {
         resigning = value;
@@ -81,6 +87,10 @@ public:
         entered = value;
         state = CustomerStatesEnum::PREPARING_TO_ENTER_RESTAURANT;
     }
+    void setLeaving(bool value) {
+        leaving = value;
+        state = CustomerStatesEnum::TURNING_DOWN;
+    }
     void setTableNumber(int tableNumber) {
         this->tableNumber = tableNumber;
     }
@@ -89,6 +99,9 @@ public:
                                         Positions enterChairPositions);
     bool getAssignedToRemoveStatus() {
         return assignedToRemove;
+    }
+    bool getLeaveRestaurantStatus() {
+        return state == CustomerStatesEnum::WAITING_TO_LEAVE;
     }
     void setSittingDirection(enum Directions direction) {
         sittingDirection = direction;

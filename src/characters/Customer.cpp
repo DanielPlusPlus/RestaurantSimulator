@@ -2,16 +2,17 @@
 #include "utils/PathFinder.hpp"
 
 #include <cmath>
-#include <iostream>
 
 
 Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
                    float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
-                   Positions queueStartingPositions, Positions enterRestaurantPositions) : 
+                   Positions queueStartingPositions, Positions enterRestaurantPositions, 
+                   Positions exitRestaurantPositions) : 
                    Character(startPositions), moveXSpeed(moveXSpeed), 
                    moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
                    queueStartingPositions(queueStartingPositions), 
-                   enterRestaurantPositions(enterRestaurantPositions) {
+                   enterRestaurantPositions(enterRestaurantPositions),
+                   exitRestaurantPositions(exitRestaurantPositions) {
     texturesLoaded = loadTextures(scaleFactor, texturesPaths);
     width *= scaleFactor;
     height *= scaleFactor;
@@ -23,8 +24,12 @@ Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float
     this->queueStartingPositions.yPos *= scaleFactor;
     this->enterRestaurantPositions.xPos *= scaleFactor;
     this->enterRestaurantPositions.yPos *= scaleFactor;
+    this->exitRestaurantPositions.xPos *= scaleFactor;
+    this->exitRestaurantPositions.yPos *= scaleFactor;
     this->resignationPositions.xPos = this->startPositions.xPos;
     this->resignationPositions.yPos = this->startPositions.yPos + tileHeight;
+    this->leavingPositions.xPos = 0.0f - tileWidth;
+    this->leavingPositions.yPos = this->startPositions.yPos;
 
     state = CustomerStatesEnum::PREPARING_TO_MOVE;
     moveProgress = 0.0f;
@@ -81,15 +86,18 @@ void Customer::updateIfWaiting(float deltaTime, float queueXPos) {
 void Customer::updateIfResigning(float deltaTime) {
     changeAnimation(deltaTime);
     changeResigningState(deltaTime);
-    changeResigningState(deltaTime);
 }
 
 void Customer::updateIfEntered(float deltaTime, int scaleFactor, 
                                float tileWidth, float tileHeight, 
                                PathFinder* pathFinder) {
     changeAnimation(deltaTime);
-    changeResigningState(deltaTime);
     changeEnterState(deltaTime, scaleFactor, tileWidth, tileHeight, pathFinder);
+}
+
+void Customer::updateIfLeaving(float deltaTime) {
+    changeAnimation(deltaTime);
+    changeLeavingState(deltaTime);
 }
 
 void Customer::changeAnimation(float deltaTime) {
@@ -240,11 +248,88 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
             animDirection = sittingDirection;
             state = CustomerStatesEnum::SITTING;
             movingState = CustomerStatesEnum::NO_MOVEMENT;
+            positions.xPos = chairPositions.xPos;
+            positions.yPos = chairPositions.yPos;
             idleTimer = 0.0f;
             break;
         case CustomerStatesEnum::SITTING:
-            positions.xPos = chairPositions.xPos;
-            positions.yPos = chairPositions.yPos;
+            idleTimer += deltaTime;
+            if(idleTimer > 5.0f) {
+                idleTimer = 0.0f;
+                state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
+            }
+            break;
+        case CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT:
+            state = CustomerStatesEnum::MOVING_TO_EXIT;
+            positions.xPos = enterChairPositions.xPos;
+            positions.yPos = enterChairPositions.yPos;
+            pathToFollow.clear();
+            currentPathIndex = 0;
+            break;
+        case CustomerStatesEnum::MOVING_TO_EXIT:
+            if(moveToDestinationPositions(exitRestaurantPositions, deltaTime, 
+                                          tileWidth, tileHeight, pathFinder)) {
+                state = CustomerStatesEnum::TURNING_DOWN;
+            }
+            break;
+        case CustomerStatesEnum::TURNING_DOWN:
+            animDirection = Directions::DOWN;
+            state = CustomerStatesEnum::WAITING_TO_LEAVE;
+            movingState = CustomerStatesEnum::NO_MOVEMENT;
+            break;
+        case CustomerStatesEnum::WAITING_TO_LEAVE:
+            break;
+        default:
+            break;
+    }
+}
+
+void Customer::changeLeavingState(float deltaTime) {
+    switch(state) {
+        case CustomerStatesEnum::TURNING_DOWN:
+            animDirection = Directions::DOWN;
+            state = CustomerStatesEnum::MOVING_DOWN;
+            break;
+        case CustomerStatesEnum::MOVING_DOWN: {
+            float moveStep = moveYSpeed * deltaTime;
+            float targetY = leavingPositions.yPos;
+            if(positions.yPos < targetY) {
+                float remaining = targetY - positions.yPos;
+                float step = (moveStep < remaining) ? moveStep : remaining;
+                positions.yPos += step;
+                if(positions.yPos >= targetY) {
+                    positions.yPos = targetY;
+                    state = CustomerStatesEnum::TURNING_LEFT;
+                }
+            }
+            else {
+                state = CustomerStatesEnum::TURNING_LEFT;
+            }
+            break;
+        }
+        case CustomerStatesEnum::TURNING_LEFT:
+            animDirection = Directions::LEFT;
+            state = CustomerStatesEnum::MOVING_LEFT;
+            break;
+        case CustomerStatesEnum::MOVING_LEFT: {
+            float moveStep = moveXSpeed * deltaTime;
+            float targetX = leavingPositions.xPos;
+            if(positions.xPos > targetX) {
+                float remaining = positions.xPos - targetX;
+                float step = (moveStep < remaining) ? moveStep : remaining;
+                positions.xPos -= step;
+                if(positions.xPos <= targetX) {
+                    positions.xPos = targetX;
+                    state = CustomerStatesEnum::WAITING_TO_REMOVE;
+                }
+            }
+            else {
+                state = CustomerStatesEnum::WAITING_TO_REMOVE;
+            }
+            break;
+        }
+        case CustomerStatesEnum::WAITING_TO_REMOVE:
+            setAssignedToRemove(true);
             break;
         default:
             break;

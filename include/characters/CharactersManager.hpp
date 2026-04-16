@@ -52,6 +52,7 @@ private:
     const Positions waitersDishDropoffPositions{70.0f, 72.0f};
     const Positions customersQueueStartingPositions{155.0f, 178.0f};
     const Positions customersEnterRestaurantPositions{155.0f, 152.0f};
+    const Positions customersExitRestaurantPositions{131.0f, 152.0f};
     
     std::uniform_real_distribution<float> timeToAddCustomerDist;
     std::uniform_real_distribution<float> timeToRemoveCustomerDist;
@@ -68,6 +69,7 @@ private:
     std::vector<Customer*> waitingCustomers;
     std::vector<Customer*> insideCustomers;
     std::vector<Customer*> resigningCustomers;
+    std::vector<Customer*> leavingCustomers;
     void addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
@@ -76,6 +78,8 @@ private:
     void moveWaitingCustomerToResignation();
     void moveWaitingCustomerToInside(int scaleFactor, int tableNumber, TablesManager* tablesManager);
     void removeResigningCustomer(int index);
+    void removeLeavingCustomer(int index);
+    void moveInsideCustomerToLeaving(int index);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);

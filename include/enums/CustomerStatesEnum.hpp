@@ -3,6 +3,7 @@
 enum CustomerStatesEnum {
     WAITING_TO_START,
     PREPARING_TO_MOVE,
+    TURNING_LEFT,
     MOVING_LEFT,
     WAITING_TO_MOVE,
     TURNING_UP,
@@ -19,5 +20,8 @@ enum CustomerStatesEnum {
     MOVING_TO_CHAIR,
     PREPARING_TO_SIT,
     NO_MOVEMENT,
-    SITTING
+    SITTING,
+    PREPARING_TO_MOVE_TO_EXIT,
+    MOVING_TO_EXIT,
+    WAITING_TO_LEAVE,
 };
