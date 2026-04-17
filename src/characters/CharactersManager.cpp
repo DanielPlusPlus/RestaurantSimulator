@@ -58,8 +58,8 @@ void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tile
 
 void CharactersManager::moveWaitingCustomerToResignation() {
     extern std::mt19937 globalRNG;
-    std::uniform_int_distribution<int> waitingCustomerIndex(5, waitingCustomers.size() - 1);
-    int index = waitingCustomerIndex(globalRNG);
+    std::uniform_int_distribution<int> waitingCustomerIndexDist(5, waitingCustomers.size() - 1);
+    int index = waitingCustomerIndexDist(globalRNG);
     if(index >= 0 && index < waitingCustomers.size()) {
         Customer* customer = waitingCustomers[index];
         customer->setResigning(true);
@@ -71,11 +71,19 @@ void CharactersManager::moveWaitingCustomerToResignation() {
 
 void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNumber, 
                                                     TablesManager* tablesManager) {
+    extern std::mt19937 globalRNG;
+    std::uniform_int_distribution<int> instantTableOccupationDist(1, 4); // do poprawy
+    int instantTableOccupation = instantTableOccupationDist(globalRNG); // do poprawy
+    bool occupyTableInstantly = instantTableOccupation == 1;
     if(!waitingCustomers.empty()) {
         Customer* customer = waitingCustomers[0];
         if(customer->isWaitingToEnter()) {
             ChairPositionsAndDirections chairPositionsAndDirections = tablesManager->getFreeChairPositions(tableNumber);
+            if(occupyTableInstantly) {
+                tablesManager->occupyTableInstantly(tableNumber);
+            }
             customer->setTableNumber(tableNumber);
+            customer->setOccupyTableInstantly(occupyTableInstantly);
             customer->setTableNumberChairAndEnterChairPositions(scaleFactor, 
                                                                 tableNumber, 
                                                                 chairPositionsAndDirections.chairPositions, 
@@ -96,6 +104,9 @@ void CharactersManager::moveInsideCustomerToLeaving(int index, TablesManager* ta
         Directions chairHorizontalDirection = customer->getChairHorizontalDirection();
         Directions chairVerticalDirection = customer->getChairVerticalDirection();
         tablesManager->freeChair(tableNumber, chairHorizontalDirection, chairVerticalDirection);
+        if(customer->getOccupyTableInstantly()) {
+            tablesManager->freeInstantlyOccupiedTable(tableNumber, tablesManager);
+        }
         customer->setLeaving(true);
         leavingCustomers.push_back(customer);
         insideCustomers.erase(insideCustomers.begin() + index);

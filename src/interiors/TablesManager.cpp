@@ -95,6 +95,19 @@ ChairPositionsAndDirections TablesManager::getFreeChairPositions(int tableNumber
                                        Directions::RIGHT, Directions::DOWN};
 }
 
+void TablesManager::occupyTableInstantly(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            table->occupyTableInstantly();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            table->occupyTableInstantly();
+        }
+    }
+}
+
 void TablesManager::freeChair(int tableNumber, 
                               Directions chairHorizontalDirection, 
                               Directions chairVerticalDirection) {
@@ -108,6 +121,19 @@ void TablesManager::freeChair(int tableNumber,
         if(table->getTableNumber() == tableNumber) {
             table->resetChairOccupancy(chairHorizontalDirection, 
                                        chairVerticalDirection);
+        }
+    }
+}
+
+void TablesManager::freeInstantlyOccupiedTable(int tableNumber, TablesManager* tablesManager) {
+     for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            table->resetTableOccupancy();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            table->resetTableOccupancy();
         }
     }
 }

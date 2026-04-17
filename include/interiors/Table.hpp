@@ -18,6 +18,7 @@ public:
     virtual ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() = 0;
     virtual void resetChairOccupancy(Directions chairHorizontalDirection, 
                                      Directions chairVerticalDirection) = 0;
+    virtual void occupyTableInstantly() = 0;
     virtual void render(sf::RenderWindow* window) = 0;
     int getTableNumber() {
         return tableNumber;
@@ -25,4 +26,7 @@ public:
     bool getOccupiedStatus() {
         return isOccupied;
     };
+    void resetTableOccupancy() {
+        isOccupied = false;
+    }
 };

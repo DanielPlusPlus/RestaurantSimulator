@@ -253,11 +253,11 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
             idleTimer = 0.0f;
             break;
         case CustomerStatesEnum::SITTING:
-            idleTimer += deltaTime;
-            if(idleTimer > 5.0f) {
-                idleTimer = 0.0f;
-                state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
-            }
+            // idleTimer += deltaTime;
+            // if(idleTimer > 5.0f) {
+            //     idleTimer = 0.0f;
+            //     state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
+            // }
             break;
         case CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT:
             state = CustomerStatesEnum::MOVING_TO_EXIT;

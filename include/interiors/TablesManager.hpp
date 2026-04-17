@@ -63,8 +63,10 @@ public:
     int getFreeTableNumber();
     bool isFreeChair(int tableNumber);
     ChairPositionsAndDirections getFreeChairPositions(int tableNumber);
+    void occupyTableInstantly(int tableNumber);
     void freeChair(int tableNumber, 
                    Directions chairHorizontalDirection, 
                    Directions chairVerticalDirection);
+    void freeInstantlyOccupiedTable(int tableNumber, TablesManager* tablesManager);
     void render(sf::RenderWindow* window);
 };

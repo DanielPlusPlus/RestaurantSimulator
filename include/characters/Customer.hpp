@@ -46,6 +46,7 @@ private:
     bool leaving = false;
     bool assignedToRemove = false;
     bool entered = false;
+    bool occupyTableInstantly = false;
 
     std::vector<Positions> pathToFollow;
     int currentPathIndex = 0;
@@ -95,6 +96,9 @@ public:
     void setTableNumber(int tableNumber) {
         this->tableNumber = tableNumber;
     }
+    void setOccupyTableInstantly(bool value) {
+        occupyTableInstantly = value;
+    }
     void setTableNumberChairAndEnterChairPositions(int scaleFactor, 
                                                    int tableNumber, 
                                                    Positions chairPositions, 
@@ -113,6 +117,9 @@ public:
     }
     int getTableNumber() {
         return tableNumber;
+    }
+    bool getOccupyTableInstantly() {
+        return occupyTableInstantly;
     }
     Directions getChairHorizontalDirection() {
         return chairHorizontalDirection;

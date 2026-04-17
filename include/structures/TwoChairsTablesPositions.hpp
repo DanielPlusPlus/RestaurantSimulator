@@ -12,10 +12,10 @@ struct TwoChairsTablesPositions {
         float leftChairEnterXPos, float leftChairEnterYPos,
         float rightChairEnterXPos, float rightChairEnterYPos
     ) : leftChairPositionsAndDirections{Positions{leftChairXPos, leftChairYPos}, 
-                                       Positions{leftChairEnterXPos, leftChairEnterYPos}, 
-                                       Directions::LEFT, Directions::DOWN},
+                                        Positions{leftChairEnterXPos, leftChairEnterYPos}, 
+                                        Directions::LEFT, Directions::DOWN},
         rightChairPositionsAndDirections{Positions{rightChairXPos, rightChairYPos}, 
-                                        Positions{rightChairEnterXPos, 
-                                        rightChairEnterYPos}, 
-                                        Directions::RIGHT, Directions::DOWN} {}
+                                         Positions{rightChairEnterXPos, 
+                                         rightChairEnterYPos}, 
+                                         Directions::RIGHT, Directions::DOWN} {}
 };
