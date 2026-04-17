@@ -31,7 +31,7 @@ private:
     Positions queueHandlingPositions;
     Positions dishPickupPositions;
     Positions dishDropoffPositions;
-    Positions lastCyclePosition;
+    Positions tableHandlingPositions;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
     float moveXSpeed = 0.0f;

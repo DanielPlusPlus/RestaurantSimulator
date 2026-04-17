@@ -13,7 +13,7 @@ bool TwoChairsTable::loadTexture(int scaleFactor, std::string texturePath) {
     return true;
 }
 
-ChairPositionsAndDirection TwoChairsTable::occupyChairAndGetPositions() {
+ChairPositionsAndDirections TwoChairsTable::occupyChairAndGetPositionsAndDirections() {
     if(availableChairs > 0) {
         availableChairs--;
         if(availableChairs == 0) {
@@ -21,21 +21,29 @@ ChairPositionsAndDirection TwoChairsTable::occupyChairAndGetPositions() {
         }
         if(!isLeftChairOccupied) {
             isLeftChairOccupied = true;
-            return chairsPositions.leftChairPositionsAndDirection;
+            return chairsPositions.leftChairPositionsAndDirections;
         }
         else if(!isRightChairOccupied) {
             isRightChairOccupied = true;
-            return chairsPositions.rightChairPositionsAndDirection;
+            return chairsPositions.rightChairPositionsAndDirections;
         }
     }
-    return ChairPositionsAndDirection{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, Directions::RIGHT};
+    return ChairPositionsAndDirections{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, 
+                                       Directions::RIGHT, Directions::DOWN};
 }
 
-void TwoChairsTable::resetTableOccupancy() {
-    availableChairs = 2;
-    isLeftChairOccupied = false;
-    isRightChairOccupied = false;
-    isOccupied = false;
+void TwoChairsTable::resetChairOccupancy(Directions chairHorizontalDirection, 
+                                         Directions chairVerticalDirection) {
+    availableChairs++;
+    if(availableChairs == 2) {
+        isOccupied = false;
+    }
+    if(chairHorizontalDirection == Directions::LEFT) {
+        isLeftChairOccupied = false;
+    }
+    else if(chairHorizontalDirection == Directions::RIGHT) {
+        isRightChairOccupied = false;
+    }
 }
 
 void TwoChairsTable::render(sf::RenderWindow* window) {

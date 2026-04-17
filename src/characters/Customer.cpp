@@ -245,7 +245,7 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
             }
             break;
         case CustomerStatesEnum::PREPARING_TO_SIT:
-            animDirection = sittingDirection;
+            animDirection = chairHorizontalDirection;
             state = CustomerStatesEnum::SITTING;
             movingState = CustomerStatesEnum::NO_MOVEMENT;
             positions.xPos = chairPositions.xPos;
@@ -453,9 +453,10 @@ bool Customer::isWaitingToEnter() {
     return state == CustomerStatesEnum::WAITING_TO_ENTER;
 }
 
-void Customer::setChairAndEnterChairPositions(int scaleFactor, int tableNumber, 
-                                              Positions chairPositions, 
-                                              Positions enterChairPositions) {
+void Customer::setTableNumberChairAndEnterChairPositions(int scaleFactor, 
+                                                         int tableNumber, 
+                                                         Positions chairPositions, 
+                                                         Positions enterChairPositions) {
     this->tableNumber = tableNumber;
     this->chairPositions.xPos = chairPositions.xPos * scaleFactor;
     this->chairPositions.yPos = chairPositions.yPos * scaleFactor;

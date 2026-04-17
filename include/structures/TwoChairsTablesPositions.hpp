@@ -1,21 +1,21 @@
 #pragma once
 
-#include "ChairPositionsAndDirection.hpp"
+#include "ChairPositionsAndDirections.hpp"
 
 
 struct TwoChairsTablesPositions {
-    ChairPositionsAndDirection leftChairPositionsAndDirection;
-    ChairPositionsAndDirection rightChairPositionsAndDirection;
+    ChairPositionsAndDirections leftChairPositionsAndDirections;
+    ChairPositionsAndDirections rightChairPositionsAndDirections;
     TwoChairsTablesPositions(
         float leftChairXPos, float leftChairYPos,
         float rightChairXPos, float rightChairYPos,
         float leftChairEnterXPos, float leftChairEnterYPos,
         float rightChairEnterXPos, float rightChairEnterYPos
-    ) : leftChairPositionsAndDirection{Positions{leftChairXPos, leftChairYPos}, 
+    ) : leftChairPositionsAndDirections{Positions{leftChairXPos, leftChairYPos}, 
                                        Positions{leftChairEnterXPos, leftChairEnterYPos}, 
-                                       Directions::LEFT},
-        rightChairPositionsAndDirection{Positions{rightChairXPos, rightChairYPos}, 
+                                       Directions::LEFT, Directions::DOWN},
+        rightChairPositionsAndDirections{Positions{rightChairXPos, rightChairYPos}, 
                                         Positions{rightChairEnterXPos, 
                                         rightChairEnterYPos}, 
-                                        Directions::RIGHT} {}
+                                        Directions::RIGHT, Directions::DOWN} {}
 };

@@ -19,7 +19,11 @@ public:
     FourChairsTable(int scaleFactor, std::string texturePath, 
                     FourChairsTablesPositions chairsPositions, 
                     int tableNumber);
-    ChairPositionsAndDirection occupyChairAndGetPositions() override;
-    void resetTableOccupancy() override;
+    ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
+    FourChairsTablesPositions getChairsPositions() {
+        return chairsPositions;
+    }
+    void resetChairOccupancy(Directions chairHorizontalDirection, 
+                             Directions chairVerticalDirection) override;
     void render(sf::RenderWindow* window) override;
 };

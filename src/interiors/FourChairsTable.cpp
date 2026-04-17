@@ -14,7 +14,7 @@ bool FourChairsTable::loadTexture(int scaleFactor, std::string texturePath) {
     return true;
 }
 
-ChairPositionsAndDirection FourChairsTable::occupyChairAndGetPositions() {
+ChairPositionsAndDirections FourChairsTable::occupyChairAndGetPositionsAndDirections() {
     if(availableChairs > 0) {
         availableChairs--;
         if(availableChairs == 0) {
@@ -22,31 +22,47 @@ ChairPositionsAndDirection FourChairsTable::occupyChairAndGetPositions() {
         }
         if(!isDownLeftChairOccupied) {
             isDownLeftChairOccupied = true;
-            return chairsPositions.downLeftChairPositionsAndDirection;
+            return chairsPositions.downLeftChairPositionsAndDirections;
         }
         else if(!isDownRightChairOccupied) {
             isDownRightChairOccupied = true;
-            return chairsPositions.downRightChairPositionsAndDirection;
+            return chairsPositions.downRightChairPositionsAndDirections;
         }
         else if(!isUpLeftChairOccupied) {
             isUpLeftChairOccupied = true;
-            return chairsPositions.upLeftChairPositionsAndDirection;
+            return chairsPositions.upLeftChairPositionsAndDirections;
         }
         else if(!isUpRightChairOccupied) {
             isUpRightChairOccupied = true;
-            return chairsPositions.upRightChairPositionsAndDirection;
+            return chairsPositions.upRightChairPositionsAndDirections;
         }
     }
-    return ChairPositionsAndDirection{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, Directions::RIGHT};
+    return ChairPositionsAndDirections{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, 
+                                       Directions::RIGHT, Directions::DOWN};
 }
 
-void FourChairsTable::resetTableOccupancy() {
-    availableChairs = 4;
-    isDownLeftChairOccupied = false;
-    isDownRightChairOccupied = false;
-    isUpLeftChairOccupied = false;
-    isUpRightChairOccupied = false;
-    isOccupied = false;
+void FourChairsTable::resetChairOccupancy(Directions chairHorizontalDirection, 
+                                          Directions chairVerticalDirection) {
+    availableChairs++;
+    if(availableChairs == 4) {
+        isOccupied = false;
+    }
+    if(chairHorizontalDirection == Directions::LEFT && 
+       chairVerticalDirection == Directions::DOWN) {
+        isDownLeftChairOccupied = false;
+    }
+    else if(chairHorizontalDirection == Directions::RIGHT && 
+            chairVerticalDirection == Directions::DOWN) {
+        isDownRightChairOccupied = false;
+    }
+    else if(chairHorizontalDirection == Directions::LEFT && 
+            chairVerticalDirection == Directions::UP) {
+        isUpLeftChairOccupied = false;
+    }
+    else if(chairHorizontalDirection == Directions::RIGHT && 
+            chairVerticalDirection == Directions::UP) {
+        isUpRightChairOccupied = false;
+    }
 }
 
 void FourChairsTable::render(sf::RenderWindow* window) {

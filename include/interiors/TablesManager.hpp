@@ -62,6 +62,9 @@ public:
     bool isFreeTable();
     int getFreeTableNumber();
     bool isFreeChair(int tableNumber);
-    ChairPositionsAndDirection getFreeChairPositions(int tableNumber);
+    ChairPositionsAndDirections getFreeChairPositions(int tableNumber);
+    void freeChair(int tableNumber, 
+                   Directions chairHorizontalDirection, 
+                   Directions chairVerticalDirection);
     void render(sf::RenderWindow* window);
 };

@@ -17,7 +17,11 @@ public:
     TwoChairsTable(int scaleFactor, std::string texturePath, 
                    TwoChairsTablesPositions chairsPositions,
                    int tableNumber);
-    ChairPositionsAndDirection occupyChairAndGetPositions() override;
-    void resetTableOccupancy() override;
+    ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
+    TwoChairsTablesPositions getChairsPositions() {
+        return chairsPositions;
+    }
+    void resetChairOccupancy(Directions chairHorizontalDirection, 
+                             Directions chairVerticalDirection) override;
     void render(sf::RenderWindow* window) override;
 };

@@ -4,8 +4,9 @@
 #include "enums/DirectionsEnum.hpp"
 
 
-struct ChairPositionsAndDirection {
+struct ChairPositionsAndDirections {
     Positions chairPositions;
     Positions enterChairPositions;
-    enum Directions chairDirection;
+    enum Directions chairHorizontalDirection;
+    enum Directions chairVerticalDirection;
 };

@@ -46,8 +46,9 @@ void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tile
                                     float moveXSpeed, float moveYSpeed) {
     extern std::mt19937 globalRNG;
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
-    Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], tileWidth, 
-                                         tileHeight, moveXSpeed, moveYSpeed, waitingCustomers.size() + 1, 
+    Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], 
+                                         tileWidth, tileHeight, moveXSpeed, moveYSpeed, 
+                                         waitingCustomers.size() + 1, 
                                          customersStartPositions, customersQueueStartingPositions, 
                                          customersEnterRestaurantPositions, 
                                          customersExitRestaurantPositions);
@@ -73,22 +74,28 @@ void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNu
     if(!waitingCustomers.empty()) {
         Customer* customer = waitingCustomers[0];
         if(customer->isWaitingToEnter()) {
-            ChairPositionsAndDirection chairPositionsAndDirection = tablesManager->getFreeChairPositions(tableNumber);
-            customer->setEntered(true);
+            ChairPositionsAndDirections chairPositionsAndDirections = tablesManager->getFreeChairPositions(tableNumber);
             customer->setTableNumber(tableNumber);
-            customer->setChairAndEnterChairPositions(scaleFactor, tableNumber, 
-                                                     chairPositionsAndDirection.chairPositions, 
-                                                     chairPositionsAndDirection.enterChairPositions);
-            customer->setSittingDirection(chairPositionsAndDirection.chairDirection);
+            customer->setTableNumberChairAndEnterChairPositions(scaleFactor, 
+                                                                tableNumber, 
+                                                                chairPositionsAndDirections.chairPositions, 
+                                                                chairPositionsAndDirections.enterChairPositions);
+            customer->setChairHorizontalDirection(chairPositionsAndDirections.chairHorizontalDirection);
+            customer->setChairVerticalDirection(chairPositionsAndDirections.chairVerticalDirection);
+            customer->setEntered(true);
             insideCustomers.push_back(customer);
             waitingCustomers.erase(waitingCustomers.begin());
         }
     }
 }
 
-void CharactersManager::moveInsideCustomerToLeaving(int index) {
+void CharactersManager::moveInsideCustomerToLeaving(int index, TablesManager* tablesManager) {
     if(index >= 0 && index < insideCustomers.size()) {
         Customer* customer = insideCustomers[index];
+        int tableNumber = customer->getTableNumber();
+        Directions chairHorizontalDirection = customer->getChairHorizontalDirection();
+        Directions chairVerticalDirection = customer->getChairVerticalDirection();
+        tablesManager->freeChair(tableNumber, chairHorizontalDirection, chairVerticalDirection);
         customer->setLeaving(true);
         leavingCustomers.push_back(customer);
         insideCustomers.erase(insideCustomers.begin() + index);
@@ -159,7 +166,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
                                             tileWidth, tileHeight, 
                                             pathFinder);
         if(insideCustomers[i]->getLeaveRestaurantStatus()) {
-            moveInsideCustomerToLeaving(i);
+            moveInsideCustomerToLeaving(i, tablesManager);
         }
     }
     for(int i = leavingCustomers.size() - 1; i >= 0; i--) {

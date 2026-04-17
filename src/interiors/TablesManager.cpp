@@ -80,18 +80,36 @@ bool TablesManager::isFreeChair(int tableNumber) {
     return false;
 }
 
-ChairPositionsAndDirection TablesManager::getFreeChairPositions(int tableNumber) {
+ChairPositionsAndDirections TablesManager::getFreeChairPositions(int tableNumber) {
     for(TwoChairsTable* table : twoChairsTables) {
         if(table->getTableNumber() == tableNumber){
-            return table->occupyChairAndGetPositions();
+            return table->occupyChairAndGetPositionsAndDirections();
         }
     }
     for(FourChairsTable* table : fourChairsTables) {
         if(table->getTableNumber() == tableNumber) {
-            return table->occupyChairAndGetPositions();
+            return table->occupyChairAndGetPositionsAndDirections();
         }
     }
-    return ChairPositionsAndDirection{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, Directions::RIGHT};
+    return ChairPositionsAndDirections{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, 
+                                       Directions::RIGHT, Directions::DOWN};
+}
+
+void TablesManager::freeChair(int tableNumber, 
+                              Directions chairHorizontalDirection, 
+                              Directions chairVerticalDirection) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            table->resetChairOccupancy(chairHorizontalDirection, 
+                                       chairVerticalDirection);
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            table->resetChairOccupancy(chairHorizontalDirection, 
+                                       chairVerticalDirection);
+        }
+    }
 }
 
 void TablesManager::render(sf::RenderWindow* window) {

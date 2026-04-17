@@ -22,7 +22,8 @@ private:
     int animFrame = 0;
     float animTime = 0.0f;
     enum Directions animDirection = Directions::LEFT;
-    enum Directions sittingDirection = Directions::RIGHT;
+    enum Directions chairHorizontalDirection = Directions::RIGHT;
+    enum Directions chairVerticalDirection = Directions::DOWN;
 
     enum CustomerStatesEnum state = CustomerStatesEnum::PREPARING_TO_MOVE;
     enum CustomerStatesEnum movingState = CustomerStatesEnum::NO_MOVEMENT;
@@ -94,17 +95,30 @@ public:
     void setTableNumber(int tableNumber) {
         this->tableNumber = tableNumber;
     }
-    void setChairAndEnterChairPositions(int scaleFactor, int tableNumber, 
-                                        Positions chairPositions, 
-                                        Positions enterChairPositions);
+    void setTableNumberChairAndEnterChairPositions(int scaleFactor, 
+                                                   int tableNumber, 
+                                                   Positions chairPositions, 
+                                                   Positions enterChairPositions);
     bool getAssignedToRemoveStatus() {
         return assignedToRemove;
     }
     bool getLeaveRestaurantStatus() {
         return state == CustomerStatesEnum::WAITING_TO_LEAVE;
     }
-    void setSittingDirection(enum Directions direction) {
-        sittingDirection = direction;
+    void setChairHorizontalDirection(enum Directions direction) {
+        chairHorizontalDirection = direction;
+    }
+    void setChairVerticalDirection(enum Directions direction) {
+        chairVerticalDirection = direction;
+    }
+    int getTableNumber() {
+        return tableNumber;
+    }
+    Directions getChairHorizontalDirection() {
+        return chairHorizontalDirection;
+    }
+    Directions getChairVerticalDirection() {
+        return chairVerticalDirection;
     }
     bool isWaitingToEnter();
 };

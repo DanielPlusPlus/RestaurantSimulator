@@ -79,7 +79,7 @@ private:
     void moveWaitingCustomerToInside(int scaleFactor, int tableNumber, TablesManager* tablesManager);
     void removeResigningCustomer(int index);
     void removeLeavingCustomer(int index);
-    void moveInsideCustomerToLeaving(int index);
+    void moveInsideCustomerToLeaving(int index, TablesManager* tablesManager);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
