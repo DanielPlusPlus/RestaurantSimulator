@@ -4,6 +4,7 @@
 #include "FourChairsTable.hpp"
 #include "structures/TwoChairsTablesPositions.hpp"
 #include "structures/FourChairsTablesPositions.hpp"
+#include "structures/DishesPositionsForFourChairsTables.hpp"
 
 #include <queue>
 #include <SFML/Graphics.hpp>
@@ -52,6 +53,24 @@ private:
         FourChairsTablesPositions(227.0f, 50.0f, 279.0f, 50.0f, 227.0f, 38.0f, 279.0f, 38.0f,
                                   227.0f, 72.0f, 279.0f, 72.0f, 227.0f, 24.0f, 279.0f, 24.0f)
     };
+
+    Positions dishesServingPositionsForTwoChairsTables[8] = {
+        Positions{70.5f, 142.0f},
+        Positions{194.0f, 142.0f},
+        Positions{22.0f, 142.0f},
+        Positions{22.0f, 113.0f},
+        Positions{22.0f, 84.0f},
+        Positions{119.0f, 84.0f},
+        Positions{175.0f, 21.0f},
+        Positions{254.0f, 21.0f}
+    };
+    DishesPositionsForFourChairsTables dishesServingPositionsForFourChairsTables[3] = {
+        DishesPositionsForFourChairsTables{244.0f, 147.0f, 262.0f, 147.0f, 244.0f, 132.0f, 262.0f, 132.0f},
+        DishesPositionsForFourChairsTables{244.0f, 106.0f, 262.0f, 106.0f, 244.0f, 91.0f, 262.0f, 91.0f},
+        DishesPositionsForFourChairsTables{244.0f, 65.0f, 262.0f, 65.0f, 244.0f, 50.0f, 262.0f, 50.0f}
+    };
+
+    // Positions TwoChairsTablesManagerPositions[8]  = {0.0f, 0.0f};
 
     std::vector<TwoChairsTable*> twoChairsTables;
     std::vector<FourChairsTable*> fourChairsTables;
