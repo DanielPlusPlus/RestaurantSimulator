@@ -8,7 +8,9 @@
 
 class TwoChairsTable : public Table {
 private:
+    TablesTypesEnum tableType = TablesTypesEnum::TWO_CHAIRS_TABLE;
     TwoChairsTablesPositions chairsPositions;
+    Positions dishesPositions;
     int availableChairs = 2;
     bool isLeftChairOccupied = false;
     bool isRightChairOccupied = false;
@@ -16,6 +18,7 @@ private:
 public:
     TwoChairsTable(int scaleFactor, std::string texturePath, 
                    TwoChairsTablesPositions chairsPositions,
+                   Positions dishesPositions,
                    int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
     void occupyTableInstantly() override {
@@ -23,6 +26,9 @@ public:
     };
     TwoChairsTablesPositions getChairsPositions() {
         return chairsPositions;
+    }
+    Positions getDishesPositions() {
+        return dishesPositions;
     }
     void resetChairOccupancy(Directions chairHorizontalDirection, 
                              Directions chairVerticalDirection) override;

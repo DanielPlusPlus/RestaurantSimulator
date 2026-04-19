@@ -18,10 +18,15 @@ private:
     };
     Positions readyDishesPositions{134.0f, 47.0f};
     std::queue<Dish*> readyDishes;
+    Dish* movingToTableDish;
+    std::vector<Dish*> dishesOnTables;
 public:
     DishesManager(int scaleFactor);
     void addDish(int scaleFactor, int tableNumber);
     void removeDish();
     Positions getReadyDishesPositions();
+    void moveReadyDishToMoving();
+    void moveMovingDishToDishesOnTables();
+    void removeDishesOnTable(int tableNumber);
     void render(sf::RenderWindow* window);
 };

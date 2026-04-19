@@ -4,6 +4,8 @@
 #include "items/DishesManager.hpp"
 #include "enums/ChefStatesEnum.hpp"
 
+#include <queue>
+
 
 class Chef : public Character {
 private:
@@ -26,13 +28,15 @@ private:
     enum Directions startAnimDirection = Directions::UP;
     enum Directions animDirection = Directions::UP;
 
-    enum ChefStatesEnum state = ChefStatesEnum::COOKING;
+    enum ChefStatesEnum state = ChefStatesEnum::WAITING_TO_COOKING;
     Positions destinationPositions;
     float moveProgress = 0.0f;
     float moveDistance = 0.0f;
     float moveSpeed = 0.0f;
     float idleTimer = 0.0f;
     float cookingTime = 0.0f;
+
+    std::queue<int> tablesNumbersToCookFor;
 
     DishesManager* dishesManager;
 
@@ -44,6 +48,7 @@ public:
     Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
         float moveYSpeed, int chefsNumber, Positions startPositions, Directions startDirection,
         DishesManager* dishesManager);
+    void addTableToCookFor(int tableNumber);
     void update(float deltaTime, int scaleFactor);
     void render(sf::RenderWindow* window) override;
 };

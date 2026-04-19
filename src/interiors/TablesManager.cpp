@@ -14,7 +14,9 @@ void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int 
         TwoChairsTable* newTable = new TwoChairsTable(scaleFactor, 
                                                       twoChairstablesTexturesPaths[i % (sizeof(twoChairstablesTexturesPaths) / 
                                                       sizeof(std::string))], 
-                                                      twoChairsTablesPositions[i], tableNumber);
+                                                      twoChairsTablesPositions[i], 
+                                                      twoChairsTablesDishesPositions[i],
+                                                      tableNumber);
         twoChairsTables.push_back(newTable);
     }
     for(int i = 0; i < fourChairsTablesNumber; i++) {
@@ -22,7 +24,9 @@ void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int 
         FourChairsTable* newTable = new FourChairsTable(scaleFactor, 
                                                         fourChairstablesTexturesPaths[i % (sizeof(fourChairstablesTexturesPaths) / 
                                                         sizeof(std::string))], 
-                                                        fourChairsTablesPositions[i], tableNumber);
+                                                        fourChairsTablesPositions[i], 
+                                                        fourChairsTablesDishesPositions[i],
+                                                        tableNumber);
         fourChairsTables.push_back(newTable);
     }
 }
@@ -145,4 +149,39 @@ void TablesManager::render(sf::RenderWindow* window) {
     for(FourChairsTable* table : fourChairsTables) {
         table->render(window);
     }
+}
+
+Positions TablesManager::getTwoChairsTableDishesPositionsByNumber(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return table->getDishesPositions();
+        }
+    }
+    return Positions{-1.0f, -1.0f};
+}
+
+FourChairsTablesDishesPositions TablesManager::getFourChairsTableDishesPositionsByNumber(int tableNumber) {
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return table->getDishesPositions();
+        }
+    }
+    return FourChairsTablesDishesPositions(-1.0f, -1.0f, 
+                                           -1.0f, -1.0f, 
+                                           -1.0f, -1.0f, 
+                                           -1.0f, -1.0f);
+}
+
+enum TablesTypesEnum TablesManager::getTableType(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return table->getTableType();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return table->getTableType();
+        }
+    }
+    return TablesTypesEnum::UNKNOWN;
 }

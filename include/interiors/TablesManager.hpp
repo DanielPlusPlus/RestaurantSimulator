@@ -4,7 +4,8 @@
 #include "FourChairsTable.hpp"
 #include "structures/TwoChairsTablesPositions.hpp"
 #include "structures/FourChairsTablesPositions.hpp"
-#include "structures/DishesPositionsForFourChairsTables.hpp"
+#include "structures/FourChairsTablesDishesPositions.hpp"
+#include "enums/TablesTypesEnum.hpp"
 
 #include <queue>
 #include <SFML/Graphics.hpp>
@@ -54,7 +55,7 @@ private:
                                   227.0f, 72.0f, 279.0f, 72.0f, 227.0f, 24.0f, 279.0f, 24.0f)
     };
 
-    Positions dishesServingPositionsForTwoChairsTables[8] = {
+    Positions twoChairsTablesDishesPositions[8] = {
         Positions{70.5f, 142.0f},
         Positions{194.0f, 142.0f},
         Positions{22.0f, 142.0f},
@@ -64,13 +65,11 @@ private:
         Positions{175.0f, 21.0f},
         Positions{254.0f, 21.0f}
     };
-    DishesPositionsForFourChairsTables dishesServingPositionsForFourChairsTables[3] = {
-        DishesPositionsForFourChairsTables{244.0f, 147.0f, 262.0f, 147.0f, 244.0f, 132.0f, 262.0f, 132.0f},
-        DishesPositionsForFourChairsTables{244.0f, 106.0f, 262.0f, 106.0f, 244.0f, 91.0f, 262.0f, 91.0f},
-        DishesPositionsForFourChairsTables{244.0f, 65.0f, 262.0f, 65.0f, 244.0f, 50.0f, 262.0f, 50.0f}
+    FourChairsTablesDishesPositions fourChairsTablesDishesPositions[3] = {
+        FourChairsTablesDishesPositions{244.0f, 147.0f, 262.0f, 147.0f, 244.0f, 132.0f, 262.0f, 132.0f},
+        FourChairsTablesDishesPositions{244.0f, 106.0f, 262.0f, 106.0f, 244.0f, 91.0f, 262.0f, 91.0f},
+        FourChairsTablesDishesPositions{244.0f, 65.0f, 262.0f, 65.0f, 244.0f, 50.0f, 262.0f, 50.0f}
     };
-
-    // Positions TwoChairsTablesManagerPositions[8]  = {0.0f, 0.0f};
 
     std::vector<TwoChairsTable*> twoChairsTables;
     std::vector<FourChairsTable*> fourChairsTables;
@@ -88,4 +87,8 @@ public:
                    Directions chairVerticalDirection);
     void freeInstantlyOccupiedTable(int tableNumber, TablesManager* tablesManager);
     void render(sf::RenderWindow* window);
+
+    Positions getTwoChairsTableDishesPositionsByNumber(int tableNumber);
+    FourChairsTablesDishesPositions getFourChairsTableDishesPositionsByNumber(int tableNumber);
+    enum TablesTypesEnum getTableType(int tableNumber);
 };

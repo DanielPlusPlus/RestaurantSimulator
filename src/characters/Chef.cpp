@@ -17,7 +17,7 @@ Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed,
     destinationPositions = dishesManager->getReadyDishesPositions();
     destinationPositions.xPos -= tileWidth;
 
-    state = ChefStatesEnum::PREPARING_TO_COOKING;
+    state = ChefStatesEnum::WAITING_TO_COOKING;
     moveSpeed = moveXSpeed;
     moveProgress = 0.0f;
     animDirection = startAnimDirection;
@@ -72,6 +72,11 @@ void Chef::changeAnimation(float deltaTime) {
 
 void Chef::changeState(float deltaTime, int scaleFactor) {
     switch(state) {
+        case ChefStatesEnum::WAITING_TO_COOKING:
+            if(!tablesNumbersToCookFor.empty()) {
+                state = ChefStatesEnum::PREPARING_TO_COOKING;
+            }
+            break;
         case ChefStatesEnum::PREPARING_TO_COOKING: {
             state = ChefStatesEnum::COOKING;
             extern std::mt19937 globalRNG;
@@ -113,7 +118,9 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
             break;
         case ChefStatesEnum::PUTTING_DOWN:
             if(idleTimer == 0.0f) {
-                dishesManager->addDish(scaleFactor, 1);
+                int numberOfTable = tablesNumbersToCookFor.front();
+                tablesNumbersToCookFor.pop();
+                dishesManager->addDish(scaleFactor, numberOfTable);
             }
             idleTimer += deltaTime;
             if(idleTimer > 1.0f) {
@@ -150,7 +157,7 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
             break;
         case ChefStatesEnum::TURNING_DOWN:
             animDirection = Directions::DOWN;
-            state = ChefStatesEnum::PREPARING_TO_COOKING;
+            state = ChefStatesEnum::WAITING_TO_COOKING;
             idleTimer = 0.0f;
             break;
         default:
@@ -167,6 +174,10 @@ enum ChefStatesEnum Chef::defineStateByStartDirection() {
     }
     // wyjatek trzeba obsłużyć, ale na razie zakładam, że kucharze zawsze będą zaczynać animację zwróceni w górę lub w dół
     return ChefStatesEnum::TURNING_UP;
+}
+
+void Chef::addTableToCookFor(int tableNumber) {
+    tablesNumbersToCookFor.push(tableNumber);
 }
 
 void Chef::render(sf::RenderWindow* window) {

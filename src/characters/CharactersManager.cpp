@@ -62,7 +62,7 @@ void CharactersManager::moveWaitingCustomerToResignation() {
     int index = waitingCustomerIndexDist(globalRNG);
     if(index >= 0 && index < waitingCustomers.size()) {
         Customer* customer = waitingCustomers[index];
-        customer->setResigning(true);
+        customer->changeToResigningState();
         resigningCustomers.push_back(customer);
         waitingCustomers.erase(waitingCustomers.begin() + index);
     }
@@ -90,7 +90,7 @@ void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNu
                                                                 chairPositionsAndDirections.enterChairPositions);
             customer->setChairHorizontalDirection(chairPositionsAndDirections.chairHorizontalDirection);
             customer->setChairVerticalDirection(chairPositionsAndDirections.chairVerticalDirection);
-            customer->setEntered(true);
+            customer->changeToEnteredState();
             insideCustomers.push_back(customer);
             waitingCustomers.erase(waitingCustomers.begin());
         }
@@ -107,7 +107,7 @@ void CharactersManager::moveInsideCustomerToLeaving(int index, TablesManager* ta
         if(customer->getOccupyTableInstantly()) {
             tablesManager->freeInstantlyOccupiedTable(tableNumber, tablesManager);
         }
-        customer->setLeaving(true);
+        customer->changeToLeavingState();
         leavingCustomers.push_back(customer);
         insideCustomers.erase(insideCustomers.begin() + index);
     }
@@ -153,7 +153,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         waiter->update(deltaTime, tileWidth, tileHeight, pathFinder);
         if(tablesManager->isFreeTable()) {
             int tableNumber = tablesManager->getFreeTableNumber();
-            if(waiter->isQueueHandling() && tablesManager->isFreeChair(tableNumber)) {
+            if(waiter->getIsQueueHandling() && tablesManager->isFreeChair(tableNumber)) {
                 moveWaitingCustomerToInside(scaleFactor, tableNumber, tablesManager);
             }
         }

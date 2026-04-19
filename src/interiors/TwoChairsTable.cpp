@@ -1,7 +1,12 @@
 #include "interiors/TwoChairsTable.hpp"
 
-TwoChairsTable::TwoChairsTable(int scaleFactor, std::string texturePath, TwoChairsTablesPositions chairsPositions, int tableNumber) : 
-                               Table(tableNumber), chairsPositions(chairsPositions) {
+TwoChairsTable::TwoChairsTable(int scaleFactor, std::string texturePath, 
+                               TwoChairsTablesPositions chairsPositions, 
+                               Positions dishesPositions, 
+                               int tableNumber) : 
+                               Table(tableNumber), 
+                               chairsPositions(chairsPositions), 
+                               dishesPositions(dishesPositions) {
     loadTexture(scaleFactor, texturePath);
 }
 

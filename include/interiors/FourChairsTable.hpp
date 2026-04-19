@@ -2,13 +2,16 @@
 
 #include "Table.hpp"
 #include "structures/FourChairsTablesPositions.hpp"
+#include "structures/FourChairsTablesDishesPositions.hpp"
 
 #include <SFML/Graphics.hpp>
 
 
 class FourChairsTable : public Table {
 private:
+TablesTypesEnum tableType = TablesTypesEnum::FOUR_CHAIRS_TABLE;
     FourChairsTablesPositions chairsPositions;
+    FourChairsTablesDishesPositions dishesPositions;
     int availableChairs = 4;
     bool isDownLeftChairOccupied = false;
     bool isDownRightChairOccupied = false;
@@ -18,6 +21,7 @@ private:
 public:
     FourChairsTable(int scaleFactor, std::string texturePath, 
                     FourChairsTablesPositions chairsPositions, 
+                    FourChairsTablesDishesPositions dishesPositions,
                     int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
     void occupyTableInstantly() override {
@@ -25,6 +29,9 @@ public:
     };
     FourChairsTablesPositions getChairsPositions() {
         return chairsPositions;
+    }
+    FourChairsTablesDishesPositions getDishesPositions() {
+        return dishesPositions;
     }
     void resetChairOccupancy(Directions chairHorizontalDirection, 
                              Directions chairVerticalDirection) override;

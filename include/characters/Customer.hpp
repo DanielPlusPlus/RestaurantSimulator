@@ -42,10 +42,7 @@ private:
     int failedCycles = 0;
 
     float previousQueueXPos = 0.0f;
-    bool resigning = false;
-    bool leaving = false;
     bool assignedToRemove = false;
-    bool entered = false;
     bool occupyTableInstantly = false;
 
     std::vector<Positions> pathToFollow;
@@ -59,9 +56,6 @@ private:
                           float tileWidth, float tileHeight, 
                           PathFinder* pathFinder);
     void changeLeavingState(float deltaTime);
-    bool getResigningStatus() {
-        return resigning;
-    }
     void setAssignedToRemove(bool value) {
         assignedToRemove = value;
     }
@@ -81,16 +75,13 @@ public:
                          PathFinder* pathFinder);
     void updateIfLeaving(float deltaTime);
     void render(sf::RenderWindow* window) override;
-    void setResigning(bool value) {
-        resigning = value;
+    void changeToResigningState() {
         state = CustomerStatesEnum::TURNING_DOWN;
     }
-    void setEntered(bool value) {
-        entered = value;
+    void changeToEnteredState() {
         state = CustomerStatesEnum::PREPARING_TO_ENTER_RESTAURANT;
     }
-    void setLeaving(bool value) {
-        leaving = value;
+    void changeToLeavingState() {
         state = CustomerStatesEnum::TURNING_DOWN;
     }
     void setTableNumber(int tableNumber) {
@@ -127,5 +118,7 @@ public:
     Directions getChairVerticalDirection() {
         return chairVerticalDirection;
     }
-    bool isWaitingToEnter();
+    bool isWaitingToEnter() {
+        return state == CustomerStatesEnum::WAITING_TO_ENTER;
+    }
 };

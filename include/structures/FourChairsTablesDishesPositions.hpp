@@ -3,12 +3,12 @@
 #include "Positions.hpp"
 
 
-struct DishesPositionsForFourChairsTables {
+struct FourChairsTablesDishesPositions {
     Positions downLeftDish;
     Positions downRightDish;
     Positions upLeftDish;
     Positions upRightDish;
-    DishesPositionsForFourChairsTables(
+    FourChairsTablesDishesPositions(
         float downLeftDishXPos, float downLeftDishYPos,
         float downRightDishXPos, float downRightDishYPos,
         float upLeftDishXPos, float upLeftDishYPos,

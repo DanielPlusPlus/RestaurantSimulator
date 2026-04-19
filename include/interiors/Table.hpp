@@ -1,6 +1,7 @@
 #pragma once
 
 #include "structures/ChairPositionsAndDirections.hpp"
+#include "enums/TablesTypesEnum.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -10,6 +11,7 @@ protected:
     sf::Texture tableTexture;
     sf::Sprite tableSprite;
     int tableNumber = 0;
+    TablesTypesEnum tableType;
     bool isOccupied = false;
 
     virtual bool loadTexture(int scaleFactor, std::string texturePath) = 0;
@@ -28,5 +30,8 @@ public:
     };
     void resetTableOccupancy() {
         isOccupied = false;
+    }
+    TablesTypesEnum getTableType() {
+        return tableType;
     }
 };

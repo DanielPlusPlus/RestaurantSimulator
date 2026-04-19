@@ -1,7 +1,7 @@
 #pragma once
 
 enum class ChefStatesEnum {
-    WAITING_TO_START,
+    WAITING_TO_COOKING,
     PREPARING_TO_COOKING,
     COOKING,
     TURNING_RIGHT,

@@ -12,7 +12,8 @@ file(GLOB_RECURSE SOURCES
     src/*.cpp
 )
 
-add_executable(RestaurantSimulator ${SOURCES})
+add_executable(RestaurantSimulator ${SOURCES}
+    include/enums/TablesTypesEnum.hpp)
 
 target_include_directories(RestaurantSimulator PRIVATE include)
 

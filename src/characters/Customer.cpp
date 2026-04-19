@@ -449,10 +449,6 @@ void Customer::render(sf::RenderWindow* window) {
     }
 }
 
-bool Customer::isWaitingToEnter() {
-    return state == CustomerStatesEnum::WAITING_TO_ENTER;
-}
-
 void Customer::setTableNumberChairAndEnterChairPositions(int scaleFactor, 
                                                          int tableNumber, 
                                                          Positions chairPositions, 
