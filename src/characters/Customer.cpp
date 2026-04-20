@@ -253,11 +253,6 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
             idleTimer = 0.0f;
             break;
         case CustomerStatesEnum::SITTING:
-            // idleTimer += deltaTime;
-            // if(idleTimer > 5.0f) {
-            //     idleTimer = 0.0f;
-            //     state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
-            // }
             break;
         case CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT:
             state = CustomerStatesEnum::MOVING_TO_EXIT;
@@ -438,7 +433,8 @@ void Customer::render(sf::RenderWindow* window) {
     if(state == CustomerStatesEnum::SITTING) {
         int directionIndex = (animDirection == Directions::LEFT) ? 0 : 1;
         spriteIndex = directionIndex * framesPerAnim + animFrame;
-    } else {
+    }
+    else {
         spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
     }
     

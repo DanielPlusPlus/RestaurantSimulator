@@ -84,6 +84,9 @@ public:
     void changeToLeavingState() {
         state = CustomerStatesEnum::TURNING_DOWN;
     }
+    void changeToMoveToExit() {
+        state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
+    }
     void setTableNumber(int tableNumber) {
         this->tableNumber = tableNumber;
     }
@@ -99,6 +102,9 @@ public:
     }
     bool getLeaveRestaurantStatus() {
         return state == CustomerStatesEnum::WAITING_TO_LEAVE;
+    }
+    bool getIsSittingStatus() {
+        return state == CustomerStatesEnum::SITTING;
     }
     void setChairHorizontalDirection(enum Directions direction) {
         chairHorizontalDirection = direction;

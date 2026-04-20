@@ -2,6 +2,7 @@
 
 #include <random>
 
+
 DishesManager::DishesManager(int scaleFactor) {
     readyDishesPositions.xPos *= scaleFactor;
     readyDishesPositions.yPos *= scaleFactor;
@@ -27,7 +28,8 @@ void DishesManager::moveReadyDishToMoving() {
     }
 }
 
-void DishesManager::moveMovingDishToDishesOnTables() {
+void DishesManager::moveMovingDishToDishesOnTables(Positions newDishPositions) {
+    movingToTableDish->changePositions(newDishPositions);
     dishesOnTables.push_back(movingToTableDish);
     movingToTableDish = nullptr;
 }
@@ -46,5 +48,8 @@ void DishesManager::removeDishesOnTable(int tableNumber) {
 void DishesManager::render(sf::RenderWindow* window) {
     if(!readyDishes.empty()) {
         readyDishes.front()->render(window);
+    }
+    for(Dish* dish : dishesOnTables) {
+        dish->render(window);
     }
 }

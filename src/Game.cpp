@@ -27,7 +27,6 @@ void Game::run() {
         
         currentScene->update(deltaTime * 2);
         
-        // window->clear();
         currentScene->render(window);
         window->display();
     }

@@ -59,6 +59,18 @@ bool Waiter::loadTextures(int scaleFactor) {
         waiterRunSprites.push_back(sprite);
     }
 
+    if(!waiterNoteTexture.loadFromFile(waiterTexturesPaths.noteTexturePath))
+        return false;
+    int noteFrameCount = waiterNoteTexture.getSize().x / frameWidth;
+    waiterNoteSprites.clear();
+    for(int i = 0; i < noteFrameCount; i++) {
+        sf::Sprite sprite;
+        sprite.setTexture(waiterNoteTexture);
+        sprite.setTextureRect(sf::IntRect(i * frameWidth, 0, frameWidth, frameHeight));
+        sprite.setScale(static_cast<float>(scaleFactor), static_cast<float>(scaleFactor));
+        waiterNoteSprites.push_back(sprite);
+    }
+
     return true;
 }
 
@@ -280,7 +292,20 @@ void Waiter::render(sf::RenderWindow* window) {
         spriteSet = &waiterRunSprites;
     }
     int framesPerAnim = 6;
-    int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
+
+    if(state == WaiterStatesEnum::TABLE_HANDLING && 
+       animDirection == Directions::DOWN) {
+        spriteSet = &waiterNoteSprites;
+    }
+    
+    int spriteIndex;
+    if(state == WaiterStatesEnum::TABLE_HANDLING && 
+       animDirection == Directions::DOWN) {
+        spriteIndex = animFrame;
+    }
+    else {
+        spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
+    }
     if(texturesLoaded && spriteIndex < spriteSet->size()) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
         sprite.setPosition(positions.xPos, positions.yPos);

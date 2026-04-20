@@ -18,5 +18,8 @@ public:
     int getTableNumber() {
         return tableNumber;
     }
+    void changePositions(Positions newPositions) {
+        positions = newPositions;
+    }
     void render(sf::RenderWindow* window);
 };

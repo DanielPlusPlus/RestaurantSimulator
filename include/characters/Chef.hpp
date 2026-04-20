@@ -11,8 +11,7 @@ class Chef : public Character {
 private:
     const CharactersTexturesPaths chefTexturesPaths = CharactersTexturesPaths{
         "assets/characters/chef/chef_idle.png", 
-        "assets/characters/chef/chef_run.png", 
-        "assets/characters/chef/chef_sit.png"
+        "assets/characters/chef/chef_run.png"
     };
     int chefNumber = 0;
     sf::Texture chefIdleTexture;
@@ -49,6 +48,9 @@ public:
         float moveYSpeed, int chefsNumber, Positions startPositions, Directions startDirection,
         DishesManager* dishesManager);
     void addTableToCookFor(int tableNumber);
+    int getDishesToCookForNumber() {
+        return tablesNumbersToCookFor.size();
+    }
     void update(float deltaTime, int scaleFactor);
     void render(sf::RenderWindow* window) override;
 };

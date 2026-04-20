@@ -35,11 +35,6 @@ private:
         Directions::UP,
         Directions::DOWN
     };
-    // const Positions waitersStartPositions[3] = {
-    //     Positions{143.0f, 168.0f},
-    //     Positions{151.0f, 40.0f},
-    //     Positions{70.0f, 72.0f}
-    // };
     const Positions waitersStartPositions[3] = {
         Positions{143.0f, 168.0f},
         Positions{151.0f, 40.0f},
@@ -74,7 +69,7 @@ private:
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
                     float moveYSpeed, int waitersNumber);
-    void addCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
+    void addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
     void moveWaitingCustomerToResignation();
     void moveWaitingCustomerToInside(int scaleFactor, int tableNumber, TablesManager* tablesManager);
     void removeResigningCustomer(int index);

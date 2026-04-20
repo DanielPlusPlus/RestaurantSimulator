@@ -10,16 +10,18 @@ class Waiter : public Character {
 private:
     const CharactersTexturesPaths waiterTexturesPaths = CharactersTexturesPaths{
         "assets/characters/waiter/waiter_idle.png", 
-        "assets/characters/waiter/waiter_run.png", 
-        "assets/characters/waiter/waiter_sit.png"
+        "assets/characters/waiter/waiter_run.png",
+        "",
+        "assets/characters/waiter/waiter_note.png"
     };
     int waiterNumber = 0;
     int tableNumber = 0;
     sf::Texture waiterIdleTexture;
     sf::Texture waiterRunTexture;
-    sf::Texture waiterSitTexture;
+    sf::Texture waiterNoteTexture;
     std::vector<sf::Sprite> waiterIdleSprites;
     std::vector<sf::Sprite> waiterRunSprites;
+    std::vector<sf::Sprite> waiterNoteSprites;
     float width = 16.0f;
     float height = 32.0f;
     bool texturesLoaded = false;

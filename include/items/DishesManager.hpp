@@ -23,10 +23,9 @@ private:
 public:
     DishesManager(int scaleFactor);
     void addDish(int scaleFactor, int tableNumber);
-    void removeDish();
     Positions getReadyDishesPositions();
     void moveReadyDishToMoving();
-    void moveMovingDishToDishesOnTables();
+    void moveMovingDishToDishesOnTables(Positions newDishPositions);
     void removeDishesOnTable(int tableNumber);
     void render(sf::RenderWindow* window);
 };

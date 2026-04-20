@@ -42,7 +42,7 @@ void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileH
     }
 }
 
-void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tileHeight, 
+void CharactersManager::addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, 
                                     float moveXSpeed, float moveYSpeed) {
     extern std::mt19937 globalRNG;
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
@@ -58,7 +58,7 @@ void CharactersManager::addCustomer(int scaleFactor, float tileWidth, float tile
 
 void CharactersManager::moveWaitingCustomerToResignation() {
     extern std::mt19937 globalRNG;
-    std::uniform_int_distribution<int> waitingCustomerIndexDist(5, waitingCustomers.size() - 1);
+    std::uniform_int_distribution<int> waitingCustomerIndexDist(3, waitingCustomers.size() - 1);
     int index = waitingCustomerIndexDist(globalRNG);
     if(index >= 0 && index < waitingCustomers.size()) {
         Customer* customer = waitingCustomers[index];
@@ -131,9 +131,9 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
                                float tileHeight, TablesManager* tablesManager, 
                                PathFinder* pathFinder) {
     addCustomerTimer += deltaTime;
-    if(addCustomerTimer > timeToAddCustomer) {
+    if(addCustomerTimer > timeToAddCustomer && waitingCustomers.size() < 9) {
         addCustomerTimer = 0.0f;
-        addCustomer(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed);
+        addWaitingCustomer(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed);
     }
     if(waitingCustomers.size() > 5) {
         removeWatingCustomerTimer += deltaTime;
