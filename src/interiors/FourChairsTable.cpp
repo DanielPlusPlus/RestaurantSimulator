@@ -22,6 +22,7 @@ bool FourChairsTable::loadTexture(int scaleFactor, std::string texturePath) {
 ChairPositionsAndDirections FourChairsTable::occupyChairAndGetPositionsAndDirections() {
     if(availableChairs > 0) {
         availableChairs--;
+        occupiedChairs++;
         if(availableChairs == 0) {
             isOccupied = true;
         }
@@ -49,6 +50,7 @@ ChairPositionsAndDirections FourChairsTable::occupyChairAndGetPositionsAndDirect
 void FourChairsTable::resetChairOccupancy(Directions chairHorizontalDirection, 
                                           Directions chairVerticalDirection) {
     availableChairs++;
+    occupiedChairs--;
     if(availableChairs == 4) {
         isOccupied = false;
     }

@@ -21,6 +21,7 @@ bool TwoChairsTable::loadTexture(int scaleFactor, std::string texturePath) {
 ChairPositionsAndDirections TwoChairsTable::occupyChairAndGetPositionsAndDirections() {
     if(availableChairs > 0) {
         availableChairs--;
+        occupiedChairs++;
         if(availableChairs == 0) {
             isOccupied = true;
         }
@@ -40,6 +41,7 @@ ChairPositionsAndDirections TwoChairsTable::occupyChairAndGetPositionsAndDirecti
 void TwoChairsTable::resetChairOccupancy(Directions chairHorizontalDirection, 
                                          Directions chairVerticalDirection) {
     availableChairs++;
+    occupiedChairs--;
     if(availableChairs == 2) {
         isOccupied = false;
     }

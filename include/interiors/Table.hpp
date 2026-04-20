@@ -11,6 +11,7 @@ protected:
     sf::Texture tableTexture;
     sf::Sprite tableSprite;
     int tableNumber = 0;
+    int occupiedChairs = 0;
     TablesTypesEnum tableType;
     bool isOccupied = false;
 
@@ -24,6 +25,9 @@ public:
     virtual void render(sf::RenderWindow* window) = 0;
     int getTableNumber() {
         return tableNumber;
+    }
+    int getOccupiedChairsNumber() {
+        return occupiedChairs;
     }
     bool getOccupiedStatus() {
         return isOccupied;
