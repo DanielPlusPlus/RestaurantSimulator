@@ -41,9 +41,18 @@ bool Level::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Level::update(float deltaTime) {
+void Level::update(float deltaTime, sf::RenderWindow* window) {
+    (void)window;
     this->charactersManager->update(deltaTime, scaleFactor, tileWidth, 
                                     tileHeight, tablesManager, pathFinder);
+}
+
+bool Level::changeScene(enum ScenesEnum* sceneName) {
+    if(isSceneToChange == true) {
+        *sceneName = ScenesEnum::SUMMARY;
+        return true;
+    }
+    return false;
 }
 
 void Level::render(sf::RenderWindow* window) {

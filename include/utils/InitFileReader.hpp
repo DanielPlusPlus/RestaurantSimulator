@@ -1,13 +1,13 @@
 #pragma once
 
 #include <string>
-#include <map>
+#include <unordered_map>
 
 
 class InitFileReader {
 private:
     const std::string filePath = "restaurantSimulator.ini";
-    std::map<std::string, int> configValues;
+    std::unordered_map<std::string, int> configValues;
 
     bool loadConfigValues();
     std::string trim(const std::string str);
@@ -15,7 +15,7 @@ private:
     bool createDefaultConfigFile();
 public:
     InitFileReader();
-    std::map<std::string, int> getConfigValues() {
+    std::unordered_map<std::string, int> getConfigValues() {
         return configValues;
     }
 };

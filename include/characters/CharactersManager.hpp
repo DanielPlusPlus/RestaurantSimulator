@@ -69,9 +69,11 @@ private:
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
                     float moveYSpeed, int waitersNumber);
-    void addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, float moveYSpeed);
+    void addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, 
+                            float moveXSpeed, float moveYSpeed);
     void moveWaitingCustomerToResignation();
-    void moveWaitingCustomerToInside(int scaleFactor, int tableNumber, TablesManager* tablesManager);
+    void moveWaitingCustomerToInside(int scaleFactor, int tableNumber, 
+                                     TablesManager* tablesManager);
     void removeResigningCustomer(int index);
     void removeLeavingCustomer(int index);
     void moveInsideCustomerToLeaving(int index, TablesManager* tablesManager);

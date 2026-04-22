@@ -24,10 +24,12 @@ private:
     TablesManager* tablesManager;
     CharactersManager* charactersManager;
     PathFinder* pathFinder;
+
+    bool loadTextures(int scaleFactor) override;
 public:
     Level(int scaleFactor);
-    bool loadTextures(int scaleFactor);
-    void update(float deltaTime) override;
+    void update(float deltaTime, sf::RenderWindow* window) override;
+    bool changeScene(enum ScenesEnum* sceneName) override;
     void render(sf::RenderWindow* window) override;
     bool isValidPositions(Positions positions);
 };

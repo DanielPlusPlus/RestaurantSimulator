@@ -43,7 +43,7 @@ void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileH
 }
 
 void CharactersManager::addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, 
-                                    float moveXSpeed, float moveYSpeed) {
+                                           float moveXSpeed, float moveYSpeed) {
     extern std::mt19937 globalRNG;
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], 

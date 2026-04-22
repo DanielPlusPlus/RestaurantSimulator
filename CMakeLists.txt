@@ -13,7 +13,11 @@ file(GLOB_RECURSE SOURCES
 )
 
 add_executable(RestaurantSimulator ${SOURCES}
-    include/enums/TablesTypesEnum.hpp)
+    include/enums/TablesTypesEnum.hpp
+    include/enums/ScenesEnum.hpp
+    src/utils/InitFileReader.cpp
+    include/utils/InitFileWriter.hpp
+    src/utils/InitFileWriter.cpp)
 
 target_include_directories(RestaurantSimulator PRIVATE include)
 
@@ -23,6 +27,8 @@ target_link_libraries(RestaurantSimulator
     sfml-graphics
     sfml-audio
 )
+
+# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
 
 add_custom_command(TARGET RestaurantSimulator POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
