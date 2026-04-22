@@ -14,15 +14,27 @@ Game::Game() {
                                         this->height * this->scaleFactor), 
                                         "Restaurant Simulator", 
                                         sf::Style::Titlebar | sf::Style::Close);
+    loadIcon();
     centerWindowOnDesktop();
     this->currentScene = new MainMenu(&this->scaleFactor, &this->chefsNumber, 
                                       &this->waitersNumber, 
+                                      &this->twoChairsTablesNumber, 
+                                      &this->fourChairsTablesNumber, 
                                       &this->timeToEndSimulationInMinutes);
 }
 
 Game::~Game() {
     delete this->window;
     delete this->currentScene;
+}
+
+bool Game::loadIcon() {
+    sf::Image icon;
+    if (icon.loadFromFile("assets/icons/icon.png")) {
+        this->window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+        return true;
+    }
+    return false;
 }
 
 void Game::centerWindowOnDesktop() {
@@ -78,10 +90,16 @@ void Game::changeScene() {
         case ScenesEnum::MAIN_MENU:
             this->currentScene = new MainMenu(&this->scaleFactor, &this->chefsNumber, 
                                               &this->waitersNumber, 
+                                              &this->twoChairsTablesNumber, 
+                                              &this->fourChairsTablesNumber, 
                                               &this->timeToEndSimulationInMinutes);
             break;
         case ScenesEnum::LEVEL:
-            this->currentScene = new Level(this->scaleFactor);
+            this->currentScene = new Level(this->scaleFactor, this->chefsNumber, 
+                                           this->waitersNumber, 
+                                           this->twoChairsTablesNumber, 
+                                           this->fourChairsTablesNumber, 
+                                           this->timeToEndSimulationInMinutes);
             break;
         case ScenesEnum::SUMMARY:
             break;

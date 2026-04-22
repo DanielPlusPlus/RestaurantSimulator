@@ -8,6 +8,8 @@ InitFileReader::InitFileReader() {
         configValues["scaleFactor"] = 1;
         configValues["chefsNumber"] = 1;
         configValues["waitersNumber"] = 1;
+        configValues["twoChairsTablesNumber"] = 8;
+        configValues["fourChairsTablesNumber"] = 3;
         configValues["timeToEndSimulationInMinutes"] = 1;
         createDefaultConfigFile();
     }
@@ -38,6 +40,12 @@ bool InitFileReader::loadConfigValues() {
                 }
                 else if(key == "waitersNumber") {
                         configValues["waitersNumber"] = stringToInt(value);
+                }
+                else if(key == "twoChairsTablesNumber") {
+                    configValues["twoChairsTablesNumber"] = stringToInt(value);
+                }
+                else if(key == "fourChairsTablesNumber") {
+                    configValues["fourChairsTablesNumber"] = stringToInt(value);
                 }
                 else if(key == "timeToEndSimulationInMinutes") {
                     configValues["timeToEndSimulationInMinutes"] = stringToInt(value);
@@ -73,6 +81,8 @@ bool InitFileReader::createDefaultConfigFile() {
         file << "scaleFactor=1\n";
         file << "chefsNumber=1\n";
         file << "waitersNumber=1\n";
+        file << "twoChairsTablesNumber=8\n";
+        file << "fourChairsTablesNumber=3\n";
         file << "timeToEndSimulationInMinutes=1\n";
         file.close();
         return true;

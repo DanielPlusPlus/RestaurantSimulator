@@ -3,12 +3,14 @@
 #include <SFML/Graphics.hpp>
 
 
-Level::Level(int scaleFactor) : Scene(scaleFactor) {
+Level::Level(int scaleFactor, int chefsNumber, int waitersNumber, 
+             int twoChairsTablesNumber, int fourChairsTablesNumber, 
+             int timeToEndSimulationInMinutes) : Scene(scaleFactor) {
     tileWidth *= scaleFactor;
     tileHeight *= scaleFactor;
     dishesManager = new DishesManager(scaleFactor);
-    tablesManager = new TablesManager(scaleFactor, 8, 3); // do poprawy - liczba stolików powinna być parametrem, a nie stałą
-    charactersManager = new CharactersManager(scaleFactor, tileWidth, tileHeight, 3, 3, dishesManager); // do poprawy - liczba postaci powinna być parametrem, a nie stałą
+    tablesManager = new TablesManager(scaleFactor, twoChairsTablesNumber, fourChairsTablesNumber);
+    charactersManager = new CharactersManager(scaleFactor, tileWidth, tileHeight, chefsNumber, waitersNumber, dishesManager);
     pathFinder = new PathFinder(this);
     this->texturesLoaded = loadTextures(scaleFactor);
 }

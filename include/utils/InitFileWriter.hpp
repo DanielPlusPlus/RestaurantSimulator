@@ -9,8 +9,8 @@ private:
     const std::string filePath = "restaurantSimulator.ini";\
     std::unordered_map<std::string, int> configValues;
 public:
-    InitFileWriter(int scaleFactor, int chefsNumber, 
-                   int waitersNumber, 
+    InitFileWriter(int scaleFactor, int chefsNumber, int waitersNumber, 
+                   int twoChairsTablesNumber, int fourChairsTablesNumber,
                    int timeToEndSimulationInMinutes);
     bool createConfigFile();
 };

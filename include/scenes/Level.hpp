@@ -27,7 +27,9 @@ private:
 
     bool loadTextures(int scaleFactor) override;
 public:
-    Level(int scaleFactor);
+    Level(int scaleFactor, int chefsNumber, int waitersNumber, 
+          int twoChairsTablesNumber, int fourChairsTablesNumber, 
+          int timeToEndSimulationInMinutes);
     void update(float deltaTime, sf::RenderWindow* window) override;
     bool changeScene(enum ScenesEnum* sceneName) override;
     void render(sf::RenderWindow* window) override;

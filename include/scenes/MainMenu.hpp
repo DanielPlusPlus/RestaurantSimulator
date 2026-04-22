@@ -21,6 +21,10 @@ private:
     sf::Text chefsNumberValueText;
     sf::Text waitersNumberLabelText;
     sf::Text waitersNumberValueText;
+    sf::Text twoChairsTablesNumberLabelText;
+    sf::Text twoChairsTablesNumberValueText;
+    sf::Text fourChairsTablesNumberLabelText;
+    sf::Text fourChairsTablesNumberValueText;
     sf::Text simulationTimeLabelText;
     sf::Text simulationTimeValueText;
     sf::Text startText;
@@ -33,11 +37,15 @@ private:
     int* scaleFactorPtr;
     int* chefsNumberPtr;
     int* waitersNumberPtr;
+    int* twoChairsTablesNumberPtr;
+    int* fourChairsTablesNumberPtr;
     int* simulationTimePtr;
 
     int newScaleFactor = 1;
     int newChefsNumber = 1;
     int newWaitersNumber = 1;
+    int newTwoChairsTablesNumber = 8;
+    int newFourChairsTablesNumber = 3;
     int newSimulationTimeInMinutes = 1;
 
     bool isSceneToReload = false;
@@ -54,7 +62,9 @@ private:
 
     bool loadTextures(int scaleFactor) override;
 public:
-    MainMenu(int* scaleFactor, int* chefsNumberPtr, int* waitersNumberPtr, int* simulationTimePtr);
+    MainMenu(int* scaleFactor, int* chefsNumberPtr, 
+             int* waitersNumberPtr, int* twoChairsTablesNumberPtr, 
+             int* fourChairsTablesNumberPtr, int* simulationTimePtr);
     ~MainMenu();
     void update(float deltaTime, sf::RenderWindow* window) override;
     bool changeScene(enum ScenesEnum* sceneName) override;

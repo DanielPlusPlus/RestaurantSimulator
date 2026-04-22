@@ -8,10 +8,13 @@
 
 
 MainMenu::MainMenu(int* scaleFactor, int* chefsNumberPtr, 
-                   int* waitersNumberPtr, int* simulationTimePtr) : 
+                   int* waitersNumberPtr, int* twoChairsTablesNumberPtr, 
+                   int* fourChairsTablesNumberPtr, int* simulationTimePtr) : 
                    Scene(*scaleFactor), scaleFactorPtr(scaleFactor), 
                    chefsNumberPtr(chefsNumberPtr), 
                    waitersNumberPtr(waitersNumberPtr), 
+                   twoChairsTablesNumberPtr(twoChairsTablesNumberPtr),
+                   fourChairsTablesNumberPtr(fourChairsTablesNumberPtr),
                    simulationTimePtr(simulationTimePtr) {
     texturesLoaded = loadTextures(this->scaleFactor);
     loadInitValues();
@@ -22,7 +25,9 @@ MainMenu::MainMenu(int* scaleFactor, int* chefsNumberPtr,
 }
 
 MainMenu::~MainMenu() {
-    InitFileWriter initFileWriter(*scaleFactorPtr, *chefsNumberPtr, *waitersNumberPtr, *simulationTimePtr);
+    InitFileWriter initFileWriter(*scaleFactorPtr, *chefsNumberPtr, 
+                                  *waitersNumberPtr, *twoChairsTablesNumberPtr, 
+                                  *fourChairsTablesNumberPtr, *simulationTimePtr);
     initFileWriter.createConfigFile();
 }
 
@@ -43,9 +48,9 @@ bool MainMenu::loadTextures(int scaleFactor) {
 }
 
 void MainMenu::configureTextsStyles() {
-    const unsigned int baseOptionTextSize = static_cast<unsigned int>(fontSize + 4);
+    const unsigned int baseOptionTextSize = static_cast<unsigned int>(fontSize + 2);
     const unsigned int baseTitleTextSize = static_cast<unsigned int>(fontSize + 12);
-    const unsigned int baseStartTextSize = static_cast<unsigned int>(fontSize + 8);
+    const unsigned int baseStartTextSize = static_cast<unsigned int>(fontSize + 6);
 
     const sf::Color outlineColor(58, 58, 80);
     titleText.setFont(font);
@@ -94,6 +99,32 @@ void MainMenu::configureTextsStyles() {
     waitersNumberValueText.setOutlineThickness(static_cast<float>(scaleFactor));
     waitersNumberValueText.setOutlineColor(outlineColor);
 
+    twoChairsTablesNumberLabelText.setFont(font);
+    twoChairsTablesNumberLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
+    twoChairsTablesNumberLabelText.setString("2 Chairs Tables Number:");
+    twoChairsTablesNumberLabelText.setFillColor(sf::Color(245, 233, 190));
+    twoChairsTablesNumberLabelText.setOutlineThickness(static_cast<float>(scaleFactor));
+    twoChairsTablesNumberLabelText.setOutlineColor(outlineColor);
+
+    twoChairsTablesNumberValueText.setFont(font);
+    twoChairsTablesNumberValueText.setCharacterSize(baseOptionTextSize * scaleFactor);
+    twoChairsTablesNumberValueText.setFillColor(sf::Color(255, 222, 120));
+    twoChairsTablesNumberValueText.setOutlineThickness(static_cast<float>(scaleFactor));
+    twoChairsTablesNumberValueText.setOutlineColor(outlineColor);
+
+    fourChairsTablesNumberLabelText.setFont(font);
+    fourChairsTablesNumberLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
+    fourChairsTablesNumberLabelText.setString("4 Chairs Tables Number:");
+    fourChairsTablesNumberLabelText.setFillColor(sf::Color(245, 233, 190));
+    fourChairsTablesNumberLabelText.setOutlineThickness(static_cast<float>(scaleFactor));
+    fourChairsTablesNumberLabelText.setOutlineColor(outlineColor);
+
+    fourChairsTablesNumberValueText.setFont(font);
+    fourChairsTablesNumberValueText.setCharacterSize(baseOptionTextSize * scaleFactor);
+    fourChairsTablesNumberValueText.setFillColor(sf::Color(255, 222, 120));
+    fourChairsTablesNumberValueText.setOutlineThickness(static_cast<float>(scaleFactor));
+    fourChairsTablesNumberValueText.setOutlineColor(outlineColor);
+
     simulationTimeLabelText.setFont(font);
     simulationTimeLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
     simulationTimeLabelText.setString("Simulation Time:");
@@ -121,6 +152,8 @@ void MainMenu::loadInitValues() {
     newScaleFactor = configValues["scaleFactor"];
     newChefsNumber = configValues["chefsNumber"];
     newWaitersNumber = configValues["waitersNumber"];
+    newTwoChairsTablesNumber = configValues["twoChairsTablesNumber"];
+    newFourChairsTablesNumber = configValues["fourChairsTablesNumber"];
     newSimulationTimeInMinutes = configValues["timeToEndSimulationInMinutes"];
     if(newScaleFactor != scaleFactor) {
         isSceneToReload = true;
@@ -162,11 +195,15 @@ void MainMenu::updateValuesTexts() {
     *scaleFactorPtr = std::max(1, std::min(newScaleFactor, 9));
     *chefsNumberPtr = std::max(1, std::min(newChefsNumber, 3));
     *waitersNumberPtr = std::max(1, std::min(newWaitersNumber, 3));
+    *twoChairsTablesNumberPtr = std::max(1, std::min(newTwoChairsTablesNumber, 8));
+    *fourChairsTablesNumberPtr = std::max(1, std::min(newFourChairsTablesNumber, 3));
     *simulationTimePtr = std::max(1, std::min(newSimulationTimeInMinutes, 5));
 
     scaleFactorValueText.setString(std::to_string(*scaleFactorPtr));
     chefsNumberValueText.setString(std::to_string(*chefsNumberPtr));
     waitersNumberValueText.setString(std::to_string(*waitersNumberPtr));
+    twoChairsTablesNumberValueText.setString(std::to_string(*twoChairsTablesNumberPtr));
+    fourChairsTablesNumberValueText.setString(std::to_string(*fourChairsTablesNumberPtr));
     simulationTimeValueText.setString(std::to_string(*simulationTimePtr) + " min");
 }
 
@@ -177,43 +214,75 @@ void MainMenu::updateTextsPositions() {
     };
 
     const float centerX = scaled(151.0f);
-    const float titleY = scaled(38.0f);
-    const float scaleFactorOptionY = scaled(84.0f);
-    const float chefsNumberOptionY = scaled(106.0f);
-    const float waitersNumberOptionY = scaled(128.0f);
-    const float simulationTimeOptionY = scaled(150.0f);
+    const float titleY = scaled(34.0f);
     const float valueSpacing = scaled(12.0f);
-    const float startY = scaled(197.0f);
+    const float startY = scaled(200.0f);
 
     const sf::FloatRect titleBounds = titleText.getLocalBounds();
     titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f,
                         titleBounds.top + titleBounds.height / 2.0f);
     titleText.setPosition(centerX, titleY);
 
+    const sf::FloatRect startBounds = startText.getLocalBounds();
+    startText.setOrigin(startBounds.left + startBounds.width / 2.0f,
+                        startBounds.top + startBounds.height / 2.0f);
+
+    const float titleBottom = titleY + titleBounds.height / 2.0f;
+    const float startTop = startY - startBounds.height / 2.0f;
+
+    auto optionRowHeight = [](const sf::Text& labelText, const sf::Text& valueText) {
+        const sf::FloatRect labelBounds = labelText.getLocalBounds();
+        const sf::FloatRect valueBounds = valueText.getLocalBounds();
+        return std::max(labelBounds.height, valueBounds.height);
+    };
+
+    const float scaleFactorRowHeight = optionRowHeight(scaleFactorLabelText, scaleFactorValueText);
+    const float chefsNumberRowHeight = optionRowHeight(chefsNumberLabelText, chefsNumberValueText);
+    const float waitersNumberRowHeight = optionRowHeight(waitersNumberLabelText, waitersNumberValueText);
+    const float twoChairsTablesRowHeight = optionRowHeight(twoChairsTablesNumberLabelText,
+                                                           twoChairsTablesNumberValueText);
+    const float fourChairsTablesRowHeight = optionRowHeight(fourChairsTablesNumberLabelText,
+                                                            fourChairsTablesNumberValueText);
+    const float simulationTimeRowHeight = optionRowHeight(simulationTimeLabelText,
+                                                          simulationTimeValueText);
+
+    const float optionsTotalHeight = scaleFactorRowHeight + chefsNumberRowHeight +
+                                     waitersNumberRowHeight + twoChairsTablesRowHeight +
+                                     fourChairsTablesRowHeight + simulationTimeRowHeight;
+    const float equalGap = (startTop - titleBottom - optionsTotalHeight) / 7.0f;
+
+    const float scaleFactorOptionTop = titleBottom + equalGap;
+    const float chefsNumberOptionTop = scaleFactorOptionTop + scaleFactorRowHeight + equalGap;
+    const float waitersNumberOptionTop = chefsNumberOptionTop + chefsNumberRowHeight + equalGap;
+    const float twoChairsTablesOptionTop = waitersNumberOptionTop + waitersNumberRowHeight + equalGap;
+    const float fourChairsTablesOptionTop = twoChairsTablesOptionTop + twoChairsTablesRowHeight + equalGap;
+    const float simulationTimeOptionTop = fourChairsTablesOptionTop + fourChairsTablesRowHeight + equalGap;
+
     auto positionOption = [centerX, valueSpacing](sf::Text& labelText, sf::Text& valueText, 
-                                                  float yPos) {
+                                                  float topY) {
         const sf::FloatRect labelBounds = labelText.getLocalBounds();
         const sf::FloatRect valueBounds = valueText.getLocalBounds();
         
         const float totalWidth = labelBounds.width + valueSpacing + valueBounds.width;
         const float leftX = centerX - (totalWidth / 2.0f);
 
-        labelText.setPosition(leftX - labelBounds.left, yPos);
-        valueText.setPosition(leftX + labelBounds.width + valueSpacing - valueBounds.left, yPos);
+        labelText.setPosition(leftX - labelBounds.left, topY - labelBounds.top);
+        valueText.setPosition(leftX + labelBounds.width + valueSpacing - valueBounds.left,
+                              topY - valueBounds.top);
     };
 
     positionOption(scaleFactorLabelText, scaleFactorValueText, 
-                   scaleFactorOptionY);
+                   scaleFactorOptionTop);
     positionOption(chefsNumberLabelText, chefsNumberValueText, 
-                   chefsNumberOptionY);
+                   chefsNumberOptionTop);
     positionOption(waitersNumberLabelText, waitersNumberValueText, 
-                   waitersNumberOptionY);
+                   waitersNumberOptionTop);
+    positionOption(twoChairsTablesNumberLabelText, twoChairsTablesNumberValueText, 
+                   twoChairsTablesOptionTop);
+    positionOption(fourChairsTablesNumberLabelText, fourChairsTablesNumberValueText, 
+                   fourChairsTablesOptionTop);
     positionOption(simulationTimeLabelText, simulationTimeValueText, 
-                   simulationTimeOptionY);
-
-    const sf::FloatRect startBounds = startText.getLocalBounds();
-    startText.setOrigin(startBounds.left + startBounds.width / 2.0f,
-                        startBounds.top + startBounds.height / 2.0f);
+                   simulationTimeOptionTop);
     startText.setPosition(centerX, startY);
 }
 
@@ -235,6 +304,10 @@ void MainMenu::updateHoverState(sf::RenderWindow* window) {
                                       hoverValueColor : normalValueColor);
     waitersNumberValueText.setFillColor(isMouseOverText(window, waitersNumberValueText) ? 
                                         hoverValueColor : normalValueColor);
+    fourChairsTablesNumberValueText.setFillColor(isMouseOverText(window, fourChairsTablesNumberValueText) ? 
+                                                 hoverValueColor : normalValueColor);
+    twoChairsTablesNumberValueText.setFillColor(isMouseOverText(window, twoChairsTablesNumberValueText) ? 
+                                                hoverValueColor : normalValueColor);
     simulationTimeValueText.setFillColor(isMouseOverText(window, simulationTimeValueText) ? 
                                          hoverValueColor : normalValueColor);
     startText.setFillColor(isMouseOverText(window, startText) ? hoverStartColor : 
@@ -255,6 +328,16 @@ void MainMenu::handleMouseClick(sf::RenderWindow* window) {
     }
     if(isMouseOverText(window, waitersNumberValueText)) {
         newWaitersNumber = 1 + newWaitersNumber % 3;
+        updateValuesTexts();
+        return;
+    }
+    if(isMouseOverText(window, twoChairsTablesNumberValueText)) {
+        newTwoChairsTablesNumber = 1 + newTwoChairsTablesNumber % 8;
+        updateValuesTexts();
+        return;
+    }
+    if(isMouseOverText(window, fourChairsTablesNumberValueText)) {
+        newFourChairsTablesNumber = 1 + newFourChairsTablesNumber % 3;
         updateValuesTexts();
         return;
     }
@@ -338,6 +421,10 @@ void MainMenu::render(sf::RenderWindow* window) {
     window->draw(chefsNumberValueText);
     window->draw(waitersNumberLabelText);
     window->draw(waitersNumberValueText);
+    window->draw(twoChairsTablesNumberLabelText);
+    window->draw(twoChairsTablesNumberValueText);
+    window->draw(fourChairsTablesNumberLabelText);
+    window->draw(fourChairsTablesNumberValueText);
     window->draw(simulationTimeLabelText);
     window->draw(simulationTimeValueText);
     window->draw(startText);
