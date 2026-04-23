@@ -195,8 +195,8 @@ void MainMenu::updateValuesTexts() {
     *scaleFactorPtr = std::max(1, std::min(newScaleFactor, 9));
     *chefsNumberPtr = std::max(1, std::min(newChefsNumber, 3));
     *waitersNumberPtr = std::max(1, std::min(newWaitersNumber, 3));
-    *twoChairsTablesNumberPtr = std::max(1, std::min(newTwoChairsTablesNumber, 8));
-    *fourChairsTablesNumberPtr = std::max(1, std::min(newFourChairsTablesNumber, 3));
+    *twoChairsTablesNumberPtr = std::max(0, std::min(newTwoChairsTablesNumber, 8));
+    *fourChairsTablesNumberPtr = std::max(0, std::min(newFourChairsTablesNumber, 3));
     *simulationTimePtr = std::max(1, std::min(newSimulationTimeInMinutes, 5));
 
     scaleFactorValueText.setString(std::to_string(*scaleFactorPtr));
@@ -332,12 +332,12 @@ void MainMenu::handleMouseClick(sf::RenderWindow* window) {
         return;
     }
     if(isMouseOverText(window, twoChairsTablesNumberValueText)) {
-        newTwoChairsTablesNumber = 1 + newTwoChairsTablesNumber % 8;
+        newTwoChairsTablesNumber = (1 + newTwoChairsTablesNumber) % 9;
         updateValuesTexts();
         return;
     }
     if(isMouseOverText(window, fourChairsTablesNumberValueText)) {
-        newFourChairsTablesNumber = 1 + newFourChairsTablesNumber % 3;
+        newFourChairsTablesNumber = (1 + newFourChairsTablesNumber) % 4;
         updateValuesTexts();
         return;
     }

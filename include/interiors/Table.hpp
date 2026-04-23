@@ -13,11 +13,14 @@ protected:
     int tableNumber = 0;
     int occupiedChairs = 0;
     TablesTypesEnum tableType;
+    Positions tableHandlingPositions;
     bool isOccupied = false;
 
     virtual bool loadTexture(int scaleFactor, std::string texturePath) = 0;
 public:
-    Table(int tableNumber) : tableNumber(tableNumber) {};
+    Table(int tableNumber, Positions tableHandlingPositions) : 
+          tableNumber(tableNumber), 
+          tableHandlingPositions(tableHandlingPositions) {};
     virtual ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() = 0;
     virtual void resetChairOccupancy(Directions chairHorizontalDirection, 
                                      Directions chairVerticalDirection) = 0;
@@ -37,5 +40,8 @@ public:
     }
     TablesTypesEnum getTableType() {
         return tableType;
+    }
+    Positions getTableHandlingPositions() {
+        return tableHandlingPositions;
     }
 };

@@ -28,7 +28,7 @@ private:
         "assets/interiors/tables/table4_2.png",
         "assets/interiors/tables/table4_3.png"
     };
-    TwoChairsTablesPositions twoChairsTablesPositions[8] = {
+    const TwoChairsTablesPositions twoChairsTablesPositions[8] = {
         TwoChairsTablesPositions(55.0f, 130.0f, 86.0f, 130.0f,
                                  55.0f, 152.0f, 86.0f, 152.0f),
         TwoChairsTablesPositions(179.0f, 130.0f, 209.0f, 130.0f,
@@ -46,7 +46,7 @@ private:
         TwoChairsTablesPositions(239.0f, 9.0f, 269.0f, 9.0f,
                                  239.0f, 24.0f, 269.0f, 24.0f)
     };
-    FourChairsTablesPositions fourChairsTablesPositions[3] = {
+    const FourChairsTablesPositions fourChairsTablesPositions[3] = {
         FourChairsTablesPositions(227.0f, 132.0f, 279.0f, 132.0f, 227.0f, 120.0f, 279.0f, 120.0f,
                                   227.0f, 152.0f, 279.0f, 152.0f, 227.0f, 104.0f, 279.0f, 104.0f),
         FourChairsTablesPositions(227.0f, 91.0f, 279.0f, 91.0f, 227.0f, 79.0f, 279.0f, 79.0f,
@@ -54,8 +54,7 @@ private:
         FourChairsTablesPositions(227.0f, 50.0f, 279.0f, 50.0f, 227.0f, 38.0f, 279.0f, 38.0f,
                                   227.0f, 72.0f, 279.0f, 72.0f, 227.0f, 24.0f, 279.0f, 24.0f)
     };
-
-    Positions twoChairsTablesDishesPositions[8] = {
+    const Positions twoChairsTablesDishesPositions[8] = {
         Positions{70.5f, 142.0f},
         Positions{194.0f, 142.0f},
         Positions{22.0f, 142.0f},
@@ -65,10 +64,25 @@ private:
         Positions{175.0f, 21.0f},
         Positions{254.0f, 21.0f}
     };
-    FourChairsTablesDishesPositions fourChairsTablesDishesPositions[3] = {
+    const FourChairsTablesDishesPositions fourChairsTablesDishesPositions[3] = {
         FourChairsTablesDishesPositions{244.0f, 147.0f, 262.0f, 147.0f, 244.0f, 132.0f, 262.0f, 132.0f},
         FourChairsTablesDishesPositions{244.0f, 106.0f, 262.0f, 106.0f, 244.0f, 91.0f, 262.0f, 91.0f},
         FourChairsTablesDishesPositions{244.0f, 65.0f, 262.0f, 65.0f, 244.0f, 50.0f, 262.0f, 50.0f}
+    };
+    const Positions twoChairsTablesHandlingPositions[8] = {
+        Positions{70.5f, 120.0f},
+        Positions{194.0f, 120.0f},
+        Positions{22.0f, 120.0f},
+        Positions{22.0f, 88.0f},
+        Positions{22.0f, 88.0f},
+        Positions{119.0f, 88.0f},
+        Positions{175.0f, 24.0f},
+        Positions{254.0f, 24.0f}
+    };
+    const Positions fourChairsTablesHandlingPositions[3] = {
+        Positions{253.0f, 104.0f},
+        Positions{253.0f, 72.0f}, // potecjalnie 64
+        Positions{253.0f, 24.0f}
     };
 
     std::vector<TwoChairsTable*> twoChairsTables;
@@ -81,6 +95,7 @@ public:
     int getFreeTableNumber();
     bool isFreeChair(int tableNumber);
     ChairPositionsAndDirections getFreeChairPositions(int tableNumber);
+    Positions getTableHandlingPositions(int tableNumber);
     void occupyTableInstantly(int tableNumber);
     void freeChair(int tableNumber, 
                    Directions chairHorizontalDirection, 

@@ -54,7 +54,7 @@ void Game::run() {
     while (window->isOpen()) {
         float deltaTime = clock.restart().asSeconds();
         
-        currentScene->update(deltaTime, window);
+        currentScene->update(5 * deltaTime, window);
         
         if(currentScene->changeScene(&this->newSceneName)) {
             updateScene();

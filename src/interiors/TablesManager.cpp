@@ -16,6 +16,7 @@ void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int 
                                                       sizeof(std::string))], 
                                                       twoChairsTablesPositions[i], 
                                                       twoChairsTablesDishesPositions[i],
+                                                      twoChairsTablesHandlingPositions[i],
                                                       tableNumber);
         twoChairsTables.push_back(newTable);
     }
@@ -26,6 +27,7 @@ void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int 
                                                         sizeof(std::string))], 
                                                         fourChairsTablesPositions[i], 
                                                         fourChairsTablesDishesPositions[i],
+                                                        fourChairsTablesHandlingPositions[i],
                                                         tableNumber);
         fourChairsTables.push_back(newTable);
     }
@@ -97,6 +99,20 @@ ChairPositionsAndDirections TablesManager::getFreeChairPositions(int tableNumber
     }
     return ChairPositionsAndDirections{Positions{-1.0f, -1.0f}, Positions{-1.0f, -1.0f}, 
                                        Directions::RIGHT, Directions::DOWN};
+}
+
+Positions TablesManager::getTableHandlingPositions(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return table->getTableHandlingPositions();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return table->getTableHandlingPositions();
+        }
+    }
+    return Positions{-1.0f, -1.0f};
 }
 
 void TablesManager::occupyTableInstantly(int tableNumber) {

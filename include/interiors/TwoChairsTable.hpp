@@ -18,7 +18,8 @@ private:
 public:
     TwoChairsTable(int scaleFactor, std::string texturePath, 
                    TwoChairsTablesPositions chairsPositions,
-                   Positions dishesPositions,
+                   Positions dishesPositions, 
+                   Positions tableHandlingPositions,
                    int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
     void occupyTableInstantly() override {

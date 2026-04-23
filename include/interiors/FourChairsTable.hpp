@@ -21,7 +21,8 @@ TablesTypesEnum tableType = TablesTypesEnum::FOUR_CHAIRS_TABLE;
 public:
     FourChairsTable(int scaleFactor, std::string texturePath, 
                     FourChairsTablesPositions chairsPositions, 
-                    FourChairsTablesDishesPositions dishesPositions,
+                    FourChairsTablesDishesPositions dishesPositions, 
+                    Positions tableHandlingPositions, 
                     int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
     void occupyTableInstantly() override {
