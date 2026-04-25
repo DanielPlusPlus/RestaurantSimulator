@@ -65,6 +65,9 @@ private:
     std::vector<Customer*> insideCustomers;
     std::vector<Customer*> resigningCustomers;
     std::vector<Customer*> leavingCustomers;
+
+    Waiter* queueNearestWaiter = nullptr;
+
     void addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
@@ -77,6 +80,11 @@ private:
     void removeResigningCustomer(int index);
     void removeLeavingCustomer(int index);
     void moveInsideCustomerToLeaving(int index, TablesManager* tablesManager);
+    Waiter* getNearestWaiterToPositions(Waiter* newWaiter, 
+                                        Waiter* nearestWaiter, 
+                                        Positions positions);
+    void getNearestWaiterToQueueHandling(int scaleFactor, Waiter* newWaiter);
+    void assignNearestWaiterToQueueHandling();
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);

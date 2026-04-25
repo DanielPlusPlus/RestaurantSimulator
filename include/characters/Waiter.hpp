@@ -72,6 +72,9 @@ public:
     void update(float deltaTime, float tileWidth, 
                 float tileHeight, PathFinder* pathFinder);
     void render(sf::RenderWindow* window) override;
+    int getWaiterNumber() {
+        return waiterNumber;
+    } // do usunięcia
     bool getIsMoving() {
         return isMoving;
     }
@@ -91,10 +94,10 @@ public:
         return state == WaiterStatesEnum::WAITING_TO_TASK;
     };
     void changeToQueueHandlingState() {
-        state = WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING;
+        state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_QUEUE_HANDLING;
     }
     void changeToTableHandlingState() {
-        state = WaiterStatesEnum::PREPARING_TO_TABLE_HANDLING;
+        state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_TABLE;
     }
     void changeToDishPickupState() {
         state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_PICKUP;
