@@ -128,23 +128,23 @@ void CharactersManager::removeLeavingCustomer(int index) {
     }
 }
 
-Waiter* CharactersManager::getNearestWaiterToPositions(Waiter* newWaiter, 
-                                                       Waiter* nearestWaiter, 
+Waiter* CharactersManager::getNearestWaiterToPositions(Waiter* nearestWaiter, 
+                                                       Waiter* newWaiter, 
                                                        Positions positions) {
     if(nearestWaiter == nullptr) {
         return newWaiter;
     }
-    float nearestWaiterXPos = nearestWaiter->getXPos();
-    float nearestWaiterYPos = nearestWaiter->getYPos();
-    float distanceToNearestWaiter = std::sqrt(std::pow(positions.xPos - nearestWaiterXPos, 2) 
-                                              + std::pow(positions.yPos - nearestWaiterYPos, 2));
+    float actualNearestWaiterXPos = nearestWaiter->getXPos();
+    float actualNearestWaiterYPos = nearestWaiter->getYPos();
+    float distanceToActualNearestWaiter = std::sqrt(std::pow(positions.xPos - actualNearestWaiterXPos, 2) 
+                                                    + std::pow(positions.yPos - actualNearestWaiterYPos, 2));
 
     float newWaiterXPos = newWaiter->getXPos();
     float newWaiterYPos = newWaiter->getYPos();
-    float distanceToNewWaiter = std::sqrt(std::pow(positions.xPos - nearestWaiterXPos, 2) 
-                                          + std::pow(positions.yPos - nearestWaiterYPos, 2));
+    float distanceToNewWaiter = std::sqrt(std::pow(positions.xPos - newWaiterXPos, 2) 
+                                          + std::pow(positions.yPos - newWaiterYPos, 2));
 
-    if(distanceToNewWaiter < distanceToNearestWaiter) {
+    if(distanceToNewWaiter < distanceToActualNearestWaiter) {
         return newWaiter;
     }
 
@@ -152,11 +152,10 @@ Waiter* CharactersManager::getNearestWaiterToPositions(Waiter* newWaiter,
 }
 
 void CharactersManager::getNearestWaiterToQueueHandling(int scaleFactor, Waiter* newWaiter) {
-    Positions queueHandlingPositions{0.0f, 0.0f};
-    queueHandlingPositions.xPos *= scaleFactor;
-    queueHandlingPositions.yPos *= scaleFactor;
-    queueNearestWaiter = getNearestWaiterToPositions(newWaiter, 
-                                                     queueNearestWaiter, 
+    Positions queueHandlingPositions{waitersQueueHandlingPositions.xPos * scaleFactor,
+                                     waitersQueueHandlingPositions.yPos * scaleFactor};
+    queueNearestWaiter = getNearestWaiterToPositions(queueNearestWaiter, 
+                                                     newWaiter, 
                                                      queueHandlingPositions);
 }
 
@@ -197,7 +196,10 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
     for(Waiter* waiter : waiters) {
         waiter->update(deltaTime, tileWidth, tileHeight, pathFinder);
         if(isFreeTables) {
-            getNearestWaiterToQueueHandling(scaleFactor, waiter);
+            if(!queueNearestWaiter->getIsAssignedToTask() && 
+               !queueNearestWaiter->getIsQueueHandling()) {
+               getNearestWaiterToQueueHandling(scaleFactor, waiter);
+            }
             
             int tableNumber = tablesManager->getFreeTableNumber();
             if(waiter->getIsQueueHandling() && tablesManager->isFreeChair(tableNumber)) {
@@ -205,8 +207,9 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
             }
         }
     }
+    std::cout << "Nearest waiter" << queueNearestWaiter->getWaiterNumber() << std::endl; // do usunięcia
     if(isFreeTables) {
-        if(!queueNearestWaiter->getIsMoving() && 
+        if(!queueNearestWaiter->getIsAssignedToTask() && 
            !queueNearestWaiter->getIsQueueHandling()) {
             assignNearestWaiterToQueueHandling();
         }

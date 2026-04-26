@@ -43,8 +43,8 @@ private:
     float idleTimer = 0.0f;
     int failedCycles = 0;
     float tableHandlingTime = 0.0f;
-    
-    bool isMoving = false;
+
+    bool isAssignedToTask = false;
     bool isNewOrder = false;
     
     std::vector<Positions> pathToFollow;
@@ -58,11 +58,14 @@ private:
                                     float tileWidth, float tileHeight, 
                                     PathFinder* pathFinder);
     void updateDirection(Positions nextPosition);
-    void setIsMoving(bool value) {
-        isMoving = value;
-    }
     void setNewOrder(bool value) {
         isNewOrder = value;
+    }
+    void setAssignedToTask(bool value) {
+        isAssignedToTask = value;
+    }
+    bool getIsNewOrder() {
+        return isNewOrder;
     }
 public:
     Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
@@ -75,9 +78,9 @@ public:
     int getWaiterNumber() {
         return waiterNumber;
     } // do usunięcia
-    bool getIsMoving() {
-        return isMoving;
-    }
+    bool getIsAssignedToTask() {
+        return isAssignedToTask;
+    };
     bool getIsQueueHandling() {
         return state == WaiterStatesEnum::QUEUE_HANDLING;
     };
@@ -111,7 +114,4 @@ public:
     void setTableNumberAndPositions(int scaleFactor, 
                                     int tableNumber, 
                                     Positions tableHandlingPositions);
-    bool getIsNewOrder() {
-        return isNewOrder;
-    }
 };

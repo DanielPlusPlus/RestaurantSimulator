@@ -94,11 +94,15 @@ void Waiter::changeAnimation(float deltaTime) {
 void Waiter::changeState(float deltaTime, float tileWidth, 
                          float tileHeight, PathFinder* pathFinder) {
     switch(state) {
+        case WaiterStatesEnum::PREPARING_TO_WAITING_TO_TASK:
+            state = WaiterStatesEnum::WAITING_TO_TASK;
+            setAssignedToTask(false);
+            break;
         case WaiterStatesEnum::WAITING_TO_TASK:
             break;
         case WaiterStatesEnum::PREPARING_TO_MOVE_TO_QUEUE_HANDLING:
             state = WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING;
-            setIsMoving(true);
+            setAssignedToTask(true);
             pathToFollow.clear();
             currentPathIndex = 0;
             break;
@@ -112,15 +116,20 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             animDirection = Directions::DOWN;
             state = WaiterStatesEnum::QUEUE_HANDLING;
             movingState = WaiterStatesEnum::NO_MOVEMENT;
-            setIsMoving(false);
+            idleTimer = 0.0f;
             break;
         case WaiterStatesEnum::QUEUE_HANDLING:
+            idleTimer += deltaTime;
+            if(idleTimer > 2.0f) {
+                idleTimer = 0.0f;
+                state = WaiterStatesEnum::PREPARING_TO_WAITING_TO_TASK;
+            }
             break;
         case WaiterStatesEnum::PREPARING_TO_MOVE_TO_TABLE:
             state = WaiterStatesEnum::MOVING_TO_TABLE;
             pathToFollow.clear();
             currentPathIndex = 0;
-            setIsMoving(true);
+            setAssignedToTask(true);
             break;
         case WaiterStatesEnum::MOVING_TO_TABLE:
             if(moveToDestinationPositions(tableHandlingPositions, deltaTime, 
@@ -134,16 +143,15 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             movingState = WaiterStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;
             extern std::mt19937 globalRNG;
-            std::uniform_int_distribution<int> dist(5, 7);
+            std::uniform_int_distribution<int> dist(4, 8);
             tableHandlingTime = dist(globalRNG);
-            setIsMoving(false);
             break;
         }
         case WaiterStatesEnum::TABLE_HANDLING:
             idleTimer += deltaTime;
             if(idleTimer > tableHandlingTime) {
                 idleTimer = 0.0f;
-                state = WaiterStatesEnum::WAITING_TO_TASK;
+                state = WaiterStatesEnum::PREPARING_TO_WAITING_TO_TASK;
                 setNewOrder(true);
             }
             break;
@@ -151,7 +159,7 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             state = WaiterStatesEnum::MOVING_TO_DISH_PICKUP;
             pathToFollow.clear();
             currentPathIndex = 0;
-            setIsMoving(true);
+            setAssignedToTask(true);
             break;
         case WaiterStatesEnum::MOVING_TO_DISH_PICKUP:
             if(moveToDestinationPositions(dishPickupPositions, deltaTime, 
@@ -164,20 +172,19 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             state = WaiterStatesEnum::DISH_PICKUP;
             movingState = WaiterStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;
-            setIsMoving(false);
             break;
         case WaiterStatesEnum::DISH_PICKUP:
             idleTimer += deltaTime;
             if(idleTimer > 1.0f) {
                 idleTimer = 0.0f;
-                state = WaiterStatesEnum::WAITING_TO_TASK;
+                state = WaiterStatesEnum::PREPARING_TO_WAITING_TO_TASK;
             }
             break;
         case WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_DROPOFF:
             state = WaiterStatesEnum::MOVING_TO_DISH_DROPOFF;
             pathToFollow.clear();
             currentPathIndex = 0;
-            setIsMoving(true);
+            setAssignedToTask(true);
             break;
         case WaiterStatesEnum::MOVING_TO_DISH_DROPOFF:
             if(moveToDestinationPositions(dishDropoffPositions, deltaTime, 
@@ -190,13 +197,12 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             state = WaiterStatesEnum::DISH_DROPOFF;
             movingState = WaiterStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;
-            setIsMoving(false);
             break;
         case WaiterStatesEnum::DISH_DROPOFF:
             idleTimer += deltaTime;
-            if(idleTimer > 1.0f) {
+            if(idleTimer > 2.0f) {
                 idleTimer = 0.0f;
-                state = WaiterStatesEnum::WAITING_TO_TASK;
+                state = WaiterStatesEnum::PREPARING_TO_WAITING_TO_TASK;
             }
             break;
         default:
