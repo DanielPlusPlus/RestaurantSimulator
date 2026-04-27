@@ -22,9 +22,6 @@ public:
                    Positions tableHandlingPositions,
                    int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
-    void occupyTableInstantly() override {
-        isOccupied = true;
-    };
     TwoChairsTablesPositions getChairsPositions() {
         return chairsPositions;
     }

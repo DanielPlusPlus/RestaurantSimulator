@@ -25,6 +25,7 @@ ChairPositionsAndDirections TwoChairsTable::occupyChairAndGetPositionsAndDirecti
         occupiedChairs++;
         if(availableChairs == 0) {
             isOccupied = true;
+            isWaitingToHandling = true;
         }
         if(!isLeftChairOccupied) {
             isLeftChairOccupied = true;
@@ -45,6 +46,7 @@ void TwoChairsTable::resetChairOccupancy(Directions chairHorizontalDirection,
     occupiedChairs--;
     if(availableChairs == 2) {
         isOccupied = false;
+        isWaitingToHandling = false;
     }
     if(chairHorizontalDirection == Directions::LEFT) {
         isLeftChairOccupied = false;

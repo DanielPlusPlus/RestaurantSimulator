@@ -58,6 +58,20 @@ bool TablesManager::isFreeTable() {
     return false;
 }
 
+bool TablesManager::isOccupiedTable() {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getOccupiedStatus()){
+            return true;
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getOccupiedStatus()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 int TablesManager::getFreeTableNumber() {
     for(TwoChairsTable* table : twoChairsTables) {
         if(!table->getOccupiedStatus()){
@@ -119,11 +133,13 @@ void TablesManager::occupyTableInstantly(int tableNumber) {
     for(TwoChairsTable* table : twoChairsTables) {
         if(table->getTableNumber() == tableNumber){
             table->occupyTableInstantly();
+            table->waitToHandlingInstantly();
         }
     }
     for(FourChairsTable* table : fourChairsTables) {
         if(table->getTableNumber() == tableNumber) {
             table->occupyTableInstantly();
+            table->waitToHandlingInstantly();
         }
     }
 }
@@ -145,7 +161,7 @@ void TablesManager::freeChair(int tableNumber,
     }
 }
 
-void TablesManager::freeInstantlyOccupiedTable(int tableNumber, TablesManager* tablesManager) {
+void TablesManager::freeInstantlyOccupiedTable(int tableNumber) {
      for(TwoChairsTable* table : twoChairsTables) {
         if(table->getTableNumber() == tableNumber){
             table->resetTableOccupancy();
@@ -154,6 +170,32 @@ void TablesManager::freeInstantlyOccupiedTable(int tableNumber, TablesManager* t
     for(FourChairsTable* table : fourChairsTables) {
         if(table->getTableNumber() == tableNumber) {
             table->resetTableOccupancy();
+        }
+    }
+}
+
+void TablesManager::resetWaitingToHandling(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            table->resetWaitingToHandling();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            table->resetWaitingToHandling();
+        }
+    }
+}
+
+void TablesManager::getWaitingToHandlingTablesNumbers(std::vector<int>* waitingToHandlingTablesNumbers) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getWaitingToHandleStatus()){
+            waitingToHandlingTablesNumbers->push_back(table->getTableNumber());
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getWaitingToHandleStatus()) {
+            waitingToHandlingTablesNumbers->push_back(table->getTableNumber());
         }
     }
 }

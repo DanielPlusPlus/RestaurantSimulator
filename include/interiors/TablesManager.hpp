@@ -92,6 +92,7 @@ public:
     void setUpTables(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber);
     void removeTable();
     bool isFreeTable();
+    bool isOccupiedTable();
     int getFreeTableNumber();
     bool isFreeChair(int tableNumber);
     ChairPositionsAndDirections getFreeChairPositions(int tableNumber);
@@ -100,7 +101,9 @@ public:
     void freeChair(int tableNumber, 
                    Directions chairHorizontalDirection, 
                    Directions chairVerticalDirection);
-    void freeInstantlyOccupiedTable(int tableNumber, TablesManager* tablesManager);
+    void freeInstantlyOccupiedTable(int tableNumber);
+    void resetWaitingToHandling(int tableNumber);
+    void getWaitingToHandlingTablesNumbers(std::vector<int>* waitingToHandlingTablesNumbers);
     void render(sf::RenderWindow* window);
 
     Positions getTwoChairsTableDishesPositionsByNumber(int tableNumber);

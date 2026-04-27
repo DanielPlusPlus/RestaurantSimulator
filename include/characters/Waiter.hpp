@@ -61,9 +61,6 @@ private:
     void setNewOrder(bool value) {
         isNewOrder = value;
     }
-    void setAssignedToTask(bool value) {
-        isAssignedToTask = value;
-    }
     bool getIsNewOrder() {
         return isNewOrder;
     }
@@ -78,21 +75,36 @@ public:
     int getWaiterNumber() {
         return waiterNumber;
     } // do usunięcia
+    void setAssignedToTask(bool value) {
+        isAssignedToTask = value;
+    }
     bool getIsAssignedToTask() {
         return isAssignedToTask;
-    };
+    }
     bool getIsQueueHandling() {
         return state == WaiterStatesEnum::QUEUE_HANDLING;
-    };
+    }
+    bool getIsSelectedToQueueHandling() {
+        if(state == WaiterStatesEnum::PREPARING_TO_MOVE_TO_QUEUE_HANDLING) {
+            return true;
+        }
+        if(state == WaiterStatesEnum::MOVING_TO_QUEUE_HANDLING) {
+            return true;
+        }
+        if(state == WaiterStatesEnum::PREPARING_TO_QUEUE_HANDLING) {
+            return true;
+        }
+        return false;
+    }
     bool getIsTableHandling() {
         return state == WaiterStatesEnum::TABLE_HANDLING;
-    };
+    }
     bool getIsDishPickup() {
         return state == WaiterStatesEnum::DISH_PICKUP;
-    };
+    }
     bool getIsDishDropoff() {
         return state == WaiterStatesEnum::DISH_DROPOFF;
-    };
+    }
     bool getIsWaitingToTask() {
         return state == WaiterStatesEnum::WAITING_TO_TASK;
     };

@@ -15,6 +15,7 @@ protected:
     TablesTypesEnum tableType;
     Positions tableHandlingPositions;
     bool isOccupied = false;
+    bool isWaitingToHandling = false;
 
     virtual bool loadTexture(int scaleFactor, std::string texturePath) = 0;
 public:
@@ -24,7 +25,6 @@ public:
     virtual ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() = 0;
     virtual void resetChairOccupancy(Directions chairHorizontalDirection, 
                                      Directions chairVerticalDirection) = 0;
-    virtual void occupyTableInstantly() = 0;
     virtual void render(sf::RenderWindow* window) = 0;
     int getTableNumber() {
         return tableNumber;
@@ -43,5 +43,17 @@ public:
     }
     Positions getTableHandlingPositions() {
         return tableHandlingPositions;
+    }
+    void occupyTableInstantly() {
+        isOccupied = true;
+    }
+    void waitToHandlingInstantly() {
+        isWaitingToHandling = true;
+    }
+    bool getWaitingToHandleStatus() {
+        return isWaitingToHandling;
+    }
+    void resetWaitingToHandling() {
+        isWaitingToHandling = false;
     }
 };

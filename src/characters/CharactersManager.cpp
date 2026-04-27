@@ -106,7 +106,7 @@ void CharactersManager::moveInsideCustomerToLeaving(int index, TablesManager* ta
         Directions chairVerticalDirection = customer->getChairVerticalDirection();
         tablesManager->freeChair(tableNumber, chairHorizontalDirection, chairVerticalDirection);
         if(customer->getOccupyTableInstantly()) {
-            tablesManager->freeInstantlyOccupiedTable(tableNumber, tablesManager);
+            tablesManager->freeInstantlyOccupiedTable(tableNumber);
         }
         customer->changeToLeavingState();
         leavingCustomers.push_back(customer);
@@ -159,16 +159,48 @@ void CharactersManager::getNearestWaiterToQueueHandling(int scaleFactor, Waiter*
                                                      queueHandlingPositions);
 }
 
+bool CharactersManager::checkIsWaiterInQueueHandling() {
+    for(Waiter* waiter : waiters) {
+        if(waiter->getIsQueueHandling() || 
+           waiter->getIsSelectedToQueueHandling()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void CharactersManager::assignNearestWaiterToQueueHandling() {
     if(queueNearestWaiter != nullptr) {
+        std::cout << "Assigned waiter " << queueNearestWaiter->getWaiterNumber() << " to queue handling" << std::endl; // do usunięcia
         queueNearestWaiter->changeToQueueHandlingState();
+    }
+}
+
+void CharactersManager::assignWaitersToTablesHandling(int scaleFactor, TablesManager* tablesManager) {
+    std::vector<int> waitingToHandlingTablesNumbers;
+    tablesManager->getWaitingToHandlingTablesNumbers(&waitingToHandlingTablesNumbers);
+    for(int tableNumber : waitingToHandlingTablesNumbers) {
+        Positions tableHandlingPositions = tablesManager->getTableHandlingPositions(tableNumber);
+        Waiter* tableNearestWaiter = nullptr;
+        for(Waiter* waiter : waiters) {
+            if(!waiter->getIsAssignedToTask()) {
+                tableNearestWaiter = getNearestWaiterToPositions(tableNearestWaiter, waiter, tableHandlingPositions);
+            }
+        }
+        if(tableNearestWaiter != nullptr) {
+            std::cout << "Assigned waiter " << tableNearestWaiter->getWaiterNumber() << " to table handling " << tableNumber << std::endl; // do usunięcia
+            tableNearestWaiter->setTableNumberAndPositions(scaleFactor, tableNumber, 
+                                                           tableHandlingPositions);
+            tableNearestWaiter->changeToTableHandlingState();
+            tableNearestWaiter->setAssignedToTask(true);
+            tablesManager->resetWaitingToHandling(tableNumber);
+        }
     }
 }
 
 void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth, 
                                float tileHeight, TablesManager* tablesManager, 
                                PathFinder* pathFinder) {
-    
     addCustomerTimer += deltaTime;
     if(addCustomerTimer > timeToAddCustomer && waitingCustomers.size() < 9) {
         addCustomerTimer = 0.0f;
@@ -189,15 +221,16 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         chef->update(deltaTime, scaleFactor);
     }
     
-    if(waiters.size() >= 1) {
-        queueNearestWaiter = waiters[0];
-    }
-    bool isFreeTables = tablesManager->isFreeTable();
+    queueNearestWaiter = nullptr;
+    bool isFreeTable = tablesManager->isFreeTable();
+    bool isOccupiedTable = tablesManager->isOccupiedTable();
+    bool isWaiterInQueueHandling = checkIsWaiterInQueueHandling();
+
     for(Waiter* waiter : waiters) {
         waiter->update(deltaTime, tileWidth, tileHeight, pathFinder);
-        if(isFreeTables) {
-            if(!queueNearestWaiter->getIsAssignedToTask() && 
-               !queueNearestWaiter->getIsQueueHandling()) {
+
+        if(isFreeTable) {
+            if(!waiter->getIsAssignedToTask() && !isWaiterInQueueHandling) {
                getNearestWaiterToQueueHandling(scaleFactor, waiter);
             }
             
@@ -207,12 +240,16 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
             }
         }
     }
-    std::cout << "Nearest waiter" << queueNearestWaiter->getWaiterNumber() << std::endl; // do usunięcia
-    if(isFreeTables) {
-        if(!queueNearestWaiter->getIsAssignedToTask() && 
-           !queueNearestWaiter->getIsQueueHandling()) {
+
+    if(isFreeTable && queueNearestWaiter != nullptr) {
+        if(!queueNearestWaiter->getIsAssignedToTask() && !isWaiterInQueueHandling) {
             assignNearestWaiterToQueueHandling();
+            queueNearestWaiter->setAssignedToTask(true);
         }
+    }
+
+    if(isOccupiedTable) {
+        assignWaitersToTablesHandling(scaleFactor, tablesManager);
     }
 
     for(int i = 0; i < waitingCustomers.size(); i++) {
