@@ -5,7 +5,6 @@
 #include "structures/TwoChairsTablesPositions.hpp"
 #include "structures/FourChairsTablesPositions.hpp"
 #include "structures/FourChairsTablesDishesPositions.hpp"
-#include "enums/TablesTypesEnum.hpp"
 
 #include <queue>
 #include <SFML/Graphics.hpp>
@@ -97,16 +96,15 @@ public:
     bool isFreeChair(int tableNumber);
     ChairPositionsAndDirections getFreeChairPositions(int tableNumber);
     Positions getTableHandlingPositions(int tableNumber);
+    Positions getDishesPositions(int tableNumber);
     void occupyTableInstantly(int tableNumber);
+    int getOccupiedChairsNumber(int tableNumber);
     void freeChair(int tableNumber, 
                    Directions chairHorizontalDirection, 
                    Directions chairVerticalDirection);
     void freeInstantlyOccupiedTable(int tableNumber);
     void resetWaitingToHandling(int tableNumber);
-    void getWaitingToHandlingTablesNumbers(std::vector<int>* waitingToHandlingTablesNumbers);
+    std::vector<int> getWaitingToHandlingTablesNumbers();
     void render(sf::RenderWindow* window);
-
     Positions getTwoChairsTableDishesPositionsByNumber(int tableNumber);
-    FourChairsTablesDishesPositions getFourChairsTableDishesPositionsByNumber(int tableNumber);
-    enum TablesTypesEnum getTableType(int tableNumber);
 };

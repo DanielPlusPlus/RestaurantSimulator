@@ -23,18 +23,26 @@ Positions DishesManager::getReadyDishesPositions() {
 
 void DishesManager::moveReadyDishToMoving() {
     if(!readyDishes.empty()) {
-        movingToTableDish = readyDishes.front();
+        movingToTablesDishes.push_back(readyDishes.front());
+        readyDishes.front()->getTableNumber();
         readyDishes.pop();
     }
 }
 
-void DishesManager::moveMovingDishToDishesOnTables(Positions newDishPositions) {
-    movingToTableDish->changePositions(newDishPositions);
-    dishesOnTables.push_back(movingToTableDish);
-    movingToTableDish = nullptr;
+void DishesManager::moveMovingDishToDishesOnTables(int tableNumber, Positions newDishPositions) {
+    for(Dish* dish : movingToTablesDishes) {
+        if(dish->getTableNumber() == tableNumber) {
+            dish->changePositions(newDishPositions);
+            dishesOnTables.push_back(dish);
+            movingToTablesDishes.erase(std::remove(movingToTablesDishes.begin(), 
+                                         movingToTablesDishes.end(), dish), 
+                                         movingToTablesDishes.end());
+            return;
+        }
+    }
 }
 
-void DishesManager::removeDishesOnTable(int tableNumber) {
+void DishesManager::removeAllDishesOnTable(int tableNumber) {
     for(Dish* dish : dishesOnTables) {
         if(dish->getTableNumber() == tableNumber) {
             dishesOnTables.erase(std::remove(dishesOnTables.begin(), 

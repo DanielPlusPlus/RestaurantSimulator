@@ -8,9 +8,11 @@
 Waiter::Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
                int waiterNumber, Positions startPositions, 
                Positions queueHandlingPositions, Positions dishPickupPositions, 
-               Positions dishDropoffPositions) : Character(startPositions), waiterNumber(waiterNumber), 
+               Positions dishDropoffPositions, DishesManager* dishesManager) : 
+               Character(startPositions), waiterNumber(waiterNumber), 
                queueHandlingPositions(queueHandlingPositions), dishPickupPositions(dishPickupPositions), 
-               dishDropoffPositions(dishDropoffPositions), moveXSpeed(moveXSpeed), moveYSpeed(moveYSpeed) {
+               dishDropoffPositions(dishDropoffPositions), moveXSpeed(moveXSpeed), moveYSpeed(moveYSpeed),
+               dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;
@@ -125,13 +127,13 @@ void Waiter::changeState(float deltaTime, float tileWidth,
                 state = WaiterStatesEnum::PREPARING_TO_WAITING_TO_TASK;
             }
             break;
-        case WaiterStatesEnum::PREPARING_TO_MOVE_TO_TABLE:
-            state = WaiterStatesEnum::MOVING_TO_TABLE;
+        case WaiterStatesEnum::PREPARING_TO_MOVE_TO_TABLE_HANDLING:
+            state = WaiterStatesEnum::MOVING_TO_TABLE_HANDLING;
             pathToFollow.clear();
             currentPathIndex = 0;
             setAssignedToTask(true);
             break;
-        case WaiterStatesEnum::MOVING_TO_TABLE:
+        case WaiterStatesEnum::MOVING_TO_TABLE_HANDLING:
             if(moveToDestinationPositions(tableHandlingPositions, deltaTime, 
                                           tileWidth, tileHeight, pathFinder)) {
                 state = WaiterStatesEnum::PREPARING_TO_TABLE_HANDLING;
@@ -174,10 +176,38 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             idleTimer = 0.0f;
             break;
         case WaiterStatesEnum::DISH_PICKUP:
+            if(idleTimer == 0.0f) {
+                dishesManager->moveReadyDishToMoving();
+            }
+            idleTimer += deltaTime;
+            if(idleTimer > 1.0f) {
+                idleTimer = 0.0f;
+                state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_PUTDOWN;
+            }
+            break;
+        case WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_PUTDOWN:
+            state = WaiterStatesEnum::MOVING_TO_DISH_PUTDOWN;
+            pathToFollow.clear();
+            currentPathIndex = 0;
+            break;
+        case WaiterStatesEnum::MOVING_TO_DISH_PUTDOWN:
+            if(moveToDestinationPositions(tableHandlingPositions, deltaTime, 
+                                          tileWidth, tileHeight, pathFinder)) {
+                state = WaiterStatesEnum::PREPARING_TO_DISH_PUTDOWN;
+            }
+            break;
+        case WaiterStatesEnum::PREPARING_TO_DISH_PUTDOWN:
+            animDirection = Directions::DOWN;
+            state = WaiterStatesEnum::DISH_PUTDOWN;
+            movingState = WaiterStatesEnum::NO_MOVEMENT;
+            idleTimer = 0.0f;
+            break;
+        case WaiterStatesEnum::DISH_PUTDOWN:
             idleTimer += deltaTime;
             if(idleTimer > 1.0f) {
                 idleTimer = 0.0f;
                 state = WaiterStatesEnum::PREPARING_TO_WAITING_TO_TASK;
+                setIsDishToPutdown(true);
             }
             break;
         case WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_DROPOFF:

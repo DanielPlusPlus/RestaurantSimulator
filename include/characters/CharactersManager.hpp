@@ -71,7 +71,7 @@ private:
     void addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
                   float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
     void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-                    float moveYSpeed, int waitersNumber);
+                    float moveYSpeed, int waitersNumber, DishesManager* dishesManager);
     void addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, 
                             float moveXSpeed, float moveYSpeed);
     void moveWaitingCustomerToResignation();
@@ -88,11 +88,17 @@ private:
     void assignNearestWaiterToQueueHandling();
     void assignWaitersToTablesHandling(int scaleFactor, TablesManager* tablesManager);
     void assignChefsToCooking(int tableNumber);
+    void assignWaitersToDishPickup(int scaleFactor, 
+                                   DishesManager* dishesManager, 
+                                   TablesManager* tablesManager);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
-    void update(float deltaTime, int scaleFactor, float tileWidth, 
-                float tileHeight, TablesManager* tablesManager, PathFinder* pathFinder);
+    void update(float deltaTime, int scaleFactor, 
+                float tileWidth, float tileHeight, 
+                DishesManager* dishesManager, 
+                TablesManager* tablesManager, 
+                PathFinder* pathFinder);
     void renderChefs(sf::RenderWindow* window);
     void renderWaitersAndCustomers(sf::RenderWindow* window);
 };

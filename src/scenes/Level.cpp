@@ -10,7 +10,8 @@ Level::Level(int scaleFactor, int chefsNumber, int waitersNumber,
     tileHeight *= scaleFactor;
     dishesManager = new DishesManager(scaleFactor);
     tablesManager = new TablesManager(scaleFactor, twoChairsTablesNumber, fourChairsTablesNumber);
-    charactersManager = new CharactersManager(scaleFactor, tileWidth, tileHeight, chefsNumber, waitersNumber, dishesManager);
+    charactersManager = new CharactersManager(scaleFactor, tileWidth, tileHeight, 
+                                              chefsNumber, waitersNumber, dishesManager);
     pathFinder = new PathFinder(this);
     this->texturesLoaded = loadTextures(scaleFactor);
 }
@@ -45,8 +46,10 @@ bool Level::loadTextures(int scaleFactor) {
 
 void Level::update(float deltaTime, sf::RenderWindow* window) {
     (void)window;
-    this->charactersManager->update(deltaTime, scaleFactor, tileWidth, 
-                                    tileHeight, tablesManager, pathFinder);
+    this->charactersManager->update(deltaTime, scaleFactor, 
+                                    tileWidth, tileHeight, 
+                                    dishesManager, tablesManager, 
+                                    pathFinder);
 }
 
 bool Level::changeScene(enum ScenesEnum* sceneName) {

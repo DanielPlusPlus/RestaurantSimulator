@@ -49,11 +49,29 @@ ChairPositionsAndDirections FourChairsTable::occupyChairAndGetPositionsAndDirect
                                        Directions::RIGHT, Directions::DOWN};
 }
 
+Positions FourChairsTable::getDishesPositions() {
+    dishPositionIndex++;
+    if(dishPositionIndex == 1) {
+        return dishesPositions.downLeftDish;
+    }
+    else if(dishPositionIndex == 2) {
+        return dishesPositions.downRightDish;
+    }
+    else if(dishPositionIndex == 3) {
+        return dishesPositions.upLeftDish;
+    }
+    else if(dishPositionIndex == 4) {
+        return dishesPositions.upRightDish;
+    }
+    return Positions{-1.0f, -1.0f};
+}
+
 void FourChairsTable::resetChairOccupancy(Directions chairHorizontalDirection, 
                                           Directions chairVerticalDirection) {
     availableChairs++;
     occupiedChairs--;
     if(availableChairs == 4) {
+        dishPositionIndex = 0;
         isOccupied = false;
         isWaitingToHandling = false;
     }

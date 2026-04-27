@@ -1,7 +1,6 @@
 #pragma once
 
 #include "structures/ChairPositionsAndDirections.hpp"
-#include "enums/TablesTypesEnum.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -12,7 +11,6 @@ protected:
     sf::Sprite tableSprite;
     int tableNumber = 0;
     int occupiedChairs = 0;
-    TablesTypesEnum tableType;
     Positions tableHandlingPositions;
     bool isOccupied = false;
     bool isWaitingToHandling = false;
@@ -26,6 +24,7 @@ public:
     virtual void resetChairOccupancy(Directions chairHorizontalDirection, 
                                      Directions chairVerticalDirection) = 0;
     virtual void render(sf::RenderWindow* window) = 0;
+    virtual Positions getDishesPositions() = 0;
     int getTableNumber() {
         return tableNumber;
     }
@@ -37,9 +36,6 @@ public:
     };
     void resetTableOccupancy() {
         isOccupied = false;
-    }
-    TablesTypesEnum getTableType() {
-        return tableType;
     }
     Positions getTableHandlingPositions() {
         return tableHandlingPositions;

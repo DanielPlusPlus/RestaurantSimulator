@@ -9,10 +9,10 @@
 
 class FourChairsTable : public Table {
 private:
-TablesTypesEnum tableType = TablesTypesEnum::FOUR_CHAIRS_TABLE;
     FourChairsTablesPositions chairsPositions;
     FourChairsTablesDishesPositions dishesPositions;
     int availableChairs = 4;
+    int dishPositionIndex = 0;
     bool isDownLeftChairOccupied = false;
     bool isDownRightChairOccupied = false;
     bool isUpLeftChairOccupied = false;
@@ -28,9 +28,7 @@ public:
     FourChairsTablesPositions getChairsPositions() {
         return chairsPositions;
     }
-    FourChairsTablesDishesPositions getDishesPositions() {
-        return dishesPositions;
-    }
+    Positions getDishesPositions() override;
     void resetChairOccupancy(Directions chairHorizontalDirection, 
                              Directions chairVerticalDirection) override;
     void render(sf::RenderWindow* window) override;

@@ -129,6 +129,20 @@ Positions TablesManager::getTableHandlingPositions(int tableNumber) {
     return Positions{-1.0f, -1.0f};
 }
 
+Positions TablesManager::getDishesPositions(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return table->getDishesPositions();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return table->getDishesPositions();
+        }
+    }
+    return Positions{-1.0f, -1.0f};
+}
+
 void TablesManager::occupyTableInstantly(int tableNumber) {
     for(TwoChairsTable* table : twoChairsTables) {
         if(table->getTableNumber() == tableNumber){
@@ -142,6 +156,20 @@ void TablesManager::occupyTableInstantly(int tableNumber) {
             table->waitToHandlingInstantly();
         }
     }
+}
+
+int TablesManager::getOccupiedChairsNumber(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return table->getOccupiedChairsNumber();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return table->getOccupiedChairsNumber();
+        }
+    }
+    return -1;
 }
 
 void TablesManager::freeChair(int tableNumber, 
@@ -187,17 +215,19 @@ void TablesManager::resetWaitingToHandling(int tableNumber) {
     }
 }
 
-void TablesManager::getWaitingToHandlingTablesNumbers(std::vector<int>* waitingToHandlingTablesNumbers) {
+std::vector<int> TablesManager::getWaitingToHandlingTablesNumbers() {
+    std::vector<int> waitingToHandlingTablesNumbers;
     for(TwoChairsTable* table : twoChairsTables) {
         if(table->getWaitingToHandleStatus()){
-            waitingToHandlingTablesNumbers->push_back(table->getTableNumber());
+            waitingToHandlingTablesNumbers.push_back(table->getTableNumber());
         }
     }
     for(FourChairsTable* table : fourChairsTables) {
         if(table->getWaitingToHandleStatus()) {
-            waitingToHandlingTablesNumbers->push_back(table->getTableNumber());
+            waitingToHandlingTablesNumbers.push_back(table->getTableNumber());
         }
     }
+    return waitingToHandlingTablesNumbers;
 }
 
 void TablesManager::render(sf::RenderWindow* window) {
@@ -215,31 +245,10 @@ Positions TablesManager::getTwoChairsTableDishesPositionsByNumber(int tableNumbe
             return table->getDishesPositions();
         }
     }
-    return Positions{-1.0f, -1.0f};
-}
-
-FourChairsTablesDishesPositions TablesManager::getFourChairsTableDishesPositionsByNumber(int tableNumber) {
     for(FourChairsTable* table : fourChairsTables) {
         if(table->getTableNumber() == tableNumber) {
             return table->getDishesPositions();
         }
     }
-    return FourChairsTablesDishesPositions(-1.0f, -1.0f, 
-                                           -1.0f, -1.0f, 
-                                           -1.0f, -1.0f, 
-                                           -1.0f, -1.0f);
-}
-
-enum TablesTypesEnum TablesManager::getTableType(int tableNumber) {
-    for(TwoChairsTable* table : twoChairsTables) {
-        if(table->getTableNumber() == tableNumber){
-            return table->getTableType();
-        }
-    }
-    for(FourChairsTable* table : fourChairsTables) {
-        if(table->getTableNumber() == tableNumber) {
-            return table->getTableType();
-        }
-    }
-    return TablesTypesEnum::UNKNOWN;
+    return Positions{-1.0f, -1.0f};
 }

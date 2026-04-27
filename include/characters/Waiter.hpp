@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Character.hpp"
+#include "items/DishesManager.hpp"
 #include "enums/WaiterStatesEnum.hpp"
 
 
@@ -46,9 +47,12 @@ private:
 
     bool isAssignedToTask = false;
     bool isNewOrder = false;
+    bool isDishToPutdown = false;
     
     std::vector<Positions> pathToFollow;
     int currentPathIndex = 0;
+
+    DishesManager* dishesManager;
 
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
@@ -62,7 +66,7 @@ public:
     Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
            int waiterNumber, Positions startPositions, 
            Positions queueHandlingPositions, Positions dishPickupPositions, 
-           Positions dishDropoffPositions);
+           Positions dishDropoffPositions, DishesManager* dishesManager);
     void update(float deltaTime, float tileWidth, 
                 float tileHeight, PathFinder* pathFinder);
     void render(sf::RenderWindow* window) override;
@@ -77,6 +81,12 @@ public:
     }
     bool getIsNewOrder() {
         return isNewOrder;
+    }
+    void setIsDishToPutdown(bool value) {
+        isDishToPutdown = value;
+    }
+    bool getIsDishToPutdown() {
+        return isDishToPutdown;
     }
     bool getIsAssignedToTask() {
         return isAssignedToTask;
@@ -112,7 +122,7 @@ public:
         state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_QUEUE_HANDLING;
     }
     void changeToTableHandlingState() {
-        state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_TABLE;
+        state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_TABLE_HANDLING;
     }
     void changeToDishPickupState() {
         state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_PICKUP;

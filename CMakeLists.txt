@@ -13,7 +13,6 @@ file(GLOB_RECURSE SOURCES
 )
 
 add_executable(RestaurantSimulator ${SOURCES}
-    include/enums/TablesTypesEnum.hpp
     include/enums/ScenesEnum.hpp
     src/utils/InitFileReader.cpp
     include/utils/InitFileWriter.hpp

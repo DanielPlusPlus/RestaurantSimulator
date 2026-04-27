@@ -8,7 +8,6 @@
 
 class TwoChairsTable : public Table {
 private:
-    TablesTypesEnum tableType = TablesTypesEnum::TWO_CHAIRS_TABLE;
     TwoChairsTablesPositions chairsPositions;
     Positions dishesPositions;
     int availableChairs = 2;
@@ -25,7 +24,7 @@ public:
     TwoChairsTablesPositions getChairsPositions() {
         return chairsPositions;
     }
-    Positions getDishesPositions() {
+    Positions getDishesPositions() override {
         return dishesPositions;
     }
     void resetChairOccupancy(Directions chairHorizontalDirection, 
