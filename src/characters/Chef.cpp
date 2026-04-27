@@ -152,7 +152,7 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
         }
         case ChefStatesEnum::TURNING_UP:
             animDirection = Directions::UP;
-            state = ChefStatesEnum::PREPARING_TO_COOKING;
+            state = ChefStatesEnum::WAITING_TO_COOKING;
             idleTimer = 0.0f;
             break;
         case ChefStatesEnum::TURNING_DOWN:

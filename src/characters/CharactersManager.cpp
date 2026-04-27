@@ -198,6 +198,25 @@ void CharactersManager::assignWaitersToTablesHandling(int scaleFactor, TablesMan
     }
 }
 
+void CharactersManager::assignChefsToCooking(int tableNumber) {
+    if(chefs.empty()) {
+        return;
+    }
+
+    Chef* chefWithMinDishesNumber = chefs[0];
+    int minDishesToCookForNumber = chefWithMinDishesNumber->getDishesToCookForNumber();
+
+    for(Chef* chef : chefs) {
+        int dishesToCookForNumber = chef->getDishesToCookForNumber();
+        if(dishesToCookForNumber < minDishesToCookForNumber) {
+            chefWithMinDishesNumber = chef;
+            minDishesToCookForNumber = dishesToCookForNumber;
+        }
+    }
+
+    chefWithMinDishesNumber->addTableToCookFor(tableNumber);
+}
+
 void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth, 
                                float tileHeight, TablesManager* tablesManager, 
                                PathFinder* pathFinder) {
@@ -214,9 +233,9 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
         }
     }
     
-    std::sort(chefs.begin(), chefs.end(), [](Chef* chef1, Chef* chef2) -> bool{
-        return chef1->getYPos() < chef2->getYPos();
-    });
+    // std::sort(chefs.begin(), chefs.end(), [](Chef* chef1, Chef* chef2) -> bool{
+    //     return chef1->getYPos() < chef2->getYPos();
+    // });
     for(Chef* chef : chefs) {
         chef->update(deltaTime, scaleFactor);
     }
@@ -238,6 +257,11 @@ void CharactersManager::update(float deltaTime, int scaleFactor, float tileWidth
             if(waiter->getIsQueueHandling() && tablesManager->isFreeChair(tableNumber)) {
                 moveWaitingCustomerToInside(scaleFactor, tableNumber, tablesManager);
             }
+        }
+
+        if(waiter->getIsNewOrder()) {
+            assignChefsToCooking(waiter->getTableNumber());
+            waiter->setNewOrder(false);
         }
     }
 

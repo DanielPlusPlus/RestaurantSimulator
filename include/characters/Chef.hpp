@@ -53,4 +53,7 @@ public:
     }
     void update(float deltaTime, int scaleFactor);
     void render(sf::RenderWindow* window) override;
+    int getChefNumber() {
+        return chefNumber;
+    }
 };

@@ -58,12 +58,6 @@ private:
                                     float tileWidth, float tileHeight, 
                                     PathFinder* pathFinder);
     void updateDirection(Positions nextPosition);
-    void setNewOrder(bool value) {
-        isNewOrder = value;
-    }
-    bool getIsNewOrder() {
-        return isNewOrder;
-    }
 public:
     Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
            int waiterNumber, Positions startPositions, 
@@ -77,6 +71,12 @@ public:
     } // do usunięcia
     void setAssignedToTask(bool value) {
         isAssignedToTask = value;
+    }
+    void setNewOrder(bool value) {
+        isNewOrder = value;
+    }
+    bool getIsNewOrder() {
+        return isNewOrder;
     }
     bool getIsAssignedToTask() {
         return isAssignedToTask;
@@ -126,4 +126,7 @@ public:
     void setTableNumberAndPositions(int scaleFactor, 
                                     int tableNumber, 
                                     Positions tableHandlingPositions);
+    int getTableNumber() {
+        return tableNumber;
+    }
 };

@@ -87,6 +87,7 @@ private:
     bool checkIsWaiterInQueueHandling();
     void assignNearestWaiterToQueueHandling();
     void assignWaitersToTablesHandling(int scaleFactor, TablesManager* tablesManager);
+    void assignChefsToCooking(int tableNumber);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
