@@ -73,6 +73,8 @@ void FourChairsTable::resetChairOccupancy(Directions chairHorizontalDirection,
     if(availableChairs == 4) {
         dishPositionIndex = 0;
         isOccupied = false;
+        isWaitingToHandling = false;
+        isWaitingToDishesTaken = true;
     }
     if(chairHorizontalDirection == Directions::LEFT && 
        chairVerticalDirection == Directions::DOWN) {

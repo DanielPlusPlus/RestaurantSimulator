@@ -31,10 +31,9 @@ public:
     bool isReadyDishes() {
         return !readyDishes.empty();
     }
-    int getReadyDishTableNumber() {
-        if(!readyDishes.empty()) {
-            return readyDishes.front()->getTableNumber();
-        }
-        return -1;
+    int getReadyDishTableNumber();
+    bool isDishesOnTables() {
+        return !dishesOnTables.empty();
     }
+    std::vector<int> getDishesOnTablesNumbers();
 };

@@ -61,3 +61,20 @@ void DishesManager::render(sf::RenderWindow* window) {
         dish->render(window);
     }
 }
+
+int DishesManager::getReadyDishTableNumber() {
+    if(!readyDishes.empty()) {
+        return readyDishes.front()->getTableNumber();
+    }
+    return -1;
+}
+
+std::vector<int> DishesManager::getDishesOnTablesNumbers() {
+    std::vector<int> dishesOnTablesNumbers;
+    for(Dish* dish : dishesOnTables) {
+        if(std::find(dishesOnTablesNumbers.begin(), dishesOnTablesNumbers.end(), dish->getTableNumber()) == dishesOnTablesNumbers.end()) {
+            dishesOnTablesNumbers.push_back(dish->getTableNumber());
+        }
+    }
+    return dishesOnTablesNumbers;
+}

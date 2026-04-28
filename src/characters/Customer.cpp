@@ -256,6 +256,17 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
             break;
         case CustomerStatesEnum::SITTING:
             break;
+        case CustomerStatesEnum::PREPARING_TO_EATING:
+            state = CustomerStatesEnum::EATING;
+            idleTimer = 0.0f;
+            break;
+        case CustomerStatesEnum::EATING:
+            idleTimer += deltaTime;
+            if(idleTimer > eatingTime) {
+                idleTimer = 0.0f;
+                state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
+            }
+            break;
         case CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT:
             state = CustomerStatesEnum::MOVING_TO_EXIT;
             positions.xPos = enterChairPositions.xPos;
@@ -427,12 +438,16 @@ void Customer::render(sf::RenderWindow* window) {
        movingState == CustomerStatesEnum::MOVING_UP) {
         spriteSet = &customerRunSprites;
     }
-    if(state == CustomerStatesEnum::SITTING) {
+    if(state == CustomerStatesEnum::SITTING ||
+       state == CustomerStatesEnum::PREPARING_TO_EATING ||
+       state == CustomerStatesEnum::EATING) {
         spriteSet = &customerSitSprites;
     }
     
     int spriteIndex;
-    if(state == CustomerStatesEnum::SITTING) {
+    if(state == CustomerStatesEnum::SITTING ||
+       state == CustomerStatesEnum::PREPARING_TO_EATING ||
+       state == CustomerStatesEnum::EATING) {
         int directionIndex = (animDirection == Directions::LEFT) ? 0 : 1;
         spriteIndex = directionIndex * framesPerAnim + animFrame;
     }

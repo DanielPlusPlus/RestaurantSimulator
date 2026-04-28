@@ -6,6 +6,7 @@
 
 #include <random>
 #include <algorithm>
+#include <unordered_map>
 #include <iostream> // do usunięcia
 
 
@@ -113,6 +114,7 @@ void CharactersManager::moveInsideCustomerToLeaving(int index, TablesManager* ta
         tablesManager->freeChair(tableNumber, chairHorizontalDirection, chairVerticalDirection);
         if(customer->getOccupyTableInstantly()) {
             tablesManager->freeInstantlyOccupiedTable(tableNumber);
+            tablesManager->setWaitingToDishesTaken(tableNumber);
         }
         customer->changeToLeavingState();
         leavingCustomers.push_back(customer);
@@ -248,6 +250,39 @@ void CharactersManager::assignWaitersToDishPickup(int scaleFactor,
     }
 }
 
+void CharactersManager::assignCustomersToEating(DishesManager* dishesManager) {
+    std::vector<int> dishesOnTablesNumbers = dishesManager->getDishesOnTablesNumbers();
+    std::unordered_map<int, int> tableOccupancyCount;
+    for(int tableNumber : dishesOnTablesNumbers) {
+        tableOccupancyCount[tableNumber]++;
+    }
+
+    for(int tableNumber : dishesOnTablesNumbers) {
+        extern std::mt19937 globalRNG;
+        std::uniform_int_distribution<int> instantTableOccupationDist(5, 10);
+        float eatingTime = float(instantTableOccupationDist(globalRNG));
+
+        int customersAtTable = 0;
+        for (Customer* customer : insideCustomers) {
+            if(customer->getTableNumber() == tableNumber && customer->isSitting()) {
+                customersAtTable++;
+            }
+        }
+
+        if(customersAtTable == tableOccupancyCount[tableNumber]) {
+            for(Customer* customer : insideCustomers) {
+                if(customer->getTableNumber() == tableNumber && customer->isSitting()) {
+                    customer->setEatingTime(eatingTime);
+                    customer->changeToEatingState();
+                    std::cout << "Customer " << customer->getCustomerNumber() << 
+                                 " at table " << tableNumber << " started eating" << 
+                                 " with eating time: " << eatingTime << std::endl;
+                }
+            }
+        }
+    }
+}
+
 void CharactersManager::update(float deltaTime, int scaleFactor, 
                                float tileWidth, float tileHeight, 
                                DishesManager* dishesManager, 
@@ -360,6 +395,11 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         if(leavingCustomers[i]->getAssignedToRemoveStatus()) {
             removeLeavingCustomer(i);
         }
+    }
+
+    bool isDishesOnTables = dishesManager->isDishesOnTables();
+    if(isDishesOnTables) {
+        assignCustomersToEating(dishesManager);
     }
 }
 

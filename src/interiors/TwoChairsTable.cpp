@@ -46,6 +46,7 @@ void TwoChairsTable::resetChairOccupancy(Directions chairHorizontalDirection,
     if(availableChairs == 2) {
         isOccupied = false;
         isWaitingToHandling = false;
+        isWaitingToDishesTaken = true;
     }
     if(chairHorizontalDirection == Directions::LEFT) {
         isLeftChairOccupied = false;

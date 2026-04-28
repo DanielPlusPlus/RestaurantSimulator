@@ -40,6 +40,7 @@ private:
     float moveYSpeed = 0.0f;
     float idleTimer = 0.0f;
     int failedCycles = 0;
+    float eatingTime = 0.0f;
 
     float previousQueueXPos = 0.0f;
     bool assignedToRemove = false;
@@ -75,6 +76,9 @@ public:
                          PathFinder* pathFinder);
     void updateIfLeaving(float deltaTime);
     void render(sf::RenderWindow* window) override;
+    int getCustomerNumber() {
+        return customerNumber;
+    } // do usunięcia
     void changeToResigningState() {
         state = CustomerStatesEnum::TURNING_DOWN;
     }
@@ -87,6 +91,9 @@ public:
     void changeToMoveToExit() {
         state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
     }
+    void changeToEatingState() {
+        state = CustomerStatesEnum::PREPARING_TO_EATING;
+    }
     void setTableNumber(int tableNumber) {
         this->tableNumber = tableNumber;
     }
@@ -97,6 +104,9 @@ public:
                                                    int tableNumber, 
                                                    Positions chairPositions, 
                                                    Positions enterChairPositions);
+    void setEatingTime(float time) {
+        eatingTime = time;
+    }
     bool getAssignedToRemoveStatus() {
         return assignedToRemove;
     }
@@ -129,5 +139,8 @@ public:
     }
     void changeToSittingState() {
         state = CustomerStatesEnum::SITTING;
+    }
+    bool isSitting() {
+        return state == CustomerStatesEnum::SITTING;
     }
 };

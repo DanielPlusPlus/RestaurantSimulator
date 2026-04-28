@@ -88,12 +88,12 @@ bool TablesManager::getTableOccupiedStatus(int tableNumber) {
 
 int TablesManager::getFreeTableNumber() {
     for(TwoChairsTable* table : twoChairsTables) {
-        if(!table->getOccupiedStatus()){
+        if(!table->getOccupiedStatus() && !table->getWaitingToDishesTakenStatus()){
             return table->getTableNumber();
         }
     }
     for(FourChairsTable* table : fourChairsTables) {
-        if(!table->getOccupiedStatus()) {
+        if(!table->getOccupiedStatus() && !table->getWaitingToDishesTakenStatus()) {
             return table->getTableNumber();
         }
     }
