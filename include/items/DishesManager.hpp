@@ -20,6 +20,7 @@ private:
     std::queue<Dish*> readyDishes;
     std::vector<Dish*> movingToTablesDishes;
     std::vector<Dish*> dishesOnTables;
+    bool isReadyDishWaitingForWaiter = false;
 public:
     DishesManager(int scaleFactor);
     void addDish(int scaleFactor, int tableNumber);
@@ -34,6 +35,12 @@ public:
     int getReadyDishTableNumber();
     bool isDishesOnTables() {
         return !dishesOnTables.empty();
+    }
+    void setReadyDishWaitingForWaiter(bool value) {
+        isReadyDishWaitingForWaiter = value;
+    }
+    bool getReadyDishWaitingForWaiterStatus() {
+        return isReadyDishWaitingForWaiter;
     }
     std::vector<int> getDishesOnTablesNumbers();
 };

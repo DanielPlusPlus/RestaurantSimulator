@@ -242,6 +242,7 @@ void CharactersManager::assignWaitersToDishPickup(int scaleFactor,
             }
     }
     if(tableNearestWaiter != nullptr) {
+        dishesManager->setReadyDishWaitingForWaiter(true);
         std::cout << "Assigned waiter " << tableNearestWaiter->getWaiterNumber() << " to dish pickup for table " << readyDishTableNumber << std::endl; // do usunięcia
         tableNearestWaiter->setTableNumberAndPositions(scaleFactor, readyDishTableNumber, 
                                                        tableHandlingPositions);
@@ -313,6 +314,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
     bool isTablesWaitingToHandling = tablesManager->isTablesWaitingToHandling();
     bool isWaiterInQueueHandling = checkIsWaiterInQueueHandling();
     bool isReadyDishes = dishesManager->isReadyDishes();
+    bool isReadyDishWaitingForWaiter = dishesManager->getReadyDishWaitingForWaiterStatus();
 
     for(Waiter* waiter : waiters) {
         waiter->update(deltaTime, tileWidth, tileHeight, pathFinder);
@@ -357,7 +359,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         assignWaitersToTablesHandling(scaleFactor, tablesManager);
     }
 
-    if(isReadyDishes) {
+    if(isReadyDishes && !isReadyDishWaitingForWaiter) {
         assignWaitersToDishPickup(scaleFactor, dishesManager, tablesManager);
     }
 

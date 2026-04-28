@@ -23,6 +23,7 @@ Positions DishesManager::getReadyDishesPositions() {
 
 void DishesManager::moveReadyDishToMoving() {
     if(!readyDishes.empty()) {
+        setReadyDishWaitingForWaiter(false);
         movingToTablesDishes.push_back(readyDishes.front());
         readyDishes.front()->getTableNumber();
         readyDishes.pop();
