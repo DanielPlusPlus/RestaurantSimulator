@@ -23,6 +23,7 @@ public:
                     FourChairsTablesPositions chairsPositions, 
                     FourChairsTablesDishesPositions dishesPositions, 
                     Positions tableHandlingPositions, 
+                    Directions tableHandlingDirection,
                     int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
     FourChairsTablesPositions getChairsPositions() {

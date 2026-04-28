@@ -19,6 +19,7 @@ public:
                    TwoChairsTablesPositions chairsPositions,
                    Positions dishesPositions, 
                    Positions tableHandlingPositions,
+                   Directions tableHandlingDirection,
                    int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
     TwoChairsTablesPositions getChairsPositions() {

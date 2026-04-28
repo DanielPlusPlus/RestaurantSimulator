@@ -133,9 +133,10 @@ public:
     void setTableHandlingDirection(enum Directions direction) {
         tableHandlingDirection = direction;
     }
-    void setTableNumberAndPositions(int scaleFactor, 
-                                    int tableNumber, 
-                                    Positions tableHandlingPositions);
+    void setTableNumberPositionsAndDirection(int scaleFactor, 
+                                             int tableNumber, 
+                                             Positions tableHandlingPositions, 
+                                             Directions tableHandlingDirection);
     int getTableNumber() {
         return tableNumber;
     }

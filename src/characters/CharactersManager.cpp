@@ -198,8 +198,10 @@ void CharactersManager::assignWaitersToTablesHandling(int scaleFactor, TablesMan
         }
         if(tableNearestWaiter != nullptr) {
             std::cout << "Assigned waiter " << tableNearestWaiter->getWaiterNumber() << " to table handling " << tableNumber << std::endl; // do usunięcia
-            tableNearestWaiter->setTableNumberAndPositions(scaleFactor, tableNumber, 
-                                                           tableHandlingPositions);
+            Directions tableHandlingDirection = tablesManager->getTableHandlingDirection(tableNumber);
+            tableNearestWaiter->setTableNumberPositionsAndDirection(scaleFactor, tableNumber, 
+                                                                   tableHandlingPositions, 
+                                                                   tableHandlingDirection);
             tableNearestWaiter->changeToTableHandlingState();
             tableNearestWaiter->setAssignedToTask(true);
             tablesManager->resetWaitingToHandling(tableNumber);
@@ -244,8 +246,10 @@ void CharactersManager::assignWaitersToDishPickup(int scaleFactor,
     if(tableNearestWaiter != nullptr) {
         dishesManager->setReadyDishWaitingForWaiter(true);
         std::cout << "Assigned waiter " << tableNearestWaiter->getWaiterNumber() << " to dish pickup for table " << readyDishTableNumber << std::endl; // do usunięcia
-        tableNearestWaiter->setTableNumberAndPositions(scaleFactor, readyDishTableNumber, 
-                                                       tableHandlingPositions);
+        Directions tableHandlingDirection = tablesManager->getTableHandlingDirection(readyDishTableNumber);
+        tableNearestWaiter->setTableNumberPositionsAndDirection(scaleFactor, readyDishTableNumber, 
+                                                                tableHandlingPositions, 
+                                                                tableHandlingDirection);
         tableNearestWaiter->changeToDishPickupState();
         tableNearestWaiter->setAssignedToTask(true);
     }

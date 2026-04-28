@@ -4,8 +4,11 @@ TwoChairsTable::TwoChairsTable(int scaleFactor, std::string texturePath,
                                TwoChairsTablesPositions chairsPositions, 
                                Positions dishesPositions, 
                                Positions tableHandlingPositions,
+                               Directions tableHandlingDirection,
                                int tableNumber) : 
-                               Table(tableNumber, tableHandlingPositions),
+                               Table(tableNumber, 
+                                     tableHandlingPositions, 
+                                     tableHandlingDirection), 
                                chairsPositions(chairsPositions), 
                                dishesPositions(dishesPositions) {
     loadTexture(scaleFactor, texturePath);

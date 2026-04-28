@@ -83,6 +83,21 @@ private:
         Positions{253.0f, 72.0f}, // potecjalnie 64
         Positions{253.0f, 24.0f}
     };
+    const enum Directions twoChairsTablesHandlingDirections[8] = {
+        Directions::DOWN,
+        Directions::DOWN,
+        Directions::DOWN,
+        Directions::DOWN,
+        Directions::UP,
+        Directions::UP,
+        Directions::UP,
+        Directions::UP
+    };
+    const enum Directions fourChairsTablesHandlingDirections[3] = {
+        Directions::DOWN,
+        Directions::DOWN,
+        Directions::DOWN
+    };
 
     std::vector<TwoChairsTable*> twoChairsTables;
     std::vector<FourChairsTable*> fourChairsTables;
@@ -97,6 +112,7 @@ public:
     bool isFreeChair(int tableNumber);
     ChairPositionsAndDirections getFreeChairPositions(int tableNumber);
     Positions getTableHandlingPositions(int tableNumber);
+    Directions getTableHandlingDirection(int tableNumber);
     Positions getDishesPositions(int tableNumber);
     void occupyTableInstantly(int tableNumber);
     int getOccupiedChairsNumber(int tableNumber);

@@ -17,6 +17,7 @@ void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int 
                                                       twoChairsTablesPositions[i], 
                                                       twoChairsTablesDishesPositions[i],
                                                       twoChairsTablesHandlingPositions[i],
+                                                      twoChairsTablesHandlingDirections[i],
                                                       tableNumber);
         twoChairsTables.push_back(newTable);
     }
@@ -28,6 +29,7 @@ void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int 
                                                         fourChairsTablesPositions[i], 
                                                         fourChairsTablesDishesPositions[i],
                                                         fourChairsTablesHandlingPositions[i],
+                                                        fourChairsTablesHandlingDirections[i],
                                                         tableNumber);
         fourChairsTables.push_back(newTable);
     }
@@ -141,6 +143,20 @@ Positions TablesManager::getTableHandlingPositions(int tableNumber) {
         }
     }
     return Positions{-1.0f, -1.0f};
+}
+
+Directions TablesManager::getTableHandlingDirection(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return table->getTableHandlingDirection();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return table->getTableHandlingDirection();
+        }
+    }
+    return Directions::DOWN;
 }
 
 Positions TablesManager::getDishesPositions(int tableNumber) {

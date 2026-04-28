@@ -349,10 +349,12 @@ void Waiter::render(sf::RenderWindow* window) {
     }
 }
 
-void Waiter::setTableNumberAndPositions(int scaleFactor, 
-                                        int tableNumber, 
-                                        Positions tableHandlingPositions) {
+void Waiter::setTableNumberPositionsAndDirection(int scaleFactor, 
+                                                 int tableNumber, 
+                                                 Positions tableHandlingPositions, 
+                                                 Directions tableHandlingDirection) {
     this->tableNumber = tableNumber;
     this->tableHandlingPositions.xPos = tableHandlingPositions.xPos * scaleFactor;
     this->tableHandlingPositions.yPos = tableHandlingPositions.yPos * scaleFactor;
+    this->tableHandlingDirection = tableHandlingDirection;
 }

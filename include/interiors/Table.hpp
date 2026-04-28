@@ -12,15 +12,18 @@ protected:
     int tableNumber = 0;
     int occupiedChairs = 0;
     Positions tableHandlingPositions;
+    enum Directions tableHandlingDirection;
     bool isOccupied = false;
     bool isWaitingToHandling = false;
     bool isWaitingToDishesTaken = false;
 
     virtual bool loadTexture(int scaleFactor, std::string texturePath) = 0;
 public:
-    Table(int tableNumber, Positions tableHandlingPositions) : 
+    Table(int tableNumber, Positions tableHandlingPositions, 
+          Directions tableHandlingDirection) : 
           tableNumber(tableNumber), 
-          tableHandlingPositions(tableHandlingPositions) {};
+          tableHandlingPositions(tableHandlingPositions),
+          tableHandlingDirection(tableHandlingDirection) {};
     virtual ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() = 0;
     virtual void resetChairOccupancy(Directions chairHorizontalDirection, 
                                      Directions chairVerticalDirection) = 0;
@@ -40,6 +43,9 @@ public:
     }
     Positions getTableHandlingPositions() {
         return tableHandlingPositions;
+    }
+    Directions getTableHandlingDirection() {
+        return tableHandlingDirection;
     }
     void occupyTableInstantly() {
         isOccupied = true;
