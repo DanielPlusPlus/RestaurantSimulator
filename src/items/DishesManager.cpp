@@ -1,5 +1,6 @@
 #include "items/DishesManager.hpp"
 
+#include <algorithm>
 #include <random>
 
 
@@ -31,27 +32,27 @@ void DishesManager::moveReadyDishToMoving() {
 }
 
 void DishesManager::moveMovingDishToDishesOnTables(int tableNumber, Positions newDishPositions) {
-    for(Dish* dish : movingToTablesDishes) {
+    for(auto it = movingToTablesDishes.begin(); it != movingToTablesDishes.end(); it++) {
+        Dish* dish = *it;
         if(dish->getTableNumber() == tableNumber) {
             dish->changePositions(newDishPositions);
             dishesOnTables.push_back(dish);
-            movingToTablesDishes.erase(std::remove(movingToTablesDishes.begin(), 
-                                         movingToTablesDishes.end(), dish), 
-                                         movingToTablesDishes.end());
+            movingToTablesDishes.erase(it);
             return;
         }
     }
 }
 
 void DishesManager::removeAllDishesOnTable(int tableNumber) {
-    for(Dish* dish : dishesOnTables) {
-        if(dish->getTableNumber() == tableNumber) {
-            dishesOnTables.erase(std::remove(dishesOnTables.begin(), 
-                                 dishesOnTables.end(), dish), 
-                                 dishesOnTables.end());
-            delete dish;
-        }
-    }
+    auto newEnd = std::remove_if(dishesOnTables.begin(), dishesOnTables.end(),
+                                 [tableNumber](Dish* dish) {
+                                     if(dish->getTableNumber() == tableNumber) {
+                                         delete dish;
+                                         return true;
+                                     }
+                                     return false;
+                                 });
+    dishesOnTables.erase(newEnd, dishesOnTables.end());
 }
 
 void DishesManager::render(sf::RenderWindow* window) {
@@ -73,9 +74,7 @@ int DishesManager::getReadyDishTableNumber() {
 std::vector<int> DishesManager::getDishesOnTablesNumbers() {
     std::vector<int> dishesOnTablesNumbers;
     for(Dish* dish : dishesOnTables) {
-        if(std::find(dishesOnTablesNumbers.begin(), dishesOnTablesNumbers.end(), dish->getTableNumber()) == dishesOnTablesNumbers.end()) {
-            dishesOnTablesNumbers.push_back(dish->getTableNumber());
-        }
+        dishesOnTablesNumbers.push_back(dish->getTableNumber());
     }
     return dishesOnTablesNumbers;
 }

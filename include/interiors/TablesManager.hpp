@@ -124,7 +124,9 @@ public:
     void resetWaitingToHandling(int tableNumber);
     void setWaitingToDishesTaken(int tableNumber);
     void resetWaitingToDishesTaken(int tableNumber);
+    bool isTablesWaitingToDishesTaken();
     std::vector<int> getWaitingToHandlingTablesNumbers();
+    std::vector<int> getWaitingToDishesTakenTablesNumbers();
     void render(sf::RenderWindow* window);
     Positions getTwoChairsTableDishesPositionsByNumber(int tableNumber);
 };

@@ -92,6 +92,9 @@ private:
                                    DishesManager* dishesManager, 
                                    TablesManager* tablesManager);
     void assignCustomersToEating(DishesManager* dishesManager);
+    void assignWaitersToDishDropoff(int scaleFactor, 
+                                    TablesManager* tablesManager, 
+                                    DishesManager* dishesManager);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);

@@ -48,12 +48,14 @@ void TablesManager::removeTable() {
 
 bool TablesManager::isFreeTable() {
     for(TwoChairsTable* table : twoChairsTables) {
-        if(!table->getOccupiedStatus()){
+        if(!table->getOccupiedStatus() && 
+           !table->getWaitingToDishesTakenStatus()){
             return true;
         }
     }
     for(FourChairsTable* table : fourChairsTables) {
-        if(!table->getOccupiedStatus()) {
+        if(!table->getOccupiedStatus() && 
+           !table->getWaitingToDishesTakenStatus()) {
             return true;
         }
     }
@@ -90,12 +92,14 @@ bool TablesManager::getTableOccupiedStatus(int tableNumber) {
 
 int TablesManager::getFreeTableNumber() {
     for(TwoChairsTable* table : twoChairsTables) {
-        if(!table->getOccupiedStatus() && !table->getWaitingToDishesTakenStatus()){
+        if(!table->getOccupiedStatus() && 
+           !table->getWaitingToDishesTakenStatus()){
             return table->getTableNumber();
         }
     }
     for(FourChairsTable* table : fourChairsTables) {
-        if(!table->getOccupiedStatus() && !table->getWaitingToDishesTakenStatus()) {
+        if(!table->getOccupiedStatus() && 
+           !table->getWaitingToDishesTakenStatus()) {
             return table->getTableNumber();
         }
     }
@@ -256,6 +260,20 @@ void TablesManager::resetWaitingToHandling(int tableNumber) {
     }
 }
 
+bool TablesManager::isTablesWaitingToDishesTaken() {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getWaitingToDishesTakenStatus()){
+            return true;
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getWaitingToDishesTakenStatus()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::vector<int> TablesManager::getWaitingToHandlingTablesNumbers() {
     std::vector<int> waitingToHandlingTablesNumbers;
     for(TwoChairsTable* table : twoChairsTables) {
@@ -269,6 +287,21 @@ std::vector<int> TablesManager::getWaitingToHandlingTablesNumbers() {
         }
     }
     return waitingToHandlingTablesNumbers;
+}
+
+std::vector<int> TablesManager::getWaitingToDishesTakenTablesNumbers() {
+    std::vector<int> waitingToDishesTakenTablesNumbers;
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getWaitingToDishesTakenStatus()){
+            waitingToDishesTakenTablesNumbers.push_back(table->getTableNumber());
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getWaitingToDishesTakenStatus()) {
+            waitingToDishesTakenTablesNumbers.push_back(table->getTableNumber());
+        }
+    }
+    return waitingToDishesTakenTablesNumbers;
 }
 
 void TablesManager::setWaitingToDishesTaken(int tableNumber) {

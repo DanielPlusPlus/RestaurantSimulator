@@ -48,6 +48,7 @@ private:
     bool isAssignedToTask = false;
     bool isNewOrder = false;
     bool isDishToPutdown = false;
+    bool isDishesToDropoff = false;
     
     std::vector<Positions> pathToFollow;
     int currentPathIndex = 0;
@@ -88,6 +89,12 @@ public:
     bool getIsDishToPutdown() {
         return isDishToPutdown;
     }
+    void setIsDishesToDropoff(bool value) {
+        isDishesToDropoff = value;
+    }
+    bool getIsDishesToDropoff() {
+        return isDishesToDropoff;
+    }
     bool getIsAssignedToTask() {
         return isAssignedToTask;
     }
@@ -106,18 +113,6 @@ public:
         }
         return false;
     }
-    bool getIsTableHandling() {
-        return state == WaiterStatesEnum::TABLE_HANDLING;
-    }
-    bool getIsDishPickup() {
-        return state == WaiterStatesEnum::DISH_PICKUP;
-    }
-    bool getIsDishDropoff() {
-        return state == WaiterStatesEnum::DISH_DROPOFF;
-    }
-    bool getIsWaitingToTask() {
-        return state == WaiterStatesEnum::WAITING_TO_TASK;
-    };
     void changeToQueueHandlingState() {
         state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_QUEUE_HANDLING;
     }
@@ -128,7 +123,7 @@ public:
         state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_PICKUP;
     }
     void changeToDishDropoffState() {
-        state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_DROPOFF;
+        state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_EATEN_DISH;
     }
     void setTableHandlingDirection(enum Directions direction) {
         tableHandlingDirection = direction;

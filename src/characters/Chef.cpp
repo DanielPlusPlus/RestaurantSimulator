@@ -80,7 +80,7 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
         case ChefStatesEnum::PREPARING_TO_COOKING: {
             state = ChefStatesEnum::COOKING;
             extern std::mt19937 globalRNG;
-            std::uniform_int_distribution<int> dist(2, 5);
+            std::uniform_int_distribution<int> dist(15, 30);
             cookingTime = dist(globalRNG);
             break;
         }

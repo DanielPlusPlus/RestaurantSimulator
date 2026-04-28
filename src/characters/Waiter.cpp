@@ -166,21 +166,21 @@ void Waiter::changeState(float deltaTime, float tileWidth,
         case WaiterStatesEnum::MOVING_TO_DISH_PICKUP:
             if(moveToDestinationPositions(dishPickupPositions, deltaTime, 
                                           tileWidth, tileHeight, pathFinder)) {
-                state = WaiterStatesEnum::PREPARING_TO_DISH_PICKUP;
+                state = WaiterStatesEnum::PREPARING_TO_READY_DISH_PICKUP;
             }
             break;
-        case WaiterStatesEnum::PREPARING_TO_DISH_PICKUP:
+        case WaiterStatesEnum::PREPARING_TO_READY_DISH_PICKUP:
             animDirection = Directions::LEFT;
-            state = WaiterStatesEnum::DISH_PICKUP;
+            state = WaiterStatesEnum::READY_DISH_PICKUP;
             movingState = WaiterStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;
             break;
-        case WaiterStatesEnum::DISH_PICKUP:
+        case WaiterStatesEnum::READY_DISH_PICKUP:
             if(idleTimer == 0.0f) {
                 dishesManager->moveReadyDishToMoving();
             }
             idleTimer += deltaTime;
-            if(idleTimer > 1.0f) {
+            if(idleTimer > 2.0f) {
                 idleTimer = 0.0f;
                 state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_PUTDOWN;
             }
@@ -197,7 +197,7 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             }
             break;
         case WaiterStatesEnum::PREPARING_TO_DISH_PUTDOWN:
-            animDirection = Directions::DOWN;
+            animDirection = tableHandlingDirection;
             state = WaiterStatesEnum::DISH_PUTDOWN;
             movingState = WaiterStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;
@@ -208,6 +208,33 @@ void Waiter::changeState(float deltaTime, float tileWidth,
                 idleTimer = 0.0f;
                 state = WaiterStatesEnum::PREPARING_TO_WAITING_TO_TASK;
                 setIsDishToPutdown(true);
+            }
+            break;
+        case WaiterStatesEnum::PREPARING_TO_MOVE_TO_EATEN_DISH:
+            state = WaiterStatesEnum::MOVING_TO_EATEN_DISH;
+            pathToFollow.clear();
+            currentPathIndex = 0;
+            break;
+        case WaiterStatesEnum::MOVING_TO_EATEN_DISH:
+            if(moveToDestinationPositions(tableHandlingPositions, deltaTime, 
+                                          tileWidth, tileHeight, pathFinder)) {
+                state = WaiterStatesEnum::PREPARING_TO_EATEN_DISH_PICKUP;
+            }
+            break;
+        case WaiterStatesEnum::PREPARING_TO_EATEN_DISH_PICKUP:
+            animDirection = tableHandlingDirection;
+            state = WaiterStatesEnum::EATEN_DISH_PICKUP;
+            movingState = WaiterStatesEnum::NO_MOVEMENT;
+            idleTimer = 0.0f;
+            break;
+        case WaiterStatesEnum::EATEN_DISH_PICKUP:
+            if(idleTimer == 0.0f) {
+                setIsDishesToDropoff(true);
+            }
+            idleTimer += deltaTime;
+            if(idleTimer > 2.0f) {
+                idleTimer = 0.0f;
+                state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_DROPOFF;
             }
             break;
         case WaiterStatesEnum::PREPARING_TO_MOVE_TO_DISH_DROPOFF:
@@ -223,7 +250,7 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             }
             break;
         case WaiterStatesEnum::PREPARING_TO_DISH_DROPOFF:
-            animDirection = Directions::RIGHT;
+            animDirection = Directions::UP;
             state = WaiterStatesEnum::DISH_DROPOFF;
             movingState = WaiterStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;

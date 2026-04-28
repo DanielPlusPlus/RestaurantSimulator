@@ -29,7 +29,6 @@ ChairPositionsAndDirections FourChairsTable::occupyChairAndGetPositionsAndDirect
         occupiedChairs++;
         if(availableChairs == 0) {
             isOccupied = true;
-            isWaitingToHandling = true;
         }
         if(!isDownLeftChairOccupied) {
             isDownLeftChairOccupied = true;
