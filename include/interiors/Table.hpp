@@ -14,6 +14,7 @@ protected:
     Positions tableHandlingPositions;
     bool isOccupied = false;
     bool isWaitingToHandling = false;
+    bool isWaitingToDishesTaken = false;
 
     virtual bool loadTexture(int scaleFactor, std::string texturePath) = 0;
 public:
@@ -43,7 +44,7 @@ public:
     void occupyTableInstantly() {
         isOccupied = true;
     }
-    void waitToHandlingInstantly() {
+    void waitToHandling() {
         isWaitingToHandling = true;
     }
     bool getWaitingToHandleStatus() {
@@ -51,5 +52,14 @@ public:
     }
     void resetWaitingToHandling() {
         isWaitingToHandling = false;
+    }
+    void waitToDishesTaken() {
+        isWaitingToDishesTaken = true;
+    }
+    bool getWaitingToDishesTakenStatus() {
+        return isWaitingToDishesTaken;
+    }
+    void resetWaitingToDishesTaken() {
+        isWaitingToDishesTaken = false;
     }
 };

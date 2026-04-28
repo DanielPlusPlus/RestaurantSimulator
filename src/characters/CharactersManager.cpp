@@ -234,12 +234,10 @@ void CharactersManager::assignWaitersToDishPickup(int scaleFactor,
     Waiter* tableNearestWaiter = nullptr;
     for(Waiter* waiter : waiters) {
         if(!waiter->getIsAssignedToTask()) {
-            if(!waiter->getIsAssignedToTask()) {
-                tableNearestWaiter = getNearestWaiterToPositions(tableNearestWaiter, 
-                                                                 waiter, 
-                                                                 dishPickupPositions);
+            tableNearestWaiter = getNearestWaiterToPositions(tableNearestWaiter, 
+                                                              waiter, 
+                                                              dishPickupPositions);
             }
-        }
     }
     if(tableNearestWaiter != nullptr) {
         std::cout << "Assigned waiter " << tableNearestWaiter->getWaiterNumber() << " to dish pickup for table " << readyDishTableNumber << std::endl; // do usunięcia
@@ -277,7 +275,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
     
     queueNearestWaiter = nullptr;
     bool isFreeTable = tablesManager->isFreeTable();
-    bool isOccupiedTable = tablesManager->isOccupiedTable();
+    bool isTablesWaitingToHandling = tablesManager->isTablesWaitingToHandling();
     bool isWaiterInQueueHandling = checkIsWaiterInQueueHandling();
     bool isReadyDishes = dishesManager->isReadyDishes();
 
@@ -320,7 +318,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         }
     }
 
-    if(isOccupiedTable) {
+    if(isTablesWaitingToHandling) {
         assignWaitersToTablesHandling(scaleFactor, tablesManager);
     }
 
@@ -346,6 +344,13 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         insideCustomers[i]->updateIfEntered(deltaTime, scaleFactor, 
                                             tileWidth, tileHeight, 
                                             pathFinder);
+        if(insideCustomers[i]->isWaitingToSit()) {
+            int tableNumber = insideCustomers[i]->getTableNumber();
+            if(tablesManager->getTableOccupiedStatus(tableNumber)) {
+                tablesManager->setWaitingToHandling(tableNumber);
+            }
+            insideCustomers[i]->changeToSittingState();
+        }
         if(insideCustomers[i]->getLeaveRestaurantStatus()) {
             moveInsideCustomerToLeaving(i, tablesManager);
         }

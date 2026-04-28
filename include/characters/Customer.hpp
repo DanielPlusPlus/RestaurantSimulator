@@ -103,9 +103,6 @@ public:
     bool getLeaveRestaurantStatus() {
         return state == CustomerStatesEnum::WAITING_TO_LEAVE;
     }
-    bool getIsSittingStatus() {
-        return state == CustomerStatesEnum::SITTING;
-    }
     void setChairHorizontalDirection(enum Directions direction) {
         chairHorizontalDirection = direction;
     }
@@ -126,5 +123,11 @@ public:
     }
     bool isWaitingToEnter() {
         return state == CustomerStatesEnum::WAITING_TO_ENTER;
+    }
+    bool isWaitingToSit() {
+        return state == CustomerStatesEnum::WAITING_TO_SIT;
+    }
+    void changeToSittingState() {
+        state = CustomerStatesEnum::SITTING;
     }
 };

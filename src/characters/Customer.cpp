@@ -246,11 +246,13 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
             break;
         case CustomerStatesEnum::PREPARING_TO_SIT:
             animDirection = chairHorizontalDirection;
-            state = CustomerStatesEnum::SITTING;
+            state = CustomerStatesEnum::WAITING_TO_SIT;
             movingState = CustomerStatesEnum::NO_MOVEMENT;
             positions.xPos = chairPositions.xPos;
             positions.yPos = chairPositions.yPos;
             idleTimer = 0.0f;
+            break;
+        case CustomerStatesEnum::WAITING_TO_SIT:
             break;
         case CustomerStatesEnum::SITTING:
             break;
