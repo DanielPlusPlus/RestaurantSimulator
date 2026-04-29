@@ -204,6 +204,20 @@ int TablesManager::getOccupiedChairsNumber(int tableNumber) {
     return -1;
 }
 
+bool TablesManager::checkIsLastCustomerOnTable(int tableNumber) {
+    for(TwoChairsTable* table : twoChairsTables) {
+        if(table->getTableNumber() == tableNumber){
+            return table->getOccupiedStatus();
+        }
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        if(table->getTableNumber() == tableNumber) {
+            return table->getOccupiedStatus();
+        }
+    }
+    return false;
+}
+
 void TablesManager::freeChair(int tableNumber, 
                               Directions chairHorizontalDirection, 
                               Directions chairVerticalDirection) {

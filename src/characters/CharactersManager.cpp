@@ -7,6 +7,7 @@
 #include <random>
 #include <algorithm>
 #include <unordered_map>
+#include <iostream>
 
 
 CharactersManager::CharactersManager(int scaleFactor, float tileWidth, float tileHeight, int chefsNumber, 
@@ -51,11 +52,12 @@ void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileH
 
 void CharactersManager::addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, 
                                            float moveXSpeed, float moveYSpeed) {
+    customersNumberCounter++;
     extern std::mt19937 globalRNG;
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], 
                                          tileWidth, tileHeight, moveXSpeed, moveYSpeed, 
-                                         waitingCustomers.size() + 1, 
+                                         customersNumberCounter, 
                                          customersStartPositions, customersQueueStartingPositions, 
                                          customersEnterRestaurantPositions, 
                                          customersExitRestaurantPositions);
@@ -91,6 +93,7 @@ void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNu
             }
             customer->setTableNumber(tableNumber);
             customer->setOccupyTableInstantly(occupyTableInstantly);
+            customer->setIsLastCustomerOnTable(tablesManager->checkIsLastCustomerOnTable(tableNumber));
             customer->setTableNumberChairAndEnterChairPositions(scaleFactor, 
                                                                 tableNumber, 
                                                                 chairPositionsAndDirections.chairPositions, 
@@ -195,6 +198,7 @@ void CharactersManager::assignWaitersToTablesHandling(int scaleFactor, TablesMan
             }
         }
         if(tableNearestWaiter != nullptr) {
+            std::cout << "Assigning waiter " << tableNearestWaiter->getWaiterNumber() << " to handle table " << tableNumber << std::endl;
             Directions tableHandlingDirection = tablesManager->getTableHandlingDirection(tableNumber);
             tableNearestWaiter->setTableNumberPositionsAndDirection(scaleFactor, tableNumber, 
                                                                    tableHandlingPositions, 
@@ -241,6 +245,7 @@ void CharactersManager::assignWaitersToDishPickup(int scaleFactor,
             }
     }
     if(tableNearestWaiter != nullptr) {
+        std::cout << "Assigning waiter " << tableNearestWaiter->getWaiterNumber() << " to pickup dish and deliver to table " << readyDishTableNumber << std::endl;
         dishesManager->setReadyDishWaitingForWaiter(true);
         Directions tableHandlingDirection = tablesManager->getTableHandlingDirection(readyDishTableNumber);
         tableNearestWaiter->setTableNumberPositionsAndDirection(scaleFactor, readyDishTableNumber, 
@@ -273,6 +278,7 @@ void CharactersManager::assignCustomersToEating(DishesManager* dishesManager) {
         if(customersAtTable == tableOccupancyCount[tableNumber]) {
             for(Customer* customer : insideCustomers) {
                 if(customer->getTableNumber() == tableNumber && customer->isSitting()) {
+                    std::cout << "Assigning customer " << customer->getCustomerNumber() << " to eat at table " << tableNumber << std::endl;
                     customer->setEatingTime(eatingTime);
                     customer->changeToEatingState();
                 }
@@ -296,6 +302,7 @@ void CharactersManager::assignWaitersToDishDropoff(int scaleFactor,
             }
         }
         if(tableNearestWaiter != nullptr) {
+            std::cout << "Assigning waiter " << tableNearestWaiter->getWaiterNumber() << " to dropoff dish to table " << tableNumber << std::endl;
             Directions tableHandlingDirection = tablesManager->getTableHandlingDirection(tableNumber);
             tableNearestWaiter->setTableNumberPositionsAndDirection(scaleFactor, tableNumber, 
                                                                     tableHandlingPositions, 
@@ -360,6 +367,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
             }
             waiter->setNewOrder(false);
         }
+        
         if(waiter->getIsDishToPutdown()) {
             int tableNumber = waiter->getTableNumber();
             Positions dishesPositions = tablesManager->getDishesPositions(tableNumber);
@@ -369,11 +377,11 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
                                                           scaleDishesPositions);
             waiter->setIsDishToPutdown(false);
         }
-        if(waiter->getIsDishesToDropoff()) {
-            int tableNumber = waiter->getTableNumber();
-            dishesManager->removeAllDishesOnTable(tableNumber);
-            waiter->setIsDishesToDropoff(false);
-        }
+        // if(waiter->getIsDishesToDropoff()) {
+        //     int tableNumber = waiter->getTableNumber();
+        //     dishesManager->removeAllDishesOnTable(tableNumber);
+        //     waiter->setIsDishesToDropoff(false);
+        // }
     }
 
     if(isFreeTable && queueNearestWaiter != nullptr) {
@@ -391,9 +399,9 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         assignWaitersToDishPickup(scaleFactor, dishesManager, tablesManager);
     }
 
-    if(isWaitingTablesToDishTaken) {
-        assignWaitersToDishDropoff(scaleFactor, tablesManager, dishesManager);
-    }
+    // if(isWaitingTablesToDishTaken) {
+    //     assignWaitersToDishDropoff(scaleFactor, tablesManager, dishesManager);
+    // }
 
     for(int i = 0; i < waitingCustomers.size(); i++) {
         if(i == 0) {
@@ -415,8 +423,10 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
                                             pathFinder);
         if(insideCustomers[i]->isWaitingToSit()) {
             int tableNumber = insideCustomers[i]->getTableNumber();
-            if(tablesManager->getTableOccupiedStatus(tableNumber)) {
+            if(tablesManager->getTableOccupiedStatus(tableNumber) &&
+               insideCustomers[i]->getIsLastCustomerOnTable()) {
                 tablesManager->setWaitingToHandling(tableNumber);
+                std::cout << "Table " << tableNumber << " is waiting to be handled" << std::endl;
             }
             insideCustomers[i]->changeToSittingState();
         }

@@ -45,6 +45,7 @@ private:
     float previousQueueXPos = 0.0f;
     bool assignedToRemove = false;
     bool occupyTableInstantly = false;
+    bool isLastCustomerOnTable = false;
 
     std::vector<Positions> pathToFollow;
     int currentPathIndex = 0;
@@ -99,6 +100,12 @@ public:
     }
     void setOccupyTableInstantly(bool value) {
         occupyTableInstantly = value;
+    }
+    void setIsLastCustomerOnTable(bool value) {
+        isLastCustomerOnTable = value;
+    }
+    bool getIsLastCustomerOnTable() {
+        return isLastCustomerOnTable;
     }
     void setTableNumberChairAndEnterChairPositions(int scaleFactor, 
                                                    int tableNumber, 

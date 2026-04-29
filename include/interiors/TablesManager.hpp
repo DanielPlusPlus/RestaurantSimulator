@@ -116,6 +116,7 @@ public:
     Positions getDishesPositions(int tableNumber);
     void occupyTableInstantly(int tableNumber);
     int getOccupiedChairsNumber(int tableNumber);
+    bool checkIsLastCustomerOnTable(int tableNumber);
     void freeChair(int tableNumber, 
                    Directions chairHorizontalDirection, 
                    Directions chairVerticalDirection);

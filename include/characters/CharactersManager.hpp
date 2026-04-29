@@ -48,6 +48,8 @@ private:
     const Positions customersQueueStartingPositions{155.0f, 178.0f};
     const Positions customersEnterRestaurantPositions{155.0f, 152.0f};
     const Positions customersExitRestaurantPositions{131.0f, 152.0f};
+
+    int customersNumberCounter = 0;
     
     std::uniform_real_distribution<float> timeToAddCustomerDist;
     std::uniform_real_distribution<float> timeToRemoveCustomerDist;
