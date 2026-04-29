@@ -97,14 +97,14 @@ bool Level::isValidPositions(Positions positions) {
        && positions.yPos <= (56.0f * scaleFactor)) {
         return true;
     }
-    if(positions.xPos >= (70.0f * scaleFactor) 
-       && positions.xPos <= (88.0f * scaleFactor)
-       && positions.yPos == (72.0f * scaleFactor)) {
+     if(positions.xPos >= (70.0f * scaleFactor) 
+         && positions.xPos <= (88.0f * scaleFactor)
+         && positions.yPos == (72.0f * scaleFactor)) {
         return true;
     }
     if(positions.xPos > (151.0f * scaleFactor) 
        && positions.xPos <= (280.0f * scaleFactor)
-       && positions.yPos == (72.0f * scaleFactor)) {
+       && positions.yPos == (64.0f * scaleFactor)) {
         return true;
     }
     if(positions.xPos >= (151.0f * scaleFactor) 

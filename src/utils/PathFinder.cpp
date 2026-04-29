@@ -11,6 +11,21 @@ PathFinder::PathFinder(Level* level) : level(level) {}
 std::vector<Positions> PathFinder::findPath(Positions start, Positions destination, 
                                             float tileWidth, float tileHeight) {
     std::vector<Positions> path;
+
+    float halfTileHeight = tileHeight / 2.0f;
+    auto resolveWalkableY = [&](float xPos, float yPos, float& resolvedY) {
+        Positions checkPos{xPos, yPos};
+        if(level->isValidPositions(checkPos)) {
+            resolvedY = yPos;
+            return true;
+        }
+        Positions offsetPos{xPos, yPos - halfTileHeight};
+        if(level->isValidPositions(offsetPos)) {
+            resolvedY = offsetPos.yPos;
+            return true;
+        }
+        return false;
+    };
     
     int startX = static_cast<int>(start.xPos / tileWidth);
     int startY = static_cast<int>(start.yPos / tileHeight);
@@ -46,8 +61,9 @@ std::vector<Positions> PathFinder::findPath(Positions start, Positions destinati
             if(visited.find({newX, newY}) == visited.end()) {
                 float checkPixelX = newX * tileWidth + tileWidth / 2;
                 float checkPixelY = newY * tileHeight + tileHeight / 2;
-                
-                if(isWalkable(checkPixelX, checkPixelY, level)) {
+                float resolvedY = checkPixelY;
+
+                if(resolveWalkableY(checkPixelX, checkPixelY, resolvedY)) {
                     visited.insert({newX, newY});
                     PathNode* newNode = new PathNode(newX, newY, current);
                     allNodes.push_back(newNode);
@@ -63,6 +79,12 @@ std::vector<Positions> PathFinder::findPath(Positions start, Positions destinati
             Positions pos;
             pos.xPos = current->x * tileWidth + tileWidth / 2;
             pos.yPos = current->y * tileHeight + tileHeight / 2;
+            if(!level->isValidPositions(pos)) {
+                Positions offsetPos{pos.xPos, pos.yPos - halfTileHeight};
+                if(level->isValidPositions(offsetPos)) {
+                    pos.yPos = offsetPos.yPos;
+                }
+            }
             path.push_back(pos);
             current = current->parent;
         }

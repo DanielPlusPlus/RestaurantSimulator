@@ -377,11 +377,11 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
                                                           scaleDishesPositions);
             waiter->setIsDishToPutdown(false);
         }
-        // if(waiter->getIsDishesToDropoff()) {
-        //     int tableNumber = waiter->getTableNumber();
-        //     dishesManager->removeAllDishesOnTable(tableNumber);
-        //     waiter->setIsDishesToDropoff(false);
-        // }
+        if(waiter->getIsDishesToDropoff()) {
+            int tableNumber = waiter->getTableNumber();
+            dishesManager->removeAllDishesOnTable(tableNumber);
+            waiter->setIsDishesToDropoff(false);
+        }
     }
 
     if(isFreeTable && queueNearestWaiter != nullptr) {
@@ -399,9 +399,9 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         assignWaitersToDishPickup(scaleFactor, dishesManager, tablesManager);
     }
 
-    // if(isWaitingTablesToDishTaken) {
-    //     assignWaitersToDishDropoff(scaleFactor, tablesManager, dishesManager);
-    // }
+    if(isWaitingTablesToDishTaken) {
+        assignWaitersToDishDropoff(scaleFactor, tablesManager, dishesManager);
+    }
 
     for(int i = 0; i < waitingCustomers.size(); i++) {
         if(i == 0) {
