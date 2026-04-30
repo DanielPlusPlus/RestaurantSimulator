@@ -23,6 +23,7 @@ private:
     bool isReadyDishWaitingForWaiter = false;
 public:
     DishesManager(int scaleFactor);
+    ~DishesManager();
     void addDish(int scaleFactor, int tableNumber);
     Positions getReadyDishesPositions();
     void moveReadyDishToMoving();

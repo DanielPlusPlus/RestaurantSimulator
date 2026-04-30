@@ -7,6 +7,18 @@ TablesManager::TablesManager(int scaleFactor, int twoChairsTablesNumber, int fou
     setUpTables(scaleFactor, twoChairsTablesNumber, fourChairsTablesNumber);
 }
 
+TablesManager::~TablesManager() {
+    for(TwoChairsTable* table : twoChairsTables) {
+        delete table;
+    }
+    twoChairsTables.clear();
+
+    for(FourChairsTable* table : fourChairsTables) {
+        delete table;
+    }
+    fourChairsTables.clear();
+}
+
 void TablesManager::setUpTables(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber) {
     int tableNumber = 0;
     for(int i = 0; i < twoChairsTablesNumber; i++) {

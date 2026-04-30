@@ -9,6 +9,23 @@ DishesManager::DishesManager(int scaleFactor) {
     readyDishesPositions.yPos *= scaleFactor;
 }
 
+DishesManager::~DishesManager() {
+    while(!readyDishes.empty()) {
+        delete readyDishes.front();
+        readyDishes.pop();
+    }
+
+    for(Dish* dish : movingToTablesDishes) {
+        delete dish;
+    }
+    movingToTablesDishes.clear();
+
+    for(Dish* dish : dishesOnTables) {
+        delete dish;
+    }
+    dishesOnTables.clear();
+}
+
 void DishesManager::addDish(int scaleFactor, int tableNumber) {
     extern std::mt19937 globalRNG;
     std::uniform_int_distribution<int> dist(2, 5);

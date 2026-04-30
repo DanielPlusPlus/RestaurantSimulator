@@ -103,6 +103,7 @@ private:
     std::vector<FourChairsTable*> fourChairsTables;
 public:
     TablesManager(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber);
+    ~TablesManager();
     void setUpTables(int scaleFactor, int twoChairsTablesNumber, int fourChairsTablesNumber);
     void removeTable();
     bool isFreeTable();

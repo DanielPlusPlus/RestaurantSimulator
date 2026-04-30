@@ -107,6 +107,7 @@ private:
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);
+    ~CharactersManager();
     void update(float deltaTime, int scaleFactor, 
                 float tileWidth, float tileHeight, 
                 DishesManager* dishesManager, 

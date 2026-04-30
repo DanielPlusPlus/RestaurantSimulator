@@ -27,6 +27,38 @@ CharactersManager::CharactersManager(int scaleFactor, float tileWidth, float til
                dishesManager);
 }
 
+CharactersManager::~CharactersManager() {
+    for(Chef* chef : chefs) {
+        delete chef;
+    }
+    chefs.clear();
+
+    for(Waiter* waiter : waiters) {
+        delete waiter;
+    }
+    waiters.clear();
+
+    for(Customer* customer : waitingCustomers) {
+        delete customer;
+    }
+    waitingCustomers.clear();
+
+    for(Customer* customer : insideCustomers) {
+        delete customer;
+    }
+    insideCustomers.clear();
+
+    for(Customer* customer : resigningCustomers) {
+        delete customer;
+    }
+    resigningCustomers.clear();
+
+    for(Customer* customer : leavingCustomers) {
+        delete customer;
+    }
+    leavingCustomers.clear();
+}
+
 void CharactersManager::addChefs(int scaleFactor, float tileWidth, float tileHeight, 
                                  float moveXSpeed, float moveYSpeed, int chefsNumber, 
                                  DishesManager* dishesManager) {
