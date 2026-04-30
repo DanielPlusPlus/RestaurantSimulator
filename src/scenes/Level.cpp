@@ -121,29 +121,6 @@ void Level::configureTextsStyles() {
     speedMultiplierValueText.setOutlineColor(outlineColor);
 }
 
-void Level::update(float deltaTime, sf::RenderWindow* window) {
-    (void)window;
-    deltaTime *= speedMultiplier;
-    updateTextsPositions();
-    updateHoverState(window);
-    this->charactersManager->update(deltaTime, scaleFactor, 
-                                    tileWidth, tileHeight, 
-                                    dishesManager, tablesManager, 
-                                    pathFinder);
-    simulationTime += deltaTime;
-
-    float remainingTimeInMinutes = timeToEndSimulationInMinutes - (simulationTime / 60.0f);
-    remainingTimeInMinutes = std::max(0.0f, remainingTimeInMinutes);
-
-    minutesNumber = static_cast<int>(remainingTimeInMinutes);
-    secondsNumber = static_cast<int>((remainingTimeInMinutes - minutesNumber) * 60);
-
-    if(remainingTimeInMinutes <= 0) {
-        isSceneToChange = true;
-    }
-    updateValuesTexts();
-}
-
 void Level::updateValuesTexts() {
     int minutes = std::max(0, minutesNumber);
     int seconds = std::max(0, secondsNumber % 60);
@@ -199,6 +176,43 @@ void Level::handleMouseClick(sf::RenderWindow* window, bool isLeftClick) {
     }
 }
 
+void Level::update(float deltaTime, sf::RenderWindow* window) {
+    (void)window;
+    sf::Event event;
+    while(window->pollEvent(event)) {
+        if(event.type == sf::Event::Closed)
+            window->close();
+        if(event.type == sf::Event::MouseButtonPressed) {
+            if(event.mouseButton.button == sf::Mouse::Left) {
+                handleMouseClick(window, true);
+            }
+            else if(event.mouseButton.button == sf::Mouse::Right) {
+                handleMouseClick(window, false);
+            }
+        }
+    }
+
+    deltaTime *= speedMultiplier;
+
+    this->charactersManager->update(deltaTime, scaleFactor, 
+                                    tileWidth, tileHeight, 
+                                    dishesManager, tablesManager, 
+                                    pathFinder);
+    simulationTime += deltaTime;
+
+    float remainingTimeInMinutes = timeToEndSimulationInMinutes - (simulationTime / 60.0f);
+    remainingTimeInMinutes = std::max(0.0f, remainingTimeInMinutes);
+
+    minutesNumber = static_cast<int>(remainingTimeInMinutes);
+    secondsNumber = static_cast<int>((remainingTimeInMinutes - minutesNumber) * 60);
+
+    if(remainingTimeInMinutes <= 0) {
+        isSceneToChange = true;
+    }
+    updateTextsPositions();
+    updateHoverState(window);
+}
+
 bool Level::changeScene(enum ScenesEnum* sceneName) {
     if(isSceneToChange) {
         *sceneName = ScenesEnum::SUMMARY;
@@ -208,22 +222,6 @@ bool Level::changeScene(enum ScenesEnum* sceneName) {
 }
 
 void Level::render(sf::RenderWindow* window) {
-    sf::Event event;
-    while(window->pollEvent(event)) {
-        if(event.type == sf::Event::Closed)
-            window->close();
-        if(event.type == sf::Event::MouseButtonPressed) {
-            if(event.mouseButton.button == sf::Mouse::Left) {
-                handleMouseClick(window, true);
-                updateTextsPositions();
-            }
-            else if(event.mouseButton.button == sf::Mouse::Right) {
-                handleMouseClick(window, false);
-                updateTextsPositions();
-            }
-        }
-    }
-    
     if(texturesLoaded) {
         window->draw(backgroundSprite);
         window->draw(flowersSprite);
@@ -280,10 +278,13 @@ void Level::render(sf::RenderWindow* window) {
         this->charactersManager->renderWaitingResigningInsideLeavingCustomers(window);
        
     }
-    window->draw(timeLabelText);
-    window->draw(timeValueText);
-    window->draw(speedMultiplierLabelText);
-    window->draw(speedMultiplierValueText);
+
+    if(fontLoaded) {
+        window->draw(timeLabelText);
+        window->draw(timeValueText);
+        window->draw(speedMultiplierLabelText);
+        window->draw(speedMultiplierValueText);
+    }
 }
 
 bool Level::isValidPositions(Positions positions) {

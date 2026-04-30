@@ -378,29 +378,33 @@ bool Summary::changeScene(enum ScenesEnum* sceneName) {
 }
 
 void Summary::render(sf::RenderWindow* window) {
-    drawBackgroundWithBlur(window);
+    if(texturesLoaded) {
+        drawBackgroundWithBlur(window);
+    }
 
-    window->draw(titleText);
+    if(fontLoaded) {
+        window->draw(titleText);
 
-    window->draw(totalCustomersLabelText);
-    window->draw(totalCustomersValueText);
-    window->draw(resigningCustomersLabelText);
-    window->draw(resigningCustomersValueText);
-    window->draw(insideCustomersLabelText);
-    window->draw(insideCustomersValueText);
-    window->draw(leavingCustomersLabelText);
-    window->draw(leavingCustomersValueText);
+        window->draw(totalCustomersLabelText);
+        window->draw(totalCustomersValueText);
+        window->draw(resigningCustomersLabelText);
+        window->draw(resigningCustomersValueText);
+        window->draw(insideCustomersLabelText);
+        window->draw(insideCustomersValueText);
+        window->draw(leavingCustomersLabelText);
+        window->draw(leavingCustomersValueText);
 
-    window->draw(orderedDishesLabelText);
-    window->draw(orderedDishesValueText);
-    window->draw(preparedDishesLabelText);
-    window->draw(preparedDishesValueText);
-    window->draw(servedDishesLabelText);
-    window->draw(servedDishesValueText);
-    window->draw(eatenDishesLabelText);
-    window->draw(eatenDishesValueText);
-    window->draw(droppedDishesLabelText);
-    window->draw(droppedDishesValueText);
+        window->draw(orderedDishesLabelText);
+        window->draw(orderedDishesValueText);
+        window->draw(preparedDishesLabelText);
+        window->draw(preparedDishesValueText);
+        window->draw(servedDishesLabelText);
+        window->draw(servedDishesValueText);
+        window->draw(eatenDishesLabelText);
+        window->draw(eatenDishesValueText);
+        window->draw(droppedDishesLabelText);
+        window->draw(droppedDishesValueText);
 
-    window->draw(returnText);
+        window->draw(returnText);
+    }
 }

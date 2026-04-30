@@ -11,6 +11,7 @@ protected:
     sf::Sprite tableSprite;
     int tableNumber = 0;
     int occupiedChairs = 0;
+    bool texturesLoaded = false;
     Positions tableHandlingPositions;
     enum Directions tableHandlingDirection;
     bool isOccupied = false;

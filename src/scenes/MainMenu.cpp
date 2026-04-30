@@ -422,20 +422,24 @@ bool MainMenu::changeScene(enum ScenesEnum* sceneName) {
 }
 
 void MainMenu::render(sf::RenderWindow* window) {
-    drawBackgroundWithBlur(window);
+    if(texturesLoaded) {
+        drawBackgroundWithBlur(window);
+    }
 
-    window->draw(titleText);
-    window->draw(scaleFactorLabelText);
-    window->draw(scaleFactorValueText);
-    window->draw(chefsNumberLabelText);
-    window->draw(chefsNumberValueText);
-    window->draw(waitersNumberLabelText);
-    window->draw(waitersNumberValueText);
-    window->draw(twoChairsTablesNumberLabelText);
-    window->draw(twoChairsTablesNumberValueText);
-    window->draw(fourChairsTablesNumberLabelText);
-    window->draw(fourChairsTablesNumberValueText);
-    window->draw(simulationTimeLabelText);
-    window->draw(simulationTimeValueText);
-    window->draw(startText);
+    if(fontLoaded) {
+        window->draw(titleText);
+        window->draw(scaleFactorLabelText);
+        window->draw(scaleFactorValueText);
+        window->draw(chefsNumberLabelText);
+        window->draw(chefsNumberValueText);
+        window->draw(waitersNumberLabelText);
+        window->draw(waitersNumberValueText);
+        window->draw(twoChairsTablesNumberLabelText);
+        window->draw(twoChairsTablesNumberValueText);
+        window->draw(fourChairsTablesNumberLabelText);
+        window->draw(fourChairsTablesNumberValueText);
+        window->draw(simulationTimeLabelText);
+        window->draw(simulationTimeValueText);
+        window->draw(startText);
+    }
 }

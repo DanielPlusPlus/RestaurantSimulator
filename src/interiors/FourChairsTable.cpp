@@ -20,7 +20,7 @@ FourChairsTable::FourChairsTable(int scaleFactor, std::string texturePath,
         std::max(chairsPositions.upLeftChairPositionsAndDirections.chairPositions.yPos,
                  chairsPositions.upRightChairPositionsAndDirections.chairPositions.yPos)
     );
-    loadTexture(scaleFactor, texturePath);
+    texturesLoaded = loadTexture(scaleFactor, texturePath);
 }
 
 bool FourChairsTable::loadTexture(int scaleFactor, std::string texturePath) {
@@ -105,5 +105,7 @@ void FourChairsTable::resetChairOccupancy(Directions chairHorizontalDirection,
 }
 
 void FourChairsTable::render(sf::RenderWindow* window) {
-    window->draw(tableSprite);
+    if(texturesLoaded) {
+        window->draw(tableSprite);
+    }
 }

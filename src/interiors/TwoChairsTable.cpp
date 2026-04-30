@@ -15,7 +15,7 @@ TwoChairsTable::TwoChairsTable(int scaleFactor, std::string texturePath,
                                    dishesPositions(dishesPositions) {
     sortY = std::max(chairsPositions.leftChairPositionsAndDirections.chairPositions.yPos,
                      chairsPositions.rightChairPositionsAndDirections.chairPositions.yPos);
-    loadTexture(scaleFactor, texturePath);
+    texturesLoaded = loadTexture(scaleFactor, texturePath);
 }
 
 bool TwoChairsTable::loadTexture(int scaleFactor, std::string texturePath) {
@@ -64,5 +64,7 @@ void TwoChairsTable::resetChairOccupancy(Directions chairHorizontalDirection,
 }
 
 void TwoChairsTable::render(sf::RenderWindow* window) {
-    window->draw(tableSprite);
+    if(texturesLoaded) {
+        window->draw(tableSprite);
+    }
 }

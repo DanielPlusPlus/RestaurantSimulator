@@ -11,6 +11,7 @@ private:
     sf::Sprite dishSprite;
     Positions positions;
     int tableNumber = 0;
+    bool texturesLoaded = false;
 
     bool loadTexture(int scaleFactor, std::string texturePath);
 public:
