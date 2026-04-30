@@ -1,7 +1,6 @@
 #include "scenes/Level.hpp"
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
@@ -51,15 +50,6 @@ Level::~Level() {
                                      orderedDishesNumberCounterPtr, preparedDishesNumberCounterPtr, 
                                      servedDishesNumberCounterPtr, eatenDishesNumberCounterPtr, 
                                      droppedDishesNumberCounterPtr);
-    std::cout << "Total customers: " << *totalCustomersNumberCounterPtr << std::endl;
-    std::cout << "Resigning customers: " << *resigningCustomersNumberCounterPtr << std::endl;
-    std::cout << "Inside customers: " << *insideCustomersNumberCounterPtr << std::endl;
-    std::cout << "Leaving customers: " << *leavingCustomersNumberCounterPtr << std::endl;
-    std::cout << "Ordered dishes: " << *orderedDishesNumberCounterPtr << std::endl;
-    std::cout << "Prepared dishes: " << *preparedDishesNumberCounterPtr << std::endl;
-    std::cout << "Served dishes: " << *servedDishesNumberCounterPtr << std::endl;
-    std::cout << "Eaten dishes: " << *eatenDishesNumberCounterPtr << std::endl;
-    std::cout << "Dropped dishes: " << *droppedDishesNumberCounterPtr << std::endl;
     delete dishesManager;
     delete tablesManager;
     delete charactersManager;
@@ -157,8 +147,6 @@ void Level::update(float deltaTime, sf::RenderWindow* window) {
 void Level::updateValuesTexts() {
     int minutes = std::max(0, minutesNumber);
     int seconds = std::max(0, secondsNumber % 60);
-    std::cout << "Remaining Time Seconds: " << secondsNumber << std::endl;
-
     std::ostringstream oss;
     oss << std::setw(2) << std::setfill('0') << minutes << ":"
         << std::setw(2) << std::setfill('0') << seconds;
@@ -362,13 +350,13 @@ bool Level::isValidPositions(Positions positions) {
     }
     if(positions.xPos >= (7.0f * scaleFactor) 
        && positions.xPos <= (212.0f * scaleFactor) 
-       && positions.yPos == (120.0f * scaleFactor)) {
+       && positions.yPos == (112.0f * scaleFactor)) {
         return true;
     }
     if(positions.xPos >= (52.0f * scaleFactor) 
        && positions.xPos <= (212.0f * scaleFactor) 
        && positions.yPos > (104.0f * scaleFactor)
-       && positions.yPos <= (120.0f * scaleFactor)) {
+       && positions.yPos <= (112.0f * scaleFactor)) {
         return true;
     }
     if(positions.xPos >= (101.0f * scaleFactor) 

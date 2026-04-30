@@ -84,7 +84,7 @@ public:
     }
     int getCustomerNumber() {
         return customerNumber;
-    } // do usunięcia
+    }
     void changeToResigningState() {
         state = CustomerStatesEnum::TURNING_DOWN;
     }

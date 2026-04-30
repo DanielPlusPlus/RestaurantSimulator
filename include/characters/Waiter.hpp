@@ -76,7 +76,7 @@ public:
     }
     int getWaiterNumber() {
         return waiterNumber;
-    } // do usunięcia
+    }
     void setAssignedToTask(bool value) {
         isAssignedToTask = value;
     }

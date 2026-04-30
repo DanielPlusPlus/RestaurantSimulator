@@ -7,7 +7,6 @@
 #include <random>
 #include <algorithm>
 #include <unordered_map>
-#include <iostream>
 
 
 CharactersManager::CharactersManager(int scaleFactor, float tileWidth, float tileHeight, int chefsNumber, 
@@ -201,7 +200,6 @@ void CharactersManager::assignWaitersToTablesHandling(int scaleFactor, TablesMan
             }
         }
         if(tableNearestWaiter != nullptr) {
-            std::cout << "Assigning waiter " << tableNearestWaiter->getWaiterNumber() << " to handle table " << tableNumber << std::endl;
             Directions tableHandlingDirection = tablesManager->getTableHandlingDirection(tableNumber);
             tableNearestWaiter->setTableNumberPositionsAndDirection(scaleFactor, tableNumber, 
                                                                    tableHandlingPositions, 
@@ -248,7 +246,6 @@ void CharactersManager::assignWaitersToDishPickup(int scaleFactor,
             }
     }
     if(tableNearestWaiter != nullptr) {
-        std::cout << "Assigning waiter " << tableNearestWaiter->getWaiterNumber() << " to pickup dish and deliver to table " << readyDishTableNumber << std::endl;
         dishesManager->setReadyDishWaitingForWaiter(true);
         Directions tableHandlingDirection = tablesManager->getTableHandlingDirection(readyDishTableNumber);
         tableNearestWaiter->setTableNumberPositionsAndDirection(scaleFactor, readyDishTableNumber, 
@@ -281,7 +278,6 @@ void CharactersManager::assignCustomersToEating(DishesManager* dishesManager) {
         if(customersAtTable == tableOccupancyCount[tableNumber]) {
             for(Customer* customer : insideCustomers) {
                 if(customer->getTableNumber() == tableNumber && customer->isSitting()) {
-                    std::cout << "Assigning customer " << customer->getCustomerNumber() << " to eat at table " << tableNumber << std::endl;
                     customer->setEatingTime(eatingTime);
                     customer->changeToEatingState();
                 }
@@ -305,7 +301,6 @@ void CharactersManager::assignWaitersToDishDropoff(int scaleFactor,
             }
         }
         if(tableNearestWaiter != nullptr) {
-            std::cout << "Assigning waiter " << tableNearestWaiter->getWaiterNumber() << " to dropoff dish to table " << tableNumber << std::endl;
             Directions tableHandlingDirection = tablesManager->getTableHandlingDirection(tableNumber);
             tableNearestWaiter->setTableNumberPositionsAndDirection(scaleFactor, tableNumber, 
                                                                     tableHandlingPositions, 
@@ -433,7 +428,6 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
             if(tablesManager->getTableOccupiedStatus(tableNumber) &&
                insideCustomers[i]->getIsLastCustomerOnTable()) {
                 tablesManager->setWaitingToHandling(tableNumber);
-                std::cout << "Table " << tableNumber << " is waiting to be handled" << std::endl;
             }
             insideCustomers[i]->changeToSittingState();
         }

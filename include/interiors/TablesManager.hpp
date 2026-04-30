@@ -35,7 +35,7 @@ private:
         TwoChairsTablesPositions(7.0f, 130.0f, 37.0f, 130.0f,
                                  7.0f, 152.0f, 37.0f, 152.0f),
         TwoChairsTablesPositions(7.0f, 101.0f, 37.0f, 101.0f,
-                                 7.0f, 120.0f, 37.0f, 120.0f),
+                                 7.0f, 112.0f, 37.0f, 112.0f),
         TwoChairsTablesPositions(7.0f, 72.0f, 37.0f, 72.0f,
                                  7.0f, 88.0f, 37.0f, 88.0f),
         TwoChairsTablesPositions(104.0f, 72.0f, 134.0f, 72.0f,
@@ -69,9 +69,9 @@ private:
         FourChairsTablesDishesPositions{244.0f, 65.0f, 262.0f, 65.0f, 244.0f, 50.0f, 262.0f, 50.0f}
     };
     const Positions twoChairsTablesHandlingPositions[8] = {
-        Positions{70.5f, 120.0f},
-        Positions{194.0f, 120.0f},
-        Positions{22.0f, 120.0f},
+        Positions{70.5f, 112.0f},
+        Positions{194.0f, 112.0f},
+        Positions{22.0f, 112.0f},
         Positions{22.0f, 88.0f},
         Positions{22.0f, 88.0f},
         Positions{119.0f, 88.0f},
@@ -80,7 +80,7 @@ private:
     };
     const Positions fourChairsTablesHandlingPositions[3] = {
         Positions{253.0f, 104.0f},
-        Positions{253.0f, 64.0f}, // potecjalnie 64
+        Positions{253.0f, 64.0f},
         Positions{253.0f, 24.0f}
     };
     const enum Directions twoChairsTablesHandlingDirections[8] = {

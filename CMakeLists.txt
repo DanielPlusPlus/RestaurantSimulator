@@ -31,7 +31,7 @@ target_link_libraries(RestaurantSimulator
     sfml-audio
 )
 
-# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
 
 add_custom_command(TARGET RestaurantSimulator POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
