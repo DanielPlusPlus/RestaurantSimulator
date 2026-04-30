@@ -49,8 +49,16 @@ private:
     const Positions customersEnterRestaurantPositions{155.0f, 152.0f};
     const Positions customersExitRestaurantPositions{131.0f, 152.0f};
 
-    int customersNumberCounter = 0;
-    
+    int totalCustomersNumberCounter = 0;
+    int resigningCustomersNumberCounter = 0;
+    int insideCustomersNumberCounter = 0;
+    int leavingCustomersNumberCounter = 0;
+    int orderedDishesNumberCounter = 0;
+    int preparedDishesNumberCounter = 0;
+    int servedDishesNumberCounter = 0;
+    int eatenDishesNumberCounter = 0;
+    int droppedDishesNumberCounter = 0;
+
     std::uniform_real_distribution<float> timeToAddCustomerDist;
     std::uniform_real_distribution<float> timeToRemoveCustomerDist;
 
@@ -106,5 +114,12 @@ public:
                 TablesManager* tablesManager, 
                 PathFinder* pathFinder);
     void renderChefs(sf::RenderWindow* window);
-    void renderWaitersAndCustomers(sf::RenderWindow* window);
+    void renderWaitersAndInsideCustomers(sf::RenderWindow* window);
+    void renderWaitingResigningInsideLeavingCustomers(sf::RenderWindow* window);
+    std::vector<Character*> getWaitersAndInsideCustomers();
+    void getStatistics(int* totalCustomersNumberPtr, int* resigningCustomersNumberPtr, 
+                       int* insideCustomersNumberPtr, int* leavingCustomersNumberPtr, 
+                       int* orderedDishesNumberPtr, int* preparedDishesNumberPtr, 
+                       int* servedDishesNumberPtr, int* eatenDishesNumberPtr, 
+                       int* droppedDishesNumberPtr);
 };

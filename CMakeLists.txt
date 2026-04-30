@@ -16,7 +16,11 @@ add_executable(RestaurantSimulator ${SOURCES}
     include/enums/ScenesEnum.hpp
     src/utils/InitFileReader.cpp
     include/utils/InitFileWriter.hpp
-    src/utils/InitFileWriter.cpp)
+    src/utils/InitFileWriter.cpp
+    src/scenes/Summary.cpp
+    include/scenes/Summary.hpp
+    include/utils/StatsFileWriter.hpp
+    src/utils/StatsFileWriter.cpp)
 
 target_include_directories(RestaurantSimulator PRIVATE include)
 

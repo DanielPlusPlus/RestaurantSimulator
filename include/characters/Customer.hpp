@@ -56,7 +56,8 @@ private:
     void changeResigningState(float deltaTime);
     void changeEnterState(float deltaTime, int scaleFactor, 
                           float tileWidth, float tileHeight, 
-                          PathFinder* pathFinder);
+                          PathFinder* pathFinder, 
+                          int* eatenDishesNumberCounter);
     void changeLeavingState(float deltaTime);
     void setAssignedToRemove(bool value) {
         assignedToRemove = value;
@@ -74,9 +75,13 @@ public:
     void updateIfResigning(float deltaTime);
     void updateIfEntered(float deltaTime, int scaleFactor, 
                          float tileWidth, float tileHeight, 
-                         PathFinder* pathFinder);
+                         PathFinder* pathFinder, 
+                         int* eatenDishesNumberCounter);
     void updateIfLeaving(float deltaTime);
     void render(sf::RenderWindow* window) override;
+    float getSortY() override {
+        return positions.yPos + (height * 0.3f);
+    }
     int getCustomerNumber() {
         return customerNumber;
     } // do usunięcia

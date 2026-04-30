@@ -43,11 +43,13 @@ void DishesManager::moveMovingDishToDishesOnTables(int tableNumber, Positions ne
     }
 }
 
-void DishesManager::removeAllDishesOnTable(int tableNumber) {
+void DishesManager::removeAllDishesOnTable(int tableNumber, int* dishesOnTableNumber) {
+    *dishesOnTableNumber = 0;
     auto newEnd = std::remove_if(dishesOnTables.begin(), dishesOnTables.end(),
-                                 [tableNumber](Dish* dish) {
+                                 [tableNumber, dishesOnTableNumber](Dish* dish) {
                                      if(dish->getTableNumber() == tableNumber) {
                                          delete dish;
+                                         (*dishesOnTableNumber)++;
                                          return true;
                                      }
                                      return false;
@@ -61,6 +63,12 @@ void DishesManager::render(sf::RenderWindow* window) {
     }
     for(Dish* dish : dishesOnTables) {
         dish->render(window);
+    }
+}
+
+void DishesManager::renderReadyDish(sf::RenderWindow* window) {
+    if(!readyDishes.empty()) {
+        readyDishes.front()->render(window);
     }
 }
 

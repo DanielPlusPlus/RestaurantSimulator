@@ -41,7 +41,7 @@ private:
 
     bool loadTextures(int scaleFactor);
     void changeAnimation(float deltaTime);
-    void changeState(float deltaTime, int scaleFactor);
+    void changeState(float deltaTime, int scaleFactor, int* addedDishesNumber);
     enum ChefStatesEnum defineStateByStartDirection();
 public:
     Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
@@ -51,8 +51,11 @@ public:
     int getDishesToCookForNumber() {
         return tablesNumbersToCookFor.size();
     }
-    void update(float deltaTime, int scaleFactor);
+    void update(float deltaTime, int scaleFactor, int* addedDishesNumber);
     void render(sf::RenderWindow* window) override;
+    float getSortY() override {
+        return positions.yPos + (height * 0.3f);
+    }
     int getChefNumber() {
         return chefNumber;
     }

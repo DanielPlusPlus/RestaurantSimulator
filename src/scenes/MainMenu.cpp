@@ -9,15 +9,16 @@
 
 MainMenu::MainMenu(int* scaleFactor, int* chefsNumberPtr, 
                    int* waitersNumberPtr, int* twoChairsTablesNumberPtr, 
-                   int* fourChairsTablesNumberPtr, int* simulationTimePtr) : 
-                   Scene(*scaleFactor), scaleFactorPtr(scaleFactor), 
-                   chefsNumberPtr(chefsNumberPtr), 
-                   waitersNumberPtr(waitersNumberPtr), 
-                   twoChairsTablesNumberPtr(twoChairsTablesNumberPtr),
-                   fourChairsTablesNumberPtr(fourChairsTablesNumberPtr),
-                   simulationTimePtr(simulationTimePtr) {
-    texturesLoaded = loadTextures(this->scaleFactor);
+                   int* fourChairsTablesNumberPtr, int* simulationTimePtr
+                   ) : Scene(*scaleFactor), 
+                       scaleFactorPtr(scaleFactor), 
+                       chefsNumberPtr(chefsNumberPtr), 
+                       waitersNumberPtr(waitersNumberPtr), 
+                       twoChairsTablesNumberPtr(twoChairsTablesNumberPtr),
+                       fourChairsTablesNumberPtr(fourChairsTablesNumberPtr),
+                       simulationTimePtr(simulationTimePtr) {
     loadInitValues();
+    texturesLoaded = loadTextures(this->scaleFactor);
     if(fontLoaded) {
         configureTextsStyles();
         updateValuesTexts();
@@ -29,6 +30,20 @@ MainMenu::~MainMenu() {
                                   *waitersNumberPtr, *twoChairsTablesNumberPtr, 
                                   *fourChairsTablesNumberPtr, *simulationTimePtr);
     initFileWriter.createConfigFile();
+}
+
+void MainMenu::loadInitValues() {
+    InitFileReader initFileReader;
+    std::unordered_map<std::string, int> configValues = initFileReader.getConfigValues();
+    newScaleFactor = configValues["scaleFactor"];
+    newChefsNumber = configValues["chefsNumber"];
+    newWaitersNumber = configValues["waitersNumber"];
+    newTwoChairsTablesNumber = configValues["twoChairsTablesNumber"];
+    newFourChairsTablesNumber = configValues["fourChairsTablesNumber"];
+    newSimulationTimeInMinutes = configValues["timeToEndSimulationInMinutes"];
+    if(newScaleFactor != scaleFactor) {
+        isSceneToReload = true;
+    }
 }
 
 bool MainMenu::loadTextures(int scaleFactor) {
@@ -52,7 +67,10 @@ void MainMenu::configureTextsStyles() {
     const unsigned int baseTitleTextSize = static_cast<unsigned int>(fontSize + 12);
     const unsigned int baseStartTextSize = static_cast<unsigned int>(fontSize + 6);
 
+    const sf::Color labelColor(245, 233, 190);
+    const sf::Color valueColor(255, 222, 120);
     const sf::Color outlineColor(58, 58, 80);
+
     titleText.setFont(font);
     titleText.setCharacterSize(baseTitleTextSize * scaleFactor);
     titleText.setString("Restaurant Simulator");
@@ -63,78 +81,78 @@ void MainMenu::configureTextsStyles() {
     scaleFactorLabelText.setFont(font);
     scaleFactorLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
     scaleFactorLabelText.setString("Scale Factor:");
-    scaleFactorLabelText.setFillColor(sf::Color(245, 233, 190));
+    scaleFactorLabelText.setFillColor(labelColor);
     scaleFactorLabelText.setOutlineThickness(static_cast<float>(scaleFactor));
     scaleFactorLabelText.setOutlineColor(outlineColor);
 
     scaleFactorValueText.setFont(font);
     scaleFactorValueText.setCharacterSize(baseOptionTextSize * scaleFactor);
-    scaleFactorValueText.setFillColor(sf::Color(255, 222, 120));
+    scaleFactorValueText.setFillColor(valueColor);
     scaleFactorValueText.setOutlineThickness(static_cast<float>(scaleFactor));
     scaleFactorValueText.setOutlineColor(outlineColor);
 
     chefsNumberLabelText.setFont(font);
     chefsNumberLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
     chefsNumberLabelText.setString("Chefs Number:");
-    chefsNumberLabelText.setFillColor(sf::Color(245, 233, 190));
+    chefsNumberLabelText.setFillColor(labelColor);
     chefsNumberLabelText.setOutlineThickness(static_cast<float>(scaleFactor));
     chefsNumberLabelText.setOutlineColor(outlineColor);
 
     chefsNumberValueText.setFont(font);
     chefsNumberValueText.setCharacterSize(baseOptionTextSize * scaleFactor);
-    chefsNumberValueText.setFillColor(sf::Color(255, 222, 120));
+    chefsNumberValueText.setFillColor(valueColor);
     chefsNumberValueText.setOutlineThickness(static_cast<float>(scaleFactor));
     chefsNumberValueText.setOutlineColor(outlineColor);
 
     waitersNumberLabelText.setFont(font);
     waitersNumberLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
     waitersNumberLabelText.setString("Waiters Number:");
-    waitersNumberLabelText.setFillColor(sf::Color(245, 233, 190));
+    waitersNumberLabelText.setFillColor(labelColor);
     waitersNumberLabelText.setOutlineThickness(static_cast<float>(scaleFactor));
     waitersNumberLabelText.setOutlineColor(outlineColor);
 
     waitersNumberValueText.setFont(font);
     waitersNumberValueText.setCharacterSize(baseOptionTextSize * scaleFactor);
-    waitersNumberValueText.setFillColor(sf::Color(255, 222, 120));
+    waitersNumberValueText.setFillColor(valueColor);
     waitersNumberValueText.setOutlineThickness(static_cast<float>(scaleFactor));
     waitersNumberValueText.setOutlineColor(outlineColor);
 
     twoChairsTablesNumberLabelText.setFont(font);
     twoChairsTablesNumberLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
     twoChairsTablesNumberLabelText.setString("2 Chairs Tables Number:");
-    twoChairsTablesNumberLabelText.setFillColor(sf::Color(245, 233, 190));
+    twoChairsTablesNumberLabelText.setFillColor(labelColor);
     twoChairsTablesNumberLabelText.setOutlineThickness(static_cast<float>(scaleFactor));
     twoChairsTablesNumberLabelText.setOutlineColor(outlineColor);
 
     twoChairsTablesNumberValueText.setFont(font);
     twoChairsTablesNumberValueText.setCharacterSize(baseOptionTextSize * scaleFactor);
-    twoChairsTablesNumberValueText.setFillColor(sf::Color(255, 222, 120));
+    twoChairsTablesNumberValueText.setFillColor(valueColor);
     twoChairsTablesNumberValueText.setOutlineThickness(static_cast<float>(scaleFactor));
     twoChairsTablesNumberValueText.setOutlineColor(outlineColor);
 
     fourChairsTablesNumberLabelText.setFont(font);
     fourChairsTablesNumberLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
     fourChairsTablesNumberLabelText.setString("4 Chairs Tables Number:");
-    fourChairsTablesNumberLabelText.setFillColor(sf::Color(245, 233, 190));
+    fourChairsTablesNumberLabelText.setFillColor(labelColor);
     fourChairsTablesNumberLabelText.setOutlineThickness(static_cast<float>(scaleFactor));
     fourChairsTablesNumberLabelText.setOutlineColor(outlineColor);
 
     fourChairsTablesNumberValueText.setFont(font);
     fourChairsTablesNumberValueText.setCharacterSize(baseOptionTextSize * scaleFactor);
-    fourChairsTablesNumberValueText.setFillColor(sf::Color(255, 222, 120));
+    fourChairsTablesNumberValueText.setFillColor(valueColor);
     fourChairsTablesNumberValueText.setOutlineThickness(static_cast<float>(scaleFactor));
     fourChairsTablesNumberValueText.setOutlineColor(outlineColor);
 
     simulationTimeLabelText.setFont(font);
     simulationTimeLabelText.setCharacterSize(baseOptionTextSize * scaleFactor);
     simulationTimeLabelText.setString("Simulation Time:");
-    simulationTimeLabelText.setFillColor(sf::Color(245, 233, 190));
+    simulationTimeLabelText.setFillColor(labelColor);
     simulationTimeLabelText.setOutlineThickness(static_cast<float>(scaleFactor));
     simulationTimeLabelText.setOutlineColor(outlineColor);
 
     simulationTimeValueText.setFont(font);
     simulationTimeValueText.setCharacterSize(baseOptionTextSize * scaleFactor);
-    simulationTimeValueText.setFillColor(sf::Color(255, 222, 120));
+    simulationTimeValueText.setFillColor(valueColor);
     simulationTimeValueText.setOutlineThickness(static_cast<float>(scaleFactor));
     simulationTimeValueText.setOutlineColor(outlineColor);
 
@@ -144,36 +162,6 @@ void MainMenu::configureTextsStyles() {
     startText.setFillColor(sf::Color(255, 236, 141));
     startText.setOutlineThickness(1.3f * static_cast<float>(scaleFactor));
     startText.setOutlineColor(outlineColor);
-}
-
-void MainMenu::loadInitValues() {
-    InitFileReader initFileReader;
-    std::unordered_map<std::string, int> configValues = initFileReader.getConfigValues();
-    newScaleFactor = configValues["scaleFactor"];
-    newChefsNumber = configValues["chefsNumber"];
-    newWaitersNumber = configValues["waitersNumber"];
-    newTwoChairsTablesNumber = configValues["twoChairsTablesNumber"];
-    newFourChairsTablesNumber = configValues["fourChairsTablesNumber"];
-    newSimulationTimeInMinutes = configValues["timeToEndSimulationInMinutes"];
-    if(newScaleFactor != scaleFactor) {
-        isSceneToReload = true;
-    }
-}
-
-void MainMenu::update(float deltaTime, sf::RenderWindow* window) {
-    sf::Event event;
-    while(window->pollEvent(event)) {
-        if(event.type == sf::Event::Closed) {
-            window->close();
-        }
-        if(event.type == sf::Event::MouseButtonPressed &&
-            event.mouseButton.button == sf::Mouse::Left) {
-            handleMouseClick(window);
-        }
-    }
-    changeAnimation(deltaTime);
-    updateTextsPositions();
-    updateHoverState(window);
 }
 
 void MainMenu::changeAnimation(float deltaTime) {
@@ -197,7 +185,7 @@ void MainMenu::updateValuesTexts() {
     *waitersNumberPtr = std::max(1, std::min(newWaitersNumber, 3));
     *twoChairsTablesNumberPtr = std::max(0, std::min(newTwoChairsTablesNumber, 8));
     *fourChairsTablesNumberPtr = std::max(0, std::min(newFourChairsTablesNumber, 3));
-    *simulationTimePtr = std::max(1, std::min(newSimulationTimeInMinutes, 5));
+    *simulationTimePtr = std::max(5, std::min(newSimulationTimeInMinutes, 60));
 
     scaleFactorValueText.setString(std::to_string(*scaleFactorPtr));
     chefsNumberValueText.setString(std::to_string(*chefsNumberPtr));
@@ -226,6 +214,7 @@ void MainMenu::updateTextsPositions() {
     const sf::FloatRect startBounds = startText.getLocalBounds();
     startText.setOrigin(startBounds.left + startBounds.width / 2.0f,
                         startBounds.top + startBounds.height / 2.0f);
+    startText.setPosition(centerX, startY);
 
     const float titleBottom = titleY + titleBounds.height / 2.0f;
     const float startTop = startY - startBounds.height / 2.0f;
@@ -283,7 +272,6 @@ void MainMenu::updateTextsPositions() {
                    fourChairsTablesOptionTop);
     positionOption(simulationTimeLabelText, simulationTimeValueText, 
                    simulationTimeOptionTop);
-    startText.setPosition(centerX, startY);
 }
 
 bool MainMenu::isMouseOverText(sf::RenderWindow* window, sf::Text text) {
@@ -314,35 +302,37 @@ void MainMenu::updateHoverState(sf::RenderWindow* window) {
                            normalStartColor);
 }
 
-void MainMenu::handleMouseClick(sf::RenderWindow* window) {
+void MainMenu::handleMouseClick(sf::RenderWindow* window, bool isLeftClick) {
+    int value = isLeftClick ? 1 : -1;
     if(isMouseOverText(window, scaleFactorValueText)) {
-        newScaleFactor = 1 + newScaleFactor % 9;
+        newScaleFactor = std::max(1, std::min(newScaleFactor + value, 9));
         updateValuesTexts();
         isSceneToReload = true;
         return;
     }
     if(isMouseOverText(window, chefsNumberValueText)) {
-        newChefsNumber = 1 + newChefsNumber % 3;
+        newChefsNumber = std::max(1, std::min(newChefsNumber + value, 3));
         updateValuesTexts();
         return;
     }
     if(isMouseOverText(window, waitersNumberValueText)) {
-        newWaitersNumber = 1 + newWaitersNumber % 3;
+        newWaitersNumber = std::max(1, std::min(newWaitersNumber + value, 3));
         updateValuesTexts();
         return;
     }
     if(isMouseOverText(window, twoChairsTablesNumberValueText)) {
-        newTwoChairsTablesNumber = (1 + newTwoChairsTablesNumber) % 9;
+        newTwoChairsTablesNumber = std::max(0, std::min(newTwoChairsTablesNumber + value, 8));
         updateValuesTexts();
         return;
     }
     if(isMouseOverText(window, fourChairsTablesNumberValueText)) {
-        newFourChairsTablesNumber = (1 + newFourChairsTablesNumber) % 4;
+        newFourChairsTablesNumber = std::max(0, std::min(newFourChairsTablesNumber + value, 3));
         updateValuesTexts();
         return;
     }
     if(isMouseOverText(window, simulationTimeValueText)) {
-        newSimulationTimeInMinutes = 1 + newSimulationTimeInMinutes % 5;
+        newSimulationTimeInMinutes = std::max(5, std::min(newSimulationTimeInMinutes + 
+                                                          (value * 5), 60));
         updateValuesTexts();
         return;
     }
@@ -397,6 +387,26 @@ void MainMenu::drawBackgroundWithBlur(sf::RenderWindow* window) {
                                              static_cast<float>(windowSize.y)));
     blurVeil.setFillColor(sf::Color(18, 18, 24, 10));
     window->draw(blurVeil);
+}
+
+void MainMenu::update(float deltaTime, sf::RenderWindow* window) {
+    sf::Event event;
+    while(window->pollEvent(event)) {
+        if(event.type == sf::Event::Closed) {
+            window->close();
+        }
+        if(event.type == sf::Event::MouseButtonPressed &&
+            event.mouseButton.button == sf::Mouse::Left) {
+            handleMouseClick(window, true);
+        }
+        if(event.type == sf::Event::MouseButtonPressed &&
+            event.mouseButton.button == sf::Mouse::Right) {
+            handleMouseClick(window, false);
+        }
+    }
+    changeAnimation(deltaTime);
+    updateTextsPositions();
+    updateHoverState(window);
 }
 
 bool MainMenu::changeScene(enum ScenesEnum* sceneName) {

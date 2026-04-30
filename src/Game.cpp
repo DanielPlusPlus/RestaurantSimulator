@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "scenes/Level.hpp"
 #include "scenes/MainMenu.hpp"
+#include "scenes/Summary.hpp"
 
 #include <algorithm>
 #include <random>
@@ -54,7 +55,7 @@ void Game::run() {
     while (window->isOpen()) {
         float deltaTime = clock.restart().asSeconds();
         
-        currentScene->update(5 * deltaTime, window);
+        currentScene->update(deltaTime, window);
         
         if(currentScene->changeScene(&this->newSceneName)) {
             updateScene();
@@ -85,7 +86,7 @@ void Game::updateScene() {
 
 void Game::changeScene() {
     delete this->currentScene;
-
+    
     switch(newSceneName) {
         case ScenesEnum::MAIN_MENU:
             this->currentScene = new MainMenu(&this->scaleFactor, &this->chefsNumber, 
@@ -99,9 +100,32 @@ void Game::changeScene() {
                                            this->waitersNumber, 
                                            this->twoChairsTablesNumber, 
                                            this->fourChairsTablesNumber, 
-                                           this->timeToEndSimulationInMinutes);
+                                           this->timeToEndSimulationInMinutes, 
+                                           &this->totalCustomersNumberCounter,
+                                           &this->resigningCustomersNumberCounter,
+                                           &this->insideCustomersNumberCounter,
+                                           &this->leavingCustomersNumberCounter,
+                                           &this->orderedDishesNumberCounter,
+                                           &this->preparedDishesNumberCounter,
+                                           &this->servedDishesNumberCounter,
+                                           &this->eatenDishesNumberCounter,
+                                           &this->droppedDishesNumberCounter);
             break;
         case ScenesEnum::SUMMARY:
+            this->currentScene = new Summary(this->scaleFactor, this->chefsNumber, 
+                                             this->waitersNumber, 
+                                             this->twoChairsTablesNumber, 
+                                             this->fourChairsTablesNumber, 
+                                             this->timeToEndSimulationInMinutes, 
+                                             this->totalCustomersNumberCounter,
+                                             this->resigningCustomersNumberCounter,
+                                             this->insideCustomersNumberCounter,
+                                             this->leavingCustomersNumberCounter,
+                                             this->orderedDishesNumberCounter,
+                                             this->preparedDishesNumberCounter,
+                                             this->servedDishesNumberCounter,
+                                             this->eatenDishesNumberCounter,
+                                             this->droppedDishesNumberCounter);
             break;
         default:
             break;

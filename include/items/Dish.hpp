@@ -18,6 +18,9 @@ public:
     int getTableNumber() {
         return tableNumber;
     }
+    float getYPos() {
+        return positions.yPos;
+    }
     void changePositions(Positions newPositions) {
         positions = newPositions;
     }

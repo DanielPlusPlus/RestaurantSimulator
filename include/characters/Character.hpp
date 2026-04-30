@@ -19,5 +19,8 @@ public:
     float getYPos() {
         return positions.yPos; 
     };
+    virtual float getSortY() {
+        return positions.yPos;
+    }
     virtual void render(sf::RenderWindow* window) = 0;
 };

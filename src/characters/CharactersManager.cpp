@@ -11,9 +11,9 @@
 
 
 CharactersManager::CharactersManager(int scaleFactor, float tileWidth, float tileHeight, int chefsNumber, 
-                                     int waitersNumber, DishesManager* dishesManager) : 
-                                     timeToAddCustomerDist(10.0f, 20.0f),
-                                     timeToRemoveCustomerDist(20.0f, 40.0f) {
+                                     int waitersNumber, DishesManager* dishesManager
+                                     ) : timeToAddCustomerDist(10.0f, 20.0f),
+                                         timeToRemoveCustomerDist(20.0f, 40.0f) {
     moveXSpeed = tileWidth;
     moveYSpeed = tileHeight;
 
@@ -52,12 +52,12 @@ void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileH
 
 void CharactersManager::addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, 
                                            float moveXSpeed, float moveYSpeed) {
-    customersNumberCounter++;
+    totalCustomersNumberCounter++;
     extern std::mt19937 globalRNG;
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], 
                                          tileWidth, tileHeight, moveXSpeed, moveYSpeed, 
-                                         customersNumberCounter, 
+                                         totalCustomersNumberCounter, 
                                          customersStartPositions, customersQueueStartingPositions, 
                                          customersEnterRestaurantPositions, 
                                          customersExitRestaurantPositions);
@@ -73,6 +73,7 @@ void CharactersManager::moveWaitingCustomerToResignation() {
         Customer* customer = waitingCustomers[index];
         customer->changeToResigningState();
         resigningCustomers.push_back(customer);
+        resigningCustomersNumberCounter++;
         waitingCustomers.erase(waitingCustomers.begin() + index);
     }
     timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
@@ -81,8 +82,8 @@ void CharactersManager::moveWaitingCustomerToResignation() {
 void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNumber, 
                                                     TablesManager* tablesManager) {
     extern std::mt19937 globalRNG;
-    std::uniform_int_distribution<int> instantTableOccupationDist(1, 4); // do poprawy
-    int instantTableOccupation = instantTableOccupationDist(globalRNG); // do poprawy
+    std::uniform_int_distribution<int> instantTableOccupationDist(1, 4);
+    int instantTableOccupation = instantTableOccupationDist(globalRNG);
     bool occupyTableInstantly = instantTableOccupation == 1;
     if(!waitingCustomers.empty()) {
         Customer* customer = waitingCustomers[0];
@@ -102,6 +103,7 @@ void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNu
             customer->setChairVerticalDirection(chairPositionsAndDirections.chairVerticalDirection);
             customer->changeToEnteredState();
             insideCustomers.push_back(customer);
+            insideCustomersNumberCounter++;
             waitingCustomers.erase(waitingCustomers.begin());
         }
     }
@@ -120,6 +122,7 @@ void CharactersManager::moveInsideCustomerToLeaving(int index, TablesManager* ta
         }
         customer->changeToLeavingState();
         leavingCustomers.push_back(customer);
+        leavingCustomersNumberCounter++;
         insideCustomers.erase(insideCustomers.begin() + index);
     }
 }
@@ -332,11 +335,10 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         }
     }
     
-    // std::sort(chefs.begin(), chefs.end(), [](Chef* chef1, Chef* chef2) -> bool{
-    //     return chef1->getYPos() < chef2->getYPos();
-    // });
     for(Chef* chef : chefs) {
-        chef->update(deltaTime, scaleFactor);
+        int addedDishesNumber = 0;
+        chef->update(deltaTime, scaleFactor, &addedDishesNumber);
+        preparedDishesNumberCounter += addedDishesNumber;
     }
     
     queueNearestWaiter = nullptr;
@@ -366,6 +368,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
                 assignChefsToCooking(waiter->getTableNumber());
             }
             waiter->setNewOrder(false);
+            orderedDishesNumberCounter += dishesNumber;
         }
         
         if(waiter->getIsDishToPutdown()) {
@@ -375,11 +378,14 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
                                               dishesPositions.yPos * scaleFactor};
             dishesManager->moveMovingDishToDishesOnTables(tableNumber, 
                                                           scaleDishesPositions);
+            servedDishesNumberCounter++;
             waiter->setIsDishToPutdown(false);
         }
         if(waiter->getIsDishesToDropoff()) {
             int tableNumber = waiter->getTableNumber();
-            dishesManager->removeAllDishesOnTable(tableNumber);
+            int dishesOnTableNumber = 0;
+            dishesManager->removeAllDishesOnTable(tableNumber, &dishesOnTableNumber);
+            droppedDishesNumberCounter += dishesOnTableNumber;
             waiter->setIsDishesToDropoff(false);
         }
     }
@@ -420,7 +426,8 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
     for(int i = 0; i < insideCustomers.size(); i++) {
         insideCustomers[i]->updateIfEntered(deltaTime, scaleFactor, 
                                             tileWidth, tileHeight, 
-                                            pathFinder);
+                                            pathFinder, 
+                                            &eatenDishesNumberCounter);
         if(insideCustomers[i]->isWaitingToSit()) {
             int tableNumber = insideCustomers[i]->getTableNumber();
             if(tablesManager->getTableOccupiedStatus(tableNumber) &&
@@ -453,20 +460,51 @@ void CharactersManager::renderChefs(sf::RenderWindow* window) {
     }
 }
 
-void CharactersManager::renderWaitersAndCustomers(sf::RenderWindow* window) {
+void CharactersManager::renderWaitersAndInsideCustomers(sf::RenderWindow* window) {
     for(Waiter* waiter : waiters) {
         waiter->render(window);
     }
+    for(Customer* insideCustomer : insideCustomers) {
+        insideCustomer->render(window);
+    }
+}
+
+void CharactersManager::renderWaitingResigningInsideLeavingCustomers(sf::RenderWindow* window) {
     for(Customer* waitingCustomer : waitingCustomers) {
         waitingCustomer->render(window);
     }
     for(Customer* resigningCustomer : resigningCustomers) {
         resigningCustomer->render(window);
     }
-    for(Customer* insideCustomer : insideCustomers) {
-        insideCustomer->render(window);
-    }
     for(Customer* leavingCustomer : leavingCustomers) {
         leavingCustomer->render(window);
     }
+}
+
+std::vector<Character*> CharactersManager::getWaitersAndInsideCustomers() {
+    std::vector<Character*> characters;
+    characters.reserve(waiters.size() + insideCustomers.size());
+    for(Waiter* waiter : waiters) {
+        characters.push_back(waiter);
+    }
+    for(Customer* insideCustomer : insideCustomers) {
+        characters.push_back(insideCustomer);
+    }
+    return characters;
+}
+
+void CharactersManager::getStatistics(int* totalCustomersNumberPtr, int* resigningCustomersNumberPtr, 
+                                      int* insideCustomersNumberPtr, int* leavingCustomersNumberPtr, 
+                                      int* orderedDishesNumberPtr, int* preparedDishesNumberPtr, 
+                                      int* servedDishesNumberPtr, int* eatenDishesNumberPtr, 
+                                      int* droppedDishesNumberPtr) {
+    *totalCustomersNumberPtr = totalCustomersNumberCounter;
+    *resigningCustomersNumberPtr = resigningCustomersNumberCounter;
+    *insideCustomersNumberPtr = insideCustomersNumberCounter;
+    *leavingCustomersNumberPtr = leavingCustomersNumberCounter;
+    *orderedDishesNumberPtr = orderedDishesNumberCounter;
+    *preparedDishesNumberPtr = preparedDishesNumberCounter;
+    *servedDishesNumberPtr = servedDishesNumberCounter;
+    *eatenDishesNumberPtr = eatenDishesNumberCounter;
+    *droppedDishesNumberPtr = droppedDishesNumberCounter;
 }

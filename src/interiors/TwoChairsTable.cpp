@@ -1,16 +1,20 @@
 #include "interiors/TwoChairsTable.hpp"
 
+#include <algorithm>
+
 TwoChairsTable::TwoChairsTable(int scaleFactor, std::string texturePath, 
                                TwoChairsTablesPositions chairsPositions, 
                                Positions dishesPositions, 
                                Positions tableHandlingPositions,
                                Directions tableHandlingDirection,
-                               int tableNumber) : 
-                               Table(tableNumber, 
-                                     tableHandlingPositions, 
-                                     tableHandlingDirection), 
-                               chairsPositions(chairsPositions), 
-                               dishesPositions(dishesPositions) {
+                               int tableNumber
+                               ) : Table(tableNumber, 
+                                   tableHandlingPositions, 
+                                   tableHandlingDirection), 
+                                   chairsPositions(chairsPositions), 
+                                   dishesPositions(dishesPositions) {
+    sortY = std::max(chairsPositions.leftChairPositionsAndDirections.chairPositions.yPos,
+                     chairsPositions.rightChairPositionsAndDirections.chairPositions.yPos);
     loadTexture(scaleFactor, texturePath);
 }
 

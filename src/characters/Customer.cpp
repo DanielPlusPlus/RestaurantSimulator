@@ -7,12 +7,12 @@
 Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
                    float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
                    Positions queueStartingPositions, Positions enterRestaurantPositions, 
-                   Positions exitRestaurantPositions) : 
-                   Character(startPositions), moveXSpeed(moveXSpeed), 
-                   moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
-                   queueStartingPositions(queueStartingPositions), 
-                   enterRestaurantPositions(enterRestaurantPositions),
-                   exitRestaurantPositions(exitRestaurantPositions) {
+                   Positions exitRestaurantPositions
+                   ) : Character(startPositions), moveXSpeed(moveXSpeed), 
+                       moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
+                       queueStartingPositions(queueStartingPositions), 
+                       enterRestaurantPositions(enterRestaurantPositions),
+                       exitRestaurantPositions(exitRestaurantPositions) {
     texturesLoaded = loadTextures(scaleFactor, texturesPaths);
     width *= scaleFactor;
     height *= scaleFactor;
@@ -90,9 +90,13 @@ void Customer::updateIfResigning(float deltaTime) {
 
 void Customer::updateIfEntered(float deltaTime, int scaleFactor, 
                                float tileWidth, float tileHeight, 
-                               PathFinder* pathFinder) {
+                               PathFinder* pathFinder, 
+                               int* eatenDishesNumberCounter) {
     changeAnimation(deltaTime);
-    changeEnterState(deltaTime, scaleFactor, tileWidth, tileHeight, pathFinder);
+    changeEnterState(deltaTime, scaleFactor, 
+                     tileWidth, tileHeight, 
+                     pathFinder, 
+                     eatenDishesNumberCounter);
 }
 
 void Customer::updateIfLeaving(float deltaTime) {
@@ -209,7 +213,8 @@ void Customer::changeResigningState(float deltaTime) {
 
 void Customer::changeEnterState(float deltaTime, int scaleFactor, 
                                 float tileWidth, float tileHeight, 
-                                PathFinder* pathFinder) {
+                                PathFinder* pathFinder, 
+                                int* eatenDishesNumberCounter) {
     switch(state) {
         case CustomerStatesEnum::PREPARING_TO_ENTER_RESTAURANT:
             animDirection = Directions::UP;
@@ -264,6 +269,7 @@ void Customer::changeEnterState(float deltaTime, int scaleFactor,
             idleTimer += deltaTime;
             if(idleTimer > eatingTime) {
                 idleTimer = 0.0f;
+                (*eatenDishesNumberCounter)++; 
                 state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
             }
             break;

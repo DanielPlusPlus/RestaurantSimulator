@@ -353,6 +353,18 @@ void TablesManager::render(sf::RenderWindow* window) {
     }
 }
 
+std::vector<Table*> TablesManager::getTables() {
+    std::vector<Table*> tables;
+    tables.reserve(twoChairsTables.size() + fourChairsTables.size());
+    for(TwoChairsTable* table : twoChairsTables) {
+        tables.push_back(table);
+    }
+    for(FourChairsTable* table : fourChairsTables) {
+        tables.push_back(table);
+    }
+    return tables;
+}
+
 Positions TablesManager::getTwoChairsTableDishesPositionsByNumber(int tableNumber) {
     for(TwoChairsTable* table : twoChairsTables) {
         if(table->getTableNumber() == tableNumber){

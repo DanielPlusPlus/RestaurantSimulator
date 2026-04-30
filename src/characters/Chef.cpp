@@ -4,9 +4,10 @@
 
 
 Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-           float moveYSpeed, int chefNumber, Positions startPositions, Directions startDirection,
-           DishesManager* dishesManager) : Character(startPositions), startAnimDirection(startDirection), 
-           chefNumber(chefNumber), dishesManager(dishesManager) {
+           float moveYSpeed, int chefNumber, Positions startPositions, 
+           Directions startDirection, DishesManager* dishesManager
+           ) : Character(startPositions), startAnimDirection(startDirection), 
+               chefNumber(chefNumber), dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
     width *= scaleFactor;
     height *= scaleFactor;
@@ -54,9 +55,9 @@ bool Chef::loadTextures(int scaleFactor) {
     return true;
 }
 
-void Chef::update(float deltaTime, int scaleFactor) {
+void Chef::update(float deltaTime, int scaleFactor, int* addedDishesNumber) {
     changeAnimation(deltaTime);
-    changeState(deltaTime, scaleFactor);
+    changeState(deltaTime, scaleFactor, addedDishesNumber);
 }
 
 void Chef::changeAnimation(float deltaTime) {
@@ -70,7 +71,7 @@ void Chef::changeAnimation(float deltaTime) {
     }
 }
 
-void Chef::changeState(float deltaTime, int scaleFactor) {
+void Chef::changeState(float deltaTime, int scaleFactor, int* addedDishesNumber) {
     switch(state) {
         case ChefStatesEnum::WAITING_TO_COOKING:
             if(!tablesNumbersToCookFor.empty()) {
@@ -121,6 +122,7 @@ void Chef::changeState(float deltaTime, int scaleFactor) {
                 int numberOfTable = tablesNumbersToCookFor.front();
                 tablesNumbersToCookFor.pop();
                 dishesManager->addDish(scaleFactor, numberOfTable);
+                (*addedDishesNumber)++;
             }
             idleTimer += deltaTime;
             if(idleTimer > 1.0f) {
@@ -172,7 +174,6 @@ enum ChefStatesEnum Chef::defineStateByStartDirection() {
     else if(startAnimDirection == Directions::DOWN) {
         return ChefStatesEnum::TURNING_DOWN;
     }
-    // wyjatek trzeba obsłużyć, ale na razie zakładam, że kucharze zawsze będą zaczynać animację zwróceni w górę lub w dół
     return ChefStatesEnum::TURNING_UP;
 }
 

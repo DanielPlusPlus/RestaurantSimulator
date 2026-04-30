@@ -46,21 +46,20 @@ private:
     int newWaitersNumber = 1;
     int newTwoChairsTablesNumber = 8;
     int newFourChairsTablesNumber = 3;
-    int newSimulationTimeInMinutes = 1;
+    int newSimulationTimeInMinutes = 5;
 
     bool isSceneToReload = false;
 
-    void configureTextsStyles();
+    bool loadTextures(int scaleFactor) override;
     void loadInitValues();
+    void configureTextsStyles();
     void changeAnimation(float deltaTime);
     void updateValuesTexts();
     void updateTextsPositions();
     bool isMouseOverText(sf::RenderWindow* window, sf::Text text);
     void updateHoverState(sf::RenderWindow* window);
-    void handleMouseClick(sf::RenderWindow* window);
+    void handleMouseClick(sf::RenderWindow* window, bool isLeftClick);
     void drawBackgroundWithBlur(sf::RenderWindow* window);
-
-    bool loadTextures(int scaleFactor) override;
 public:
     MainMenu(int* scaleFactor, int* chefsNumberPtr, 
              int* waitersNumberPtr, int* twoChairsTablesNumberPtr, 

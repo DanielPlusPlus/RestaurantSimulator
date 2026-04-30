@@ -16,6 +16,7 @@ protected:
     bool isOccupied = false;
     bool isWaitingToHandling = false;
     bool isWaitingToDishesTaken = false;
+    float sortY = 0.0f;
 
     virtual bool loadTexture(int scaleFactor, std::string texturePath) = 0;
 public:
@@ -46,6 +47,9 @@ public:
     }
     Directions getTableHandlingDirection() {
         return tableHandlingDirection;
+    }
+    float getSortY() {
+        return sortY;
     }
     void occupyTableInstantly() {
         isOccupied = true;

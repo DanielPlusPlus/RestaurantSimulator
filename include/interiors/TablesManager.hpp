@@ -129,5 +129,6 @@ public:
     std::vector<int> getWaitingToHandlingTablesNumbers();
     std::vector<int> getWaitingToDishesTakenTablesNumbers();
     void render(sf::RenderWindow* window);
+    std::vector<Table*> getTables();
     Positions getTwoChairsTableDishesPositionsByNumber(int tableNumber);
 };

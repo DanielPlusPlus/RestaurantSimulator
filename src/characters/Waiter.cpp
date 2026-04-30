@@ -8,11 +8,13 @@
 Waiter::Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
                int waiterNumber, Positions startPositions, 
                Positions queueHandlingPositions, Positions dishPickupPositions, 
-               Positions dishDropoffPositions, DishesManager* dishesManager) : 
-               Character(startPositions), waiterNumber(waiterNumber), 
-               queueHandlingPositions(queueHandlingPositions), dishPickupPositions(dishPickupPositions), 
-               dishDropoffPositions(dishDropoffPositions), moveXSpeed(moveXSpeed), moveYSpeed(moveYSpeed),
-               dishesManager(dishesManager) {
+               Positions dishDropoffPositions, DishesManager* dishesManager
+               ) : Character(startPositions), waiterNumber(waiterNumber), 
+                   queueHandlingPositions(queueHandlingPositions), 
+                   dishPickupPositions(dishPickupPositions), 
+                   dishDropoffPositions(dishDropoffPositions), 
+                   moveXSpeed(moveXSpeed), moveYSpeed(moveYSpeed),
+                   dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
     width = width * scaleFactor;
     height = height * scaleFactor;

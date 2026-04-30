@@ -71,6 +71,9 @@ public:
     void update(float deltaTime, float tileWidth, 
                 float tileHeight, PathFinder* pathFinder);
     void render(sf::RenderWindow* window) override;
+    float getSortY() override {
+        return positions.yPos + (height * 0.3f);
+    }
     int getWaiterNumber() {
         return waiterNumber;
     } // do usunięcia

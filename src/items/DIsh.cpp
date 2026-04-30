@@ -1,8 +1,9 @@
 #include "items/Dish.hpp"
 
 
-Dish::Dish(int scaleFactor, std::string texturePath, Positions positions, int tableNumber) : 
-           positions(positions), tableNumber(tableNumber) {
+Dish::Dish(int scaleFactor, std::string texturePath, 
+           Positions positions, int tableNumber
+           ) : positions(positions), tableNumber(tableNumber) {
     // texturesLoaded = loadTexture(scaleFactor, texturePath);
     loadTexture(scaleFactor, texturePath);
 }

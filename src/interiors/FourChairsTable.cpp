@@ -1,17 +1,25 @@
 #include "interiors/FourChairsTable.hpp"
 
+#include <algorithm>
+
 
 FourChairsTable::FourChairsTable(int scaleFactor, std::string texturePath, 
                                  FourChairsTablesPositions chairsPositions, 
                                  FourChairsTablesDishesPositions dishesPositions,
                                  Positions tableHandlingPositions,
                                  Directions tableHandlingDirection,
-                                 int tableNumber) : 
-                                 Table(tableNumber, 
-                                       tableHandlingPositions, 
-                                       tableHandlingDirection),
-                                 chairsPositions(chairsPositions), 
-                                 dishesPositions(dishesPositions) {
+                                 int tableNumber
+                                 ) : Table(tableNumber, 
+                                     tableHandlingPositions, 
+                                     tableHandlingDirection),
+                                     chairsPositions(chairsPositions), 
+                                     dishesPositions(dishesPositions) {
+    sortY = std::max(
+        std::max(chairsPositions.downLeftChairPositionsAndDirections.chairPositions.yPos,
+                 chairsPositions.downRightChairPositionsAndDirections.chairPositions.yPos),
+        std::max(chairsPositions.upLeftChairPositionsAndDirections.chairPositions.yPos,
+                 chairsPositions.upRightChairPositionsAndDirections.chairPositions.yPos)
+    );
     loadTexture(scaleFactor, texturePath);
 }
 

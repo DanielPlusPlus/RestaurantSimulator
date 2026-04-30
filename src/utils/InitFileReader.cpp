@@ -10,7 +10,7 @@ InitFileReader::InitFileReader() {
         configValues["waitersNumber"] = 1;
         configValues["twoChairsTablesNumber"] = 8;
         configValues["fourChairsTablesNumber"] = 3;
-        configValues["timeToEndSimulationInMinutes"] = 1;
+        configValues["timeToEndSimulationInMinutes"] = 5;
         createDefaultConfigFile();
     }
 }
@@ -83,7 +83,7 @@ bool InitFileReader::createDefaultConfigFile() {
         file << "waitersNumber=1\n";
         file << "twoChairsTablesNumber=8\n";
         file << "fourChairsTablesNumber=3\n";
-        file << "timeToEndSimulationInMinutes=1\n";
+        file << "timeToEndSimulationInMinutes=5\n";
         file.close();
         return true;
     }
