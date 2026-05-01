@@ -209,6 +209,7 @@ void Level::update(float deltaTime, sf::RenderWindow* window) {
     if(remainingTimeInMinutes <= 0) {
         isSceneToChange = true;
     }
+    updateValuesTexts();
     updateTextsPositions();
     updateHoverState(window);
 }
