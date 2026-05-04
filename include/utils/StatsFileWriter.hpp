@@ -9,8 +9,8 @@ private:
     const std::string filePath = "stats.txt";
     std::unordered_map<std::string, int> statsValues;
 public:
-    StatsFileWriter(int waitersNumber, 
-                    int chefsNumber, 
+    StatsFileWriter(int chefsNumber, 
+                    int waitersNumber, 
                     int twoChairsTablesNumber, 
                     int fourChairsTablesNumber, 
                     int simulatonTimeInMinutes,

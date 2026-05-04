@@ -63,8 +63,8 @@ private:
     void drawBackgroundWithBlur(sf::RenderWindow* window);
 public:
     Summary(int scaleFactor,
-            int waitersNumber,
             int chefsNumber,
+            int waitersNumber,
             int twoChairsTablesNumber,
             int fourChairsTablesNumber,
             int simulationTimeInMinutes,

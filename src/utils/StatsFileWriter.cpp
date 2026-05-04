@@ -5,8 +5,8 @@
 #include <cstring>
 
 
-StatsFileWriter::StatsFileWriter(int waitersNumber, 
-                                 int chefsNumber, 
+StatsFileWriter::StatsFileWriter(int chefsNumber, 
+                                 int waitersNumber, 
                                  int twoChairsTablesNumber, 
                                  int fourChairsTablesNumber, 
                                  int simulatonTimeInMinutes, 
@@ -19,8 +19,8 @@ StatsFileWriter::StatsFileWriter(int waitersNumber,
                                  int servedDishesNumberCounter, 
                                  int eatenDishesNumberCounter, 
                                  int droppedDishesNumberCounter) {
-    statsValues["waitersNumber"] = waitersNumber;
     statsValues["chefsNumber"] = chefsNumber;
+    statsValues["waitersNumber"] = waitersNumber;
     statsValues["twoChairsTablesNumber"] = twoChairsTablesNumber;
     statsValues["fourChairsTablesNumber"] = fourChairsTablesNumber;
     statsValues["simulationTimeInMinutes"] = simulatonTimeInMinutes;
@@ -42,8 +42,8 @@ bool StatsFileWriter::writeStatsToFile() {
     date[strlen(date) - 1] = '\0';
     if(file.is_open()) {
         file << "[Restaurant Simulator Stats from " << date << "]\n";
-        file << "Waiters: " << statsValues["waitersNumber"] << "\n";
         file << "Chefs: " << statsValues["chefsNumber"] << "\n";
+        file << "Waiters: " << statsValues["waitersNumber"] << "\n";
         file << "Two chairs tables: " << statsValues["twoChairsTablesNumber"] << "\n";
         file << "Four chairs tables: " << statsValues["fourChairsTablesNumber"] << "\n";
         file << "Simulation time (minutes): " << statsValues["simulationTimeInMinutes"] << "\n";
