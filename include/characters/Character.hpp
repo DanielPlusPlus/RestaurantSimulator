@@ -13,6 +13,7 @@ protected:
     Positions positions;
 public:
     Character(Positions positions) : startPositions(positions), positions(positions) {}
+    virtual ~Character() = default;
     float getXPos() {
         return positions.xPos; 
     };

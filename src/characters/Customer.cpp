@@ -8,11 +8,12 @@ Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float
                    float moveXSpeed, float moveYSpeed, Positions startPositions, 
                    Positions queueStartingPositions, Positions enterRestaurantPositions, 
                    Positions exitRestaurantPositions
-                   ) : Character(startPositions), moveXSpeed(moveXSpeed), 
-                       moveYSpeed(moveYSpeed), 
+                   ) : Character(startPositions), 
                        queueStartingPositions(queueStartingPositions), 
                        enterRestaurantPositions(enterRestaurantPositions),
-                       exitRestaurantPositions(exitRestaurantPositions) {
+                       exitRestaurantPositions(exitRestaurantPositions),
+                       moveXSpeed(moveXSpeed), 
+                       moveYSpeed(moveYSpeed) {
     texturesLoaded = loadTextures(scaleFactor, texturesPaths);
     width *= scaleFactor;
     height *= scaleFactor;
@@ -371,7 +372,7 @@ bool Customer::moveToDestinationPositions(Positions destinationPositions, float 
         }
     }
 
-    if(currentPathIndex < pathToFollow.size()) {
+    if(currentPathIndex < static_cast<int>(pathToFollow.size())) {
         Positions nextWaypoint = pathToFollow[currentPathIndex];
         updateDirection(nextWaypoint);
 
@@ -458,7 +459,7 @@ void Customer::render(sf::RenderWindow* window) {
         spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
     }
     
-    if(texturesLoaded && spriteIndex < spriteSet->size()) {
+    if(texturesLoaded && spriteIndex < static_cast<int>(spriteSet->size())) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
         sprite.setPosition(positions.xPos, positions.yPos);
         window->draw(sprite);

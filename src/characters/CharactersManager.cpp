@@ -96,9 +96,9 @@ void CharactersManager::addWaitingCustomer(int scaleFactor, float tileWidth, flo
 
 void CharactersManager::moveWaitingCustomerToResignation() {
     extern std::mt19937 globalRNG;
-    std::uniform_int_distribution<int> waitingCustomerIndexDist(3, waitingCustomers.size() - 1);
+    std::uniform_int_distribution<int> waitingCustomerIndexDist(3, static_cast<int>(waitingCustomers.size()) - 1);
     int index = waitingCustomerIndexDist(globalRNG);
-    if(index >= 0 && index < waitingCustomers.size()) {
+    if(index >= 0 && index < static_cast<int>(waitingCustomers.size())) {
         Customer* customer = waitingCustomers[index];
         customer->changeToResigningState();
         resigningCustomers.push_back(customer);
@@ -139,7 +139,7 @@ void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNu
 }
 
 void CharactersManager::moveInsideCustomerToLeaving(int index, TablesManager* tablesManager) {
-    if(index >= 0 && index < insideCustomers.size()) {
+    if(index >= 0 && index < static_cast<int>(insideCustomers.size())) {
         Customer* customer = insideCustomers[index];
         int tableNumber = customer->getTableNumber();
         Directions chairHorizontalDirection = customer->getChairHorizontalDirection();
@@ -157,14 +157,14 @@ void CharactersManager::moveInsideCustomerToLeaving(int index, TablesManager* ta
 }
 
 void CharactersManager::removeResigningCustomer(int index) {
-    if(index >= 0 && index < resigningCustomers.size()) {
+    if(index >= 0 && index < static_cast<int>(resigningCustomers.size())) {
         delete resigningCustomers[index];
         resigningCustomers.erase(resigningCustomers.begin() + index);
     }
 }
 
 void CharactersManager::removeLeavingCustomer(int index) {
-    if(index >= 0 && index < leavingCustomers.size()) {
+    if(index >= 0 && index < static_cast<int>(leavingCustomers.size())) {
         delete leavingCustomers[index];
         leavingCustomers.erase(leavingCustomers.begin() + index);
     }
@@ -433,7 +433,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         assignWaitersToDishDropoff(scaleFactor, tablesManager);
     }
 
-    for(int i = 0; i < waitingCustomers.size(); i++) {
+    for(int i = 0; i < static_cast<int>(waitingCustomers.size()); i++) {
         if(i == 0) {
             waitingCustomers[i]->updateIfWaiting(deltaTime, customersQueueStartingPositions.xPos * scaleFactor);
         }
@@ -447,7 +447,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
             removeResigningCustomer(i);
         }
     }
-    for(int i = 0; i < insideCustomers.size(); i++) {
+    for(int i = 0; i < static_cast<int>(insideCustomers.size()); i++) {
         insideCustomers[i]->updateIfEntered(deltaTime, 
                                             tileWidth, tileHeight, 
                                             pathFinder, 

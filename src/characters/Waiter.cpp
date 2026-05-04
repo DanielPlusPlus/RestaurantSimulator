@@ -293,7 +293,7 @@ bool Waiter::moveToDestinationPositions(Positions destinationPositions, float de
         }
     }
 
-    if(currentPathIndex < pathToFollow.size()) {
+    if(currentPathIndex < static_cast<int>(pathToFollow.size())) {
         Positions nextWaypoint = pathToFollow[currentPathIndex];
         updateDirection(nextWaypoint);
 
@@ -371,7 +371,7 @@ void Waiter::render(sf::RenderWindow* window) {
     else {
         spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
     }
-    if(texturesLoaded && spriteIndex < spriteSet->size()) {
+    if(texturesLoaded && spriteIndex < static_cast<int>(spriteSet->size())) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
         sprite.setPosition(positions.xPos, positions.yPos);
         window->draw(sprite);

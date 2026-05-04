@@ -26,6 +26,7 @@ public:
           tableNumber(tableNumber), 
           tableHandlingPositions(tableHandlingPositions),
           tableHandlingDirection(tableHandlingDirection) {};
+    virtual ~Table() = default;
     virtual ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() = 0;
     virtual void resetChairOccupancy(Directions chairHorizontalDirection, 
                                      Directions chairVerticalDirection) = 0;

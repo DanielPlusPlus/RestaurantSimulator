@@ -187,7 +187,7 @@ void Chef::render(sf::RenderWindow* window) {
         spriteSet = &chefRunSprites;
     }
     int spriteIndex = static_cast<int>(animDirection) * framesPerAnim + animFrame;
-    if(texturesLoaded && spriteIndex < spriteSet->size()) {
+    if(texturesLoaded && spriteIndex < static_cast<int>(spriteSet->size())) {
         sf::Sprite sprite = spriteSet->at(spriteIndex);
         sprite.setPosition(positions.xPos, positions.yPos);
         window->draw(sprite);
