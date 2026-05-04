@@ -4,6 +4,7 @@
 #include "characters/Customer.hpp"
 #include "interiors/TablesManager.hpp"
 
+#include <algorithm>
 #include <random>
 #include <unordered_map>
 
@@ -479,7 +480,12 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
 }
 
 void CharactersManager::renderChefs(sf::RenderWindow* window) {
-    for(Chef* chef : chefs) {
+    std::vector<Chef*> sortedChefs(chefs.begin(), chefs.end());
+    std::stable_sort(sortedChefs.begin(), sortedChefs.end(),
+                     [](Chef* left, Chef* right) {
+                         return left->getSortY() < right->getSortY();
+                     });
+    for(Chef* chef : sortedChefs) {
         chef->render(window);
     }
 }
