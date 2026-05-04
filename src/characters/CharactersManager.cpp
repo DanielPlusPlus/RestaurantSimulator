@@ -11,19 +11,18 @@
 
 CharactersManager::CharactersManager(int scaleFactor, float tileWidth, float tileHeight, int chefsNumber, 
                                      int waitersNumber, DishesManager* dishesManager
-                                     ) : timeToAddCustomerDist(10.0f, 20.0f),
-                                         timeToRemoveCustomerDist(20.0f, 40.0f) {
+                                     ) : timeToAddCustomerDist(1.0f / 22.0f),
+                                         timeToRemoveCustomerDist(30.0f, 6.0f) {
     moveXSpeed = tileWidth;
     moveYSpeed = tileHeight;
 
     extern std::mt19937 globalRNG;
-    timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
+    timeToRemoveWaitingCustomer = std::clamp(timeToRemoveCustomerDist(globalRNG), 15.0f, 50.0f);
     
-    addChefs(scaleFactor, tileWidth, tileHeight, 
-             moveXSpeed, moveYSpeed, chefsNumber, 
+    addChefs(scaleFactor, tileWidth, 
+             moveXSpeed, chefsNumber, 
              dishesManager);
-    addWaiters(scaleFactor, tileWidth, tileHeight, 
-               moveXSpeed, moveYSpeed, waitersNumber, 
+    addWaiters(scaleFactor, moveXSpeed, moveYSpeed, waitersNumber, 
                dishesManager);
 }
 
@@ -59,18 +58,18 @@ CharactersManager::~CharactersManager() {
     leavingCustomers.clear();
 }
 
-void CharactersManager::addChefs(int scaleFactor, float tileWidth, float tileHeight, 
-                                 float moveXSpeed, float moveYSpeed, int chefsNumber, 
+void CharactersManager::addChefs(int scaleFactor, float tileWidth, 
+                                 float moveXSpeed, int chefsNumber, 
                                  DishesManager* dishesManager) {
     for(int i = 0; i < chefsNumber; i++) {
-        Chef* newChef = new Chef(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed, 
+        Chef* newChef = new Chef(scaleFactor, tileWidth, moveXSpeed, 
                                  chefsStartPositions[i], chefsStartDirections[i], dishesManager);
         chefs.push_back(newChef);
     }
 }
 
-void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileHeight, 
-                                   float moveXSpeed, float moveYSpeed, int waitersNumber,
+void CharactersManager::addWaiters(int scaleFactor, float moveXSpeed, float moveYSpeed, 
+                                   int waitersNumber,
                                    DishesManager* dishesManager) {
     for(int i = 0; i < waitersNumber; i++) {
         Waiter* newWaiter = new Waiter(scaleFactor, moveXSpeed, moveYSpeed, 
@@ -85,14 +84,14 @@ void CharactersManager::addWaitingCustomer(int scaleFactor, float tileWidth, flo
                                            float moveXSpeed, float moveYSpeed) {
     totalCustomersNumberCounter++;
     extern std::mt19937 globalRNG;
-    std::uniform_int_distribution<int> customerTextureDist(0, 1);
+    std::discrete_distribution<int> customerTextureDist{55, 45};
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], 
                                          tileWidth, tileHeight, moveXSpeed, moveYSpeed, 
                                          customersStartPositions, customersQueueStartingPositions, 
                                          customersEnterRestaurantPositions, 
                                          customersExitRestaurantPositions);
     waitingCustomers.push_back(newCustomer);
-    timeToAddCustomer = timeToAddCustomerDist(globalRNG);
+    timeToAddCustomer = std::clamp(timeToAddCustomerDist(globalRNG), 8.0f, 40.0f);
 }
 
 void CharactersManager::moveWaitingCustomerToResignation() {
@@ -296,8 +295,8 @@ void CharactersManager::assignCustomersToEating(DishesManager* dishesManager) {
 
     for(int tableNumber : dishesOnTablesNumbers) {
         extern std::mt19937 globalRNG;
-        std::uniform_int_distribution<int> instantTableOccupationDist(5, 10);
-        float eatingTime = float(instantTableOccupationDist(globalRNG));
+        std::lognormal_distribution<float> eatingTimeDist(2.5f, 0.35f);
+        float eatingTime = std::clamp(eatingTimeDist(globalRNG), 11.0f, 28.0f);
 
         int customersAtTable = 0;
         for (Customer* customer : insideCustomers) {
@@ -318,8 +317,7 @@ void CharactersManager::assignCustomersToEating(DishesManager* dishesManager) {
 }
 
 void CharactersManager::assignWaitersToDishDropoff(int scaleFactor, 
-                                                   TablesManager* tablesManager, 
-                                                   DishesManager* dishesManager) {
+                                                   TablesManager* tablesManager) {
     std::vector<int> waitingToDishesTakenTablesNumbers = tablesManager->getWaitingToDishesTakenTablesNumbers();
     for(int tableNumber : waitingToDishesTakenTablesNumbers) {
         Positions tableHandlingPositions = tablesManager->getTableHandlingPositions(tableNumber);
@@ -432,7 +430,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
     }
 
     if(isWaitingTablesToDishTaken) {
-        assignWaitersToDishDropoff(scaleFactor, tablesManager, dishesManager);
+        assignWaitersToDishDropoff(scaleFactor, tablesManager);
     }
 
     for(int i = 0; i < waitingCustomers.size(); i++) {
@@ -450,7 +448,7 @@ void CharactersManager::update(float deltaTime, int scaleFactor,
         }
     }
     for(int i = 0; i < insideCustomers.size(); i++) {
-        insideCustomers[i]->updateIfEntered(deltaTime, scaleFactor, 
+        insideCustomers[i]->updateIfEntered(deltaTime, 
                                             tileWidth, tileHeight, 
                                             pathFinder, 
                                             &eatenDishesNumberCounter);

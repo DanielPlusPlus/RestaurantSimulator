@@ -4,6 +4,7 @@ project(RestaurantSimulator LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 set(SFML_DIR "${CMAKE_SOURCE_DIR}/external/SFML-2.6.2/lib/cmake/SFML")
 
 find_package(SFML 2.6 COMPONENTS system window graphics audio REQUIRED)

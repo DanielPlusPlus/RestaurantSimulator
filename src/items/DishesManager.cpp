@@ -28,9 +28,8 @@ DishesManager::~DishesManager() {
 
 void DishesManager::addDish(int scaleFactor, int tableNumber) {
     extern std::mt19937 globalRNG;
-    std::uniform_int_distribution<int> dist(2, 5);
-    Dish* newDish = new Dish(scaleFactor, dishesTexturesPaths[dist(globalRNG) % 
-                             (sizeof(dishesTexturesPaths) / sizeof(std::string))], 
+    std::discrete_distribution<int> dist{25, 10, 20, 25, 20};
+    Dish* newDish = new Dish(scaleFactor, dishesTexturesPaths[dist(globalRNG)], 
                              readyDishesPositions, tableNumber);
     readyDishes.push(newDish);
 }

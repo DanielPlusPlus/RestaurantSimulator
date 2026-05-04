@@ -11,7 +11,7 @@
 #include <vector>
 
 
-class TablesManager;;
+class TablesManager;
 class PathFinder;
 
 class CharactersManager {
@@ -57,8 +57,8 @@ private:
     int eatenDishesNumberCounter = 0;
     int droppedDishesNumberCounter = 0;
 
-    std::uniform_real_distribution<float> timeToAddCustomerDist;
-    std::uniform_real_distribution<float> timeToRemoveCustomerDist;
+    std::exponential_distribution<float> timeToAddCustomerDist;
+    std::normal_distribution<float> timeToRemoveCustomerDist;
 
     float moveXSpeed = 0.0f;
     float moveYSpeed = 0.0f;
@@ -76,10 +76,10 @@ private:
 
     Waiter* queueNearestWaiter = nullptr;
 
-    void addChefs(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-                  float moveYSpeed, int chefsNumber, DishesManager* dishesManager);
-    void addWaiters(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-                    float moveYSpeed, int waitersNumber, DishesManager* dishesManager);
+    void addChefs(int scaleFactor, float tileWidth, float moveXSpeed, 
+                  int chefsNumber, DishesManager* dishesManager);
+    void addWaiters(int scaleFactor, float moveXSpeed, float moveYSpeed, 
+                    int waitersNumber, DishesManager* dishesManager);
     void addWaitingCustomer(int scaleFactor, float tileWidth, float tileHeight, 
                             float moveXSpeed, float moveYSpeed);
     void moveWaitingCustomerToResignation();
@@ -101,8 +101,7 @@ private:
                                    TablesManager* tablesManager);
     void assignCustomersToEating(DishesManager* dishesManager);
     void assignWaitersToDishDropoff(int scaleFactor, 
-                                    TablesManager* tablesManager, 
-                                    DishesManager* dishesManager);
+                                    TablesManager* tablesManager);
 public:
     CharactersManager(int scaleFactor, float tileWidth, float tileHeight, 
                       int chefsNumber, int waitersNumber, DishesManager* dishesManager);

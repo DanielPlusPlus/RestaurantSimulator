@@ -1,6 +1,7 @@
 #include "characters/Waiter.hpp"
 #include "utils/PathFinder.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <random>
 
@@ -146,8 +147,8 @@ void Waiter::changeState(float deltaTime, float tileWidth,
             movingState = WaiterStatesEnum::NO_MOVEMENT;
             idleTimer = 0.0f;
             extern std::mt19937 globalRNG;
-            std::uniform_int_distribution<int> dist(4, 8);
-            tableHandlingTime = dist(globalRNG);
+            std::poisson_distribution<int> dist(6.0);
+            tableHandlingTime = static_cast<float>(std::clamp(dist(globalRNG), 3, 10));
             break;
         }
         case WaiterStatesEnum::TABLE_HANDLING:

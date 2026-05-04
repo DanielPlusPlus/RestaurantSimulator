@@ -51,7 +51,7 @@ private:
     void changeAnimation(float deltaTime);
     void changeWaitingState(float deltaTime, float queueXPos);
     void changeResigningState(float deltaTime);
-    void changeEnterState(float deltaTime, int scaleFactor, 
+    void changeEnterState(float deltaTime, 
                           float tileWidth, float tileHeight, 
                           PathFinder* pathFinder, 
                           int* eatenDishesNumberCounter);
@@ -70,7 +70,7 @@ public:
              Positions exitRestaurantPositions);
     void updateIfWaiting(float deltaTime, float queueXPos);
     void updateIfResigning(float deltaTime);
-    void updateIfEntered(float deltaTime, int scaleFactor, 
+    void updateIfEntered(float deltaTime, 
                          float tileWidth, float tileHeight, 
                          PathFinder* pathFinder, 
                          int* eatenDishesNumberCounter);

@@ -47,7 +47,7 @@ ChairPositionsAndDirections TwoChairsTable::occupyChairAndGetPositionsAndDirecti
 }
 
 void TwoChairsTable::resetChairOccupancy(Directions chairHorizontalDirection, 
-                                         Directions chairVerticalDirection) {
+                                         Directions) {
     availableChairs++;
     occupiedChairs--;
     if(availableChairs == 2) {

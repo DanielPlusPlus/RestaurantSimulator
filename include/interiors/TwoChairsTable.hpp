@@ -22,13 +22,10 @@ public:
                    Directions tableHandlingDirection,
                    int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
-    TwoChairsTablesPositions getChairsPositions() {
-        return chairsPositions;
-    }
     Positions getDishesPositions() override {
         return dishesPositions;
     }
     void resetChairOccupancy(Directions chairHorizontalDirection, 
-                             Directions chairVerticalDirection) override;
+                             Directions) override;
     void render(sf::RenderWindow* window) override;
 };

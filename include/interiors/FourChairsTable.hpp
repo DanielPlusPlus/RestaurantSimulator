@@ -26,9 +26,6 @@ public:
                     Directions tableHandlingDirection,
                     int tableNumber);
     ChairPositionsAndDirections occupyChairAndGetPositionsAndDirections() override;
-    FourChairsTablesPositions getChairsPositions() {
-        return chairsPositions;
-    }
     Positions getDishesPositions() override;
     void resetChairOccupancy(Directions chairHorizontalDirection, 
                              Directions chairVerticalDirection) override;

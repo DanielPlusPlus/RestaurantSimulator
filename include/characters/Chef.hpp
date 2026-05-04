@@ -40,8 +40,8 @@ private:
     void changeState(float deltaTime, int scaleFactor, int* addedDishesNumber);
     enum ChefStatesEnum defineStateByStartDirection();
 public:
-    Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-        float moveYSpeed, Positions startPositions, Directions startDirection,
+    Chef(int scaleFactor, float tileWidth, float moveXSpeed, 
+        Positions startPositions, Directions startDirection,
         DishesManager* dishesManager);
     void addTableToCookFor(int tableNumber);
     int getDishesToCookForNumber() {

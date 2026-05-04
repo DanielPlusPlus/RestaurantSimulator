@@ -87,12 +87,12 @@ void Customer::updateIfResigning(float deltaTime) {
     changeResigningState(deltaTime);
 }
 
-void Customer::updateIfEntered(float deltaTime, int scaleFactor, 
+void Customer::updateIfEntered(float deltaTime, 
                                float tileWidth, float tileHeight, 
                                PathFinder* pathFinder, 
                                int* eatenDishesNumberCounter) {
     changeAnimation(deltaTime);
-    changeEnterState(deltaTime, scaleFactor, 
+    changeEnterState(deltaTime, 
                      tileWidth, tileHeight, 
                      pathFinder, 
                      eatenDishesNumberCounter);
@@ -208,7 +208,7 @@ void Customer::changeResigningState(float deltaTime) {
     }
 }
 
-void Customer::changeEnterState(float deltaTime, int scaleFactor, 
+void Customer::changeEnterState(float deltaTime, 
                                 float tileWidth, float tileHeight, 
                                 PathFinder* pathFinder, 
                                 int* eatenDishesNumberCounter) {

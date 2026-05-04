@@ -12,9 +12,9 @@ private:
     const std::string dishesTexturesPaths[5] = {
         "assets/items/dishes/soup.png",
         "assets/items/dishes/soup_2.png",
+        "assets/items/dishes/pizza.png",
         "assets/items/dishes/cake.png",
-        "assets/items/dishes/cake_2.png",
-        "assets/items/dishes/pizza.png"
+        "assets/items/dishes/cake_2.png"
     };
     Positions readyDishesPositions{134.0f, 47.0f};
     std::queue<Dish*> readyDishes;

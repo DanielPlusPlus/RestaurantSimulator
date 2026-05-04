@@ -1,11 +1,12 @@
 #include "characters/Chef.hpp"
 
+#include <algorithm>
 #include <random>
 
 
-Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-           float moveYSpeed, Positions startPositions, 
-           Directions startDirection, DishesManager* dishesManager
+Chef::Chef(int scaleFactor, float tileWidth, float moveXSpeed, 
+           Positions startPositions, Directions startDirection, 
+           DishesManager* dishesManager
            ) : Character(startPositions), startAnimDirection(startDirection), 
                dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
@@ -80,8 +81,8 @@ void Chef::changeState(float deltaTime, int scaleFactor, int* addedDishesNumber)
         case ChefStatesEnum::PREPARING_TO_COOKING: {
             state = ChefStatesEnum::COOKING;
             extern std::mt19937 globalRNG;
-            std::uniform_int_distribution<int> dist(15, 30);
-            cookingTime = dist(globalRNG);
+            std::gamma_distribution<float> dist(8.0f, 6.0f);
+            cookingTime = std::clamp(dist(globalRNG), 24.0f, 80.0f);
             break;
         }
         case ChefStatesEnum::COOKING:
