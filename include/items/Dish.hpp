@@ -19,6 +19,9 @@ public:
     int getTableNumber() {
         return tableNumber;
     }
+    Positions getPositions() {
+        return positions;
+    }
     float getYPos() {
         return positions.yPos;
     }

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <algorithm>
 #include <vector>
+#include <set>
 
 
 Level::Level(int scaleFactor, int chefsNumber, int waitersNumber, 
@@ -252,8 +253,12 @@ void Level::render(sf::RenderWindow* window) {
             renderItems.push_back(RenderItem{table->getSortY() * static_cast<float>(scaleFactor),
                                              RenderType::Table, table});
         }
+        std::set<std::pair<float, float>> dishPositions;
         for(Dish* dish : dishes) {
-            renderItems.push_back(RenderItem{dish->getYPos(), RenderType::Dish, dish});
+            Positions pos = dish->getPositions();
+            if(dishPositions.insert({pos.xPos, pos.yPos}).second) {
+                renderItems.push_back(RenderItem{dish->getYPos(), RenderType::Dish, dish});
+            }
         }
         for(Character* character : characters) {
             renderItems.push_back(RenderItem{character->getSortY(), RenderType::Character, character});
