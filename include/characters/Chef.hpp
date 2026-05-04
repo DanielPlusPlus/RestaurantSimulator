@@ -13,10 +13,8 @@ private:
         "assets/characters/chef/chef_idle.png", 
         "assets/characters/chef/chef_run.png"
     };
-    int chefNumber = 0;
     sf::Texture chefIdleTexture;
     sf::Texture chefRunTexture;
-    sf::Texture chefSitTexture;
     std::vector<sf::Sprite> chefIdleSprites;
     std::vector<sf::Sprite> chefRunSprites;
     float width = 16.0f;
@@ -29,8 +27,6 @@ private:
 
     enum ChefStatesEnum state = ChefStatesEnum::WAITING_TO_COOKING;
     Positions destinationPositions;
-    float moveProgress = 0.0f;
-    float moveDistance = 0.0f;
     float moveSpeed = 0.0f;
     float idleTimer = 0.0f;
     float cookingTime = 0.0f;
@@ -45,7 +41,7 @@ private:
     enum ChefStatesEnum defineStateByStartDirection();
 public:
     Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-        float moveYSpeed, int chefsNumber, Positions startPositions, Directions startDirection,
+        float moveYSpeed, Positions startPositions, Directions startDirection,
         DishesManager* dishesManager);
     void addTableToCookFor(int tableNumber);
     int getDishesToCookForNumber() {
@@ -55,8 +51,5 @@ public:
     void render(sf::RenderWindow* window) override;
     float getSortY() override {
         return positions.yPos + (height * 0.3f);
-    }
-    int getChefNumber() {
-        return chefNumber;
     }
 };

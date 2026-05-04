@@ -8,7 +8,6 @@ class PathFinder;
 
 class Customer : public Character {
 private:
-    int customerNumber = 0;
     int tableNumber = 0;
     sf::Texture customerIdleTexture;
     sf::Texture customerRunTexture;
@@ -34,8 +33,6 @@ private:
     Positions exitRestaurantPositions;
     Positions chairPositions;
     Positions enterChairPositions;
-    float moveProgress = 0.0f;
-    float moveDistance = 0.0f;
     float moveXSpeed = 0.0f;
     float moveYSpeed = 0.0f;
     float idleTimer = 0.0f;
@@ -68,7 +65,7 @@ private:
     void updateDirection(Positions nextPosition);
 public:
     Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
-             float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
+             float moveXSpeed, float moveYSpeed, Positions startPositions, 
              Positions queueStartingPositions, Positions enterRestaurantPositions, 
              Positions exitRestaurantPositions);
     void updateIfWaiting(float deltaTime, float queueXPos);
@@ -82,9 +79,6 @@ public:
     float getSortY() override {
         return positions.yPos + (height * 0.3f);
     }
-    int getCustomerNumber() {
-        return customerNumber;
-    }
     void changeToResigningState() {
         state = CustomerStatesEnum::TURNING_DOWN;
     }
@@ -93,9 +87,6 @@ public:
     }
     void changeToLeavingState() {
         state = CustomerStatesEnum::TURNING_DOWN;
-    }
-    void changeToMoveToExit() {
-        state = CustomerStatesEnum::PREPARING_TO_MOVE_TO_EXIT;
     }
     void changeToEatingState() {
         state = CustomerStatesEnum::PREPARING_TO_EATING;

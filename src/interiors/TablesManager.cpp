@@ -356,15 +356,6 @@ void TablesManager::resetWaitingToDishesTaken(int tableNumber) {
     }
 }
 
-void TablesManager::render(sf::RenderWindow* window) {
-    for(TwoChairsTable* table : twoChairsTables) {
-        table->render(window);
-    }
-    for(FourChairsTable* table : fourChairsTables) {
-        table->render(window);
-    }
-}
-
 std::vector<Table*> TablesManager::getTables() {
     std::vector<Table*> tables;
     tables.reserve(twoChairsTables.size() + fourChairsTables.size());
@@ -375,18 +366,4 @@ std::vector<Table*> TablesManager::getTables() {
         tables.push_back(table);
     }
     return tables;
-}
-
-Positions TablesManager::getTwoChairsTableDishesPositionsByNumber(int tableNumber) {
-    for(TwoChairsTable* table : twoChairsTables) {
-        if(table->getTableNumber() == tableNumber){
-            return table->getDishesPositions();
-        }
-    }
-    for(FourChairsTable* table : fourChairsTables) {
-        if(table->getTableNumber() == tableNumber) {
-            return table->getDishesPositions();
-        }
-    }
-    return Positions{-1.0f, -1.0f};
 }

@@ -5,11 +5,11 @@
 
 
 Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float tileWidth, float tileHeight, 
-                   float moveXSpeed, float moveYSpeed, int customerNumber, Positions startPositions, 
+                   float moveXSpeed, float moveYSpeed, Positions startPositions, 
                    Positions queueStartingPositions, Positions enterRestaurantPositions, 
                    Positions exitRestaurantPositions
                    ) : Character(startPositions), moveXSpeed(moveXSpeed), 
-                       moveYSpeed(moveYSpeed), customerNumber(customerNumber), 
+                       moveYSpeed(moveYSpeed), 
                        queueStartingPositions(queueStartingPositions), 
                        enterRestaurantPositions(enterRestaurantPositions),
                        exitRestaurantPositions(exitRestaurantPositions) {
@@ -32,7 +32,6 @@ Customer::Customer(int scaleFactor, CharactersTexturesPaths texturesPaths, float
     this->leavingPositions.yPos = this->startPositions.yPos;
 
     state = CustomerStatesEnum::PREPARING_TO_MOVE;
-    moveProgress = 0.0f;
     animDirection = Directions::LEFT;
 }
 
@@ -123,8 +122,6 @@ void Customer::changeWaitingState(float deltaTime, float queueXPos) {
         break;
         case CustomerStatesEnum::MOVING_LEFT: {
             float moveStep = moveXSpeed * deltaTime;
-            float startX = queueXPos;
-            float targetX = positions.xPos - moveDistance;
             if(positions.xPos > queueXPos) {
                 float remaining = positions.xPos - queueXPos;
                 float step = (moveStep < remaining) ? moveStep : remaining;

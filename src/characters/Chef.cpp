@@ -4,10 +4,10 @@
 
 
 Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed, 
-           float moveYSpeed, int chefNumber, Positions startPositions, 
+           float moveYSpeed, Positions startPositions, 
            Directions startDirection, DishesManager* dishesManager
            ) : Character(startPositions), startAnimDirection(startDirection), 
-               chefNumber(chefNumber), dishesManager(dishesManager) {
+               dishesManager(dishesManager) {
     texturesLoaded = loadTextures(scaleFactor);
     width *= scaleFactor;
     height *= scaleFactor;
@@ -20,7 +20,6 @@ Chef::Chef(int scaleFactor, float tileWidth, float tileHeight, float moveXSpeed,
 
     state = ChefStatesEnum::WAITING_TO_COOKING;
     moveSpeed = moveXSpeed;
-    moveProgress = 0.0f;
     animDirection = startAnimDirection;
 }
 
@@ -136,8 +135,6 @@ void Chef::changeState(float deltaTime, int scaleFactor, int* addedDishesNumber)
             break;
         case ChefStatesEnum::MOVING_LEFT: {
             float moveStep = moveSpeed * deltaTime;
-            float startX = destinationPositions.xPos;
-            float targetX = positions.xPos - moveDistance;
             if(positions.xPos > startPositions.xPos) {
                 float remaining = positions.xPos - startPositions.xPos;
                 float step = (moveStep < remaining) ? moveStep : remaining;

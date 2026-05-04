@@ -8,7 +8,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <random>
-#include <algorithm>
 #include <vector>
 
 

@@ -15,7 +15,6 @@ private:
         "",
         "assets/characters/waiter/waiter_note.png"
     };
-    int waiterNumber = 0;
     int tableNumber = 0;
     sf::Texture waiterIdleTexture;
     sf::Texture waiterRunTexture;
@@ -37,8 +36,6 @@ private:
     Positions dishPickupPositions;
     Positions dishDropoffPositions;
     Positions tableHandlingPositions;
-    float moveProgress = 0.0f;
-    float moveDistance = 0.0f;
     float moveXSpeed = 0.0f;
     float moveYSpeed = 0.0f;
     float idleTimer = 0.0f;
@@ -64,8 +61,8 @@ private:
                                     PathFinder* pathFinder);
     void updateDirection(Positions nextPosition);
 public:
-    Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
-           int waiterNumber, Positions startPositions, 
+        Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
+            Positions startPositions, 
            Positions queueHandlingPositions, Positions dishPickupPositions, 
            Positions dishDropoffPositions, DishesManager* dishesManager);
     void update(float deltaTime, float tileWidth, 
@@ -73,9 +70,6 @@ public:
     void render(sf::RenderWindow* window) override;
     float getSortY() override {
         return positions.yPos + (height * 0.3f);
-    }
-    int getWaiterNumber() {
-        return waiterNumber;
     }
     void setAssignedToTask(bool value) {
         isAssignedToTask = value;
@@ -127,9 +121,6 @@ public:
     }
     void changeToDishDropoffState() {
         state = WaiterStatesEnum::PREPARING_TO_MOVE_TO_EATEN_DISH;
-    }
-    void setTableHandlingDirection(enum Directions direction) {
-        tableHandlingDirection = direction;
     }
     void setTableNumberPositionsAndDirection(int scaleFactor, 
                                              int tableNumber, 

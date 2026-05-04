@@ -6,10 +6,10 @@
 
 
 Waiter::Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed, 
-               int waiterNumber, Positions startPositions, 
+               Positions startPositions, 
                Positions queueHandlingPositions, Positions dishPickupPositions, 
                Positions dishDropoffPositions, DishesManager* dishesManager
-               ) : Character(startPositions), waiterNumber(waiterNumber), 
+               ) : Character(startPositions), 
                    queueHandlingPositions(queueHandlingPositions), 
                    dishPickupPositions(dishPickupPositions), 
                    dishDropoffPositions(dishDropoffPositions), 
@@ -31,7 +31,6 @@ Waiter::Waiter(int scaleFactor, float moveXSpeed, float moveYSpeed,
     this->dishDropoffPositions.yPos *= scaleFactor;
 
     state = WaiterStatesEnum::WAITING_TO_TASK;
-    moveProgress = 0.0f;
     animDirection = Directions::DOWN;
 }
 

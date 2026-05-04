@@ -29,7 +29,6 @@ public:
     void moveReadyDishToMoving();
     void moveMovingDishToDishesOnTables(int tableNumber, Positions newDishPositions);
     void removeAllDishesOnTable(int tableNumber, int* dishesOnTableNumber);
-    void render(sf::RenderWindow* window);
     void renderReadyDish(sf::RenderWindow* window);
     bool isReadyDishes() {
         return !readyDishes.empty();

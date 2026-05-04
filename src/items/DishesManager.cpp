@@ -43,7 +43,6 @@ void DishesManager::moveReadyDishToMoving() {
     if(!readyDishes.empty()) {
         setReadyDishWaitingForWaiter(false);
         movingToTablesDishes.push_back(readyDishes.front());
-        readyDishes.front()->getTableNumber();
         readyDishes.pop();
     }
 }
@@ -72,15 +71,6 @@ void DishesManager::removeAllDishesOnTable(int tableNumber, int* dishesOnTableNu
                                      return false;
                                  });
     dishesOnTables.erase(newEnd, dishesOnTables.end());
-}
-
-void DishesManager::render(sf::RenderWindow* window) {
-    if(!readyDishes.empty()) {
-        readyDishes.front()->render(window);
-    }
-    for(Dish* dish : dishesOnTables) {
-        dish->render(window);
-    }
 }
 
 void DishesManager::renderReadyDish(sf::RenderWindow* window) {

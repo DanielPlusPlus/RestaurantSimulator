@@ -6,8 +6,6 @@
 #include "structures/FourChairsTablesPositions.hpp"
 #include "structures/FourChairsTablesDishesPositions.hpp"
 
-#include <queue>
-#include <SFML/Graphics.hpp>
 
 
 class TablesManager {
@@ -129,7 +127,5 @@ public:
     bool isTablesWaitingToDishesTaken();
     std::vector<int> getWaitingToHandlingTablesNumbers();
     std::vector<int> getWaitingToDishesTakenTablesNumbers();
-    void render(sf::RenderWindow* window);
     std::vector<Table*> getTables();
-    Positions getTwoChairsTableDishesPositionsByNumber(int tableNumber);
 };

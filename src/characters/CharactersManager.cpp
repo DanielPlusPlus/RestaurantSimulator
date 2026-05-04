@@ -5,7 +5,6 @@
 #include "interiors/TablesManager.hpp"
 
 #include <random>
-#include <algorithm>
 #include <unordered_map>
 
 
@@ -63,7 +62,7 @@ void CharactersManager::addChefs(int scaleFactor, float tileWidth, float tileHei
                                  float moveXSpeed, float moveYSpeed, int chefsNumber, 
                                  DishesManager* dishesManager) {
     for(int i = 0; i < chefsNumber; i++) {
-        Chef* newChef = new Chef(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed, i + 1, 
+        Chef* newChef = new Chef(scaleFactor, tileWidth, tileHeight, moveXSpeed, moveYSpeed, 
                                  chefsStartPositions[i], chefsStartDirections[i], dishesManager);
         chefs.push_back(newChef);
     }
@@ -73,7 +72,7 @@ void CharactersManager::addWaiters(int scaleFactor, float tileWidth, float tileH
                                    float moveXSpeed, float moveYSpeed, int waitersNumber,
                                    DishesManager* dishesManager) {
     for(int i = 0; i < waitersNumber; i++) {
-        Waiter* newWaiter = new Waiter(scaleFactor, moveXSpeed, moveYSpeed, i + 1, 
+        Waiter* newWaiter = new Waiter(scaleFactor, moveXSpeed, moveYSpeed, 
                                        waitersStartPositions[i], waitersQueueHandlingPositions, 
                                        waitersDishPickupPositions, waitersDishDropoffPositions,
                                        dishesManager);
@@ -88,7 +87,6 @@ void CharactersManager::addWaitingCustomer(int scaleFactor, float tileWidth, flo
     std::uniform_int_distribution<int> customerTextureDist(0, 1);
     Customer* newCustomer = new Customer(scaleFactor, customersTexturesPaths[customerTextureDist(globalRNG)], 
                                          tileWidth, tileHeight, moveXSpeed, moveYSpeed, 
-                                         totalCustomersNumberCounter, 
                                          customersStartPositions, customersQueueStartingPositions, 
                                          customersEnterRestaurantPositions, 
                                          customersExitRestaurantPositions);

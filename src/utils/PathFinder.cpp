@@ -102,7 +102,3 @@ std::vector<Positions> PathFinder::findPath(Positions start, Positions destinati
     return path;
 }
 
-bool PathFinder::isWalkable(float x, float y, Level* level) {
-    Positions checkPos{x, y};
-    return level->isValidPositions(checkPos);
-}
