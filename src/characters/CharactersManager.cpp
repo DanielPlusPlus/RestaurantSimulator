@@ -96,8 +96,15 @@ void CharactersManager::addWaitingCustomer(int scaleFactor, float tileWidth, flo
 
 void CharactersManager::moveWaitingCustomerToResignation() {
     extern std::mt19937 globalRNG;
-    std::uniform_int_distribution<int> waitingCustomerIndexDist(3, static_cast<int>(waitingCustomers.size()) - 1);
-    int index = waitingCustomerIndexDist(globalRNG);
+    const int startIndex = 3;
+    const int lastIndex = static_cast<int>(waitingCustomers.size()) - 1;
+    const int range = lastIndex - startIndex;
+    std::geometric_distribution<int> waitingCustomerIndexDist(0.35);
+    int tailOffset = waitingCustomerIndexDist(globalRNG);
+    if(tailOffset > range) {
+        tailOffset = range;
+    }
+    int index = lastIndex - tailOffset;
     if(index >= 0 && index < static_cast<int>(waitingCustomers.size())) {
         Customer* customer = waitingCustomers[index];
         customer->changeToResigningState();
@@ -105,15 +112,14 @@ void CharactersManager::moveWaitingCustomerToResignation() {
         resigningCustomersNumberCounter++;
         waitingCustomers.erase(waitingCustomers.begin() + index);
     }
-    timeToRemoveWaitingCustomer = timeToRemoveCustomerDist(globalRNG);
+    timeToRemoveWaitingCustomer = std::clamp(timeToRemoveCustomerDist(globalRNG), 15.0f, 50.0f);
 }
 
 void CharactersManager::moveWaitingCustomerToInside(int scaleFactor, int tableNumber, 
                                                     TablesManager* tablesManager) {
     extern std::mt19937 globalRNG;
-    std::uniform_int_distribution<int> instantTableOccupationDist(1, 4);
-    int instantTableOccupation = instantTableOccupationDist(globalRNG);
-    bool occupyTableInstantly = instantTableOccupation == 1;
+    std::bernoulli_distribution instantTableOccupationDist(0.25);
+    bool occupyTableInstantly = instantTableOccupationDist(globalRNG);
     if(!waitingCustomers.empty()) {
         Customer* customer = waitingCustomers[0];
         if(customer->isWaitingToEnter()) {

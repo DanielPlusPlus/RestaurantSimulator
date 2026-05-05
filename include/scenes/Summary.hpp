@@ -36,8 +36,8 @@ private:
     float animTime = 0.0f;
     sf::Vector2u blurTextureSize = sf::Vector2u(0u, 0u);
 
-    int waitersNumber = 0;
     int chefsNumber = 0;
+    int waitersNumber = 0;
     int twoChairsTablesNumber = 0;
     int fourChairsTablesNumber = 0;
     int simulationTimeInMinutes = 0;
