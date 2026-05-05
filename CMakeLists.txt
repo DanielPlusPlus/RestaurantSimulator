@@ -32,5 +32,8 @@ add_custom_command(TARGET RestaurantSimulator POST_BUILD
     "${CMAKE_SOURCE_DIR}/external/SFML-2.6.2/bin"
     $<TARGET_FILE_DIR:RestaurantSimulator>
     COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/dlls"
+    $<TARGET_FILE_DIR:RestaurantSimulator>
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${CMAKE_SOURCE_DIR}/assets"
     $<TARGET_FILE_DIR:RestaurantSimulator>/assets)

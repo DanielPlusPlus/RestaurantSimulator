@@ -1,4 +1,5 @@
 .vscode/
 build/
 external/
+dlls/
 RestaurantSimulatorInstaller.exe
