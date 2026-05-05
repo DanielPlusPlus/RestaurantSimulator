@@ -12,15 +12,9 @@ file(GLOB_RECURSE SOURCES
     src/*.cpp
 )
 
-add_executable(RestaurantSimulator ${SOURCES}
-    include/enums/ScenesEnum.hpp
-    src/utils/InitFileReader.cpp
-    include/utils/InitFileWriter.hpp
-    src/utils/InitFileWriter.cpp
-    src/scenes/Summary.cpp
-    include/scenes/Summary.hpp
-    include/utils/StatsFileWriter.hpp
-    src/utils/StatsFileWriter.cpp)
+set(RESOURCE_FILES resources.rc)
+
+add_executable(RestaurantSimulator ${SOURCES} ${RESOURCE_FILES})
 
 target_include_directories(RestaurantSimulator PRIVATE include)
 
