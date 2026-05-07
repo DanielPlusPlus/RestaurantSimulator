@@ -31,12 +31,18 @@ cmake --build build --config Release
 ```
 .
 ├── assets/              # graphics and fonts
-├── include/             # class/struct headers
-├── src/                 # implementations
-├── external/            # dependencies (SFML)
 ├── build/               # CMake build output
+├── dlls/                # runtime DLLs
+├── docs/                # documentation
+├── external/            # dependencies (SFML)
+├── include/             # class/struct headers
 ├── screenshots/         # screenshots
-└── README.md            # this file
+├── src/                 # implementations
+├── CMakeLists.txt       # CMake configuration
+├── Installer.nsi        # NSIS installer script
+├── README.md            # this file
+├── readme.txt           # readme bundled after install
+└── resources.rc         # Windows resources
 ```
 
 ## PL
@@ -70,12 +76,16 @@ cmake --build build --config Release
 ```
 .
 ├── assets/              # zasoby graficzne i fonty
-├── include/             # naglowki klas i struktur
-├── src/                 # implementacje
-├── external/            # zaleznosci (SFML)
 ├── build/               # katalog generowany przez CMake
+├── dlls/                # biblioteki DLL
+├── docs/                # dokumentacja
+├── external/            # zaleznosci (SFML)
+├── include/             # naglowki klas i struktur
 ├── screenshots/         # zrzuty ekranu
-└── README.md            # ten plik
+├── src/                 # implementacje
+├── CMakeLists.txt       # konfiguracja CMake
+├── Installer.nsi        # skrypt instalatora NSIS
+├── README.md            # ten plik
+├── readme.txt           # readme dolaczane po instalacji
+└── resources.rc         # zasoby Windows
 ```
-
----

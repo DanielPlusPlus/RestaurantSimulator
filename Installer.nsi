@@ -1,3 +1,5 @@
+Name "Restaurant Simulator"
+
 OutFile "RestaurantSimulatorInstaller.exe"
 InstallDir "$PROGRAMFILES\RestaurantSimulator"
 Icon "assets\icons\icon.ico"
