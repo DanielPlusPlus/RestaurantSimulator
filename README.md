@@ -7,7 +7,7 @@ Restaurant Simulator is a 2D restaurant simulator. The user selects parameters s
 
 ### Screenshots
 ![Main menu](screenshots/menu_screen.png)
-![Simulation](screenshots/simulation_screen.png?)
+![Simulation](screenshots/simulation_screen.png)
 ![Summary](screenshots/summary_screen.png)
 
 ### Technologies
@@ -52,7 +52,7 @@ Restaurant Simulator to dwuwymiarowy symulator restauracji. Użytkownik wybiera 
 
 ### Screeny
 ![Menu glowne](screenshots/menu_screen.png)
-![Symulacja](screenshots/simulation_screen.png?)
+![Symulacja](screenshots/simulation_screen.png)
 ![Podsumowanie](screenshots/summary_screen.png)
 
 ### Technologie
