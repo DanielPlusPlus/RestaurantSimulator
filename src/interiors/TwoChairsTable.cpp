@@ -13,8 +13,7 @@ TwoChairsTable::TwoChairsTable(int scaleFactor, std::string texturePath,
                                    tableHandlingDirection), 
                                    chairsPositions(chairsPositions), 
                                    dishesPositions(dishesPositions) {
-    sortY = std::max(chairsPositions.leftChairPositionsAndDirections.chairPositions.yPos,
-                     chairsPositions.rightChairPositionsAndDirections.chairPositions.yPos);
+    sortY = chairsPositions.leftChairPositionsAndDirections.chairPositions.yPos;
     texturesLoaded = loadTexture(scaleFactor, texturePath);
 }
 

@@ -14,12 +14,7 @@ FourChairsTable::FourChairsTable(int scaleFactor, std::string texturePath,
                                      tableHandlingDirection),
                                      chairsPositions(chairsPositions), 
                                      dishesPositions(dishesPositions) {
-    sortY = std::max(
-        std::max(chairsPositions.downLeftChairPositionsAndDirections.chairPositions.yPos,
-                 chairsPositions.downRightChairPositionsAndDirections.chairPositions.yPos),
-        std::max(chairsPositions.upLeftChairPositionsAndDirections.chairPositions.yPos,
-                 chairsPositions.upRightChairPositionsAndDirections.chairPositions.yPos)
-    );
+    sortY = chairsPositions.upLeftChairPositionsAndDirections.chairPositions.yPos;
     texturesLoaded = loadTexture(scaleFactor, texturePath);
 }
 
